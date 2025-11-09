@@ -1,1 +1,163 @@
-<p>preferences works!</p>
+<app-header-secondary></app-header-secondary>
+
+<main class="preferences">
+  <nav class="preferences__back" aria-label="Back to previous">
+    <a class="preferences__back-link" routerLink="/generate-recipe">
+      <img
+        src="assets/preferences/back-arrow.svg"
+        alt=""
+        class="preferences__back-icon"
+      />
+      <span class="preferences__back-text">Ingredients</span>
+    </a>
+  </nav>
+  <section class="preferences__section" aria-labelledby="preferences-title">
+    <h2 id="preferences-title" class="preferences__title">
+      Choose your preferences
+    </h2>
+    <div class="preferences__portion-group">
+      <div class="preferences__portion">
+        <span class="preferences__label">How many portions do you need?</span>
+        <div class="preferences__portion-control">
+          <div
+            class="preferences__portion-btn preferences__portion-btn--minus"
+            role="button"
+            tabindex="0"
+            aria-label="Decrease portions"
+          >
+            <img src="assets/preferences/minus.svg" alt="" />
+          </div>
+          <div class="preferences__portion-display" aria-live="polite">
+            <span class="preferences__portion-value">1</span>
+          </div>
+          <span class="preferences__portion-unit">Portions</span>
+          <div
+            class="preferences__portion-btn preferences__portion-btn--plus"
+            role="button"
+            tabindex="0"
+            aria-label="Increase portions"
+          >
+            <img src="assets/preferences/plus.svg" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="preferences__portion">
+        <span class="preferences__label">How many are cooking?</span>
+        <div class="preferences__portion-control">
+          <div
+            class="preferences__portion-btn preferences__portion-btn--minus"
+            role="button"
+            tabindex="0"
+            aria-label="Decrease portions"
+          >
+            <img src="assets/preferences/minus.svg" alt="" />
+          </div>
+          <div class="preferences__portion-display" aria-live="polite">
+            <span class="preferences__portion-value">1</span>
+          </div>
+          <span class="preferences__portion-unit">Person</span>
+          <div
+            class="preferences__portion-btn preferences__portion-btn--plus"
+            role="button"
+            tabindex="0"
+            aria-label="Increase portions"
+          >
+            <img src="assets/preferences/plus.svg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="preferences__categories">
+      <section class="preferences__category preferences__category--time">
+        <header class="preferences__category-header">
+          <img
+            src="assets/preferences/schedule.svg"
+            alt="Cooking time icon"
+            class="preferences__icon"
+          />
+          <span class="preferences__category-title">Cooking time:</span>
+        </header>
+        <div class="preferences__options">
+          <div class="preferences__option">
+            <div class="preferences__option-box">
+              <span class="preferences__option-label">Quick</span>
+            </div>
+            <span class="preferences__option-desc">up to 20 min</span>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box">
+              <span class="preferences__option-label">Medium</span>
+            </div>
+            <span class="preferences__option-desc">25–40 min</span>
+          </div>
+
+          <div class="preferences__option">
+            <div class="preferences__option-box">
+              <span class="preferences__option-label">Complex</span>
+            </div>
+            <span class="preferences__option-desc">over 45 min</span>
+          </div>
+        </div>
+      </section>
+      <section class="preferences__category preferences__category--cuisine">
+        <header class="preferences__category-header">
+          <img
+            src="assets/preferences/public.svg"
+            alt="Cuisine icon"
+            class="preferences__icon"
+          />
+          <span class="preferences__category-title">Cuisine</span>
+        </header>
+        <div class="preferences__options">
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>German</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Italian</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Indian</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Japanese</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Gourmet</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Fusion</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="preferences__category preferences__category--diet">
+        <header class="preferences__category-header">
+          <img
+            src="assets/preferences/fork_spoon.svg"
+            alt="Diet preferences icon"
+            class="preferences__icon"
+          />
+          <span class="preferences__category-title">Diet preferences</span>
+        </header>
+        <div class="preferences__options">
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Vegetarian</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Vegan</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box"><span>Keto</span></div>
+          </div>
+          <div class="preferences__option">
+            <div class="preferences__option-box">
+              <span>No preferences</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <p class="preferences-cta">
+      <a routerLink="/loading" class="btn" role="button">Generate a recipe</a>
+    </p>
+  </section>
+</main>
