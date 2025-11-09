@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { HeaderPrimaryComponent } from '../../layout/headers/header-primary/header-primary.component';
 
 @Component({
   selector: 'app-loading',
   standalone: true,
-  imports: [],
+  imports: [HeaderPrimaryComponent],
   templateUrl: './loading.component.html',
-  styleUrl: './loading.component.scss'
+  styleUrls: ['./loading.component.scss']
 })
-export class LoadingComponent {
-
-}
+export class LoadingComponent {}

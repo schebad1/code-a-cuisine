@@ -1,0 +1,69 @@
+main {
+    background-color: rgb(57,96,57);
+    height: calc(100vh - 136px);
+    color: rgba(250, 240, 230, 1);
+    padding: 0 0 36px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading__visual {
+    width: 253px;
+    height: 309px;
+    border-radius: 20px;
+    background-color: rgba(196, 208, 196, 1);
+}
+
+.loading__container {
+    padding-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Text + Punkte in einer Linie halten */
+.loading__text {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;      
+    font-size: 48px;
+    font-weight: bold;    
+  }
+  
+  /* Punktgruppe neben dem Text */
+  .loading__dots {
+    display: inline-flex;
+    gap: 6px;
+    height: 1em;         /* verhindert Layout-Shift */
+  }
+  
+  /* Einzelne Punkte: Farbe vom Text erben */
+  .loading__dot {
+    --size: 0.25em;      /* Größe der Punkte relativ zur Schrift */
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 1;
+  
+    /* Animation: nacheinander aus- und wieder einblenden */
+    animation: dot-cycle 1.8s ease-in-out infinite both;
+    animation-delay: calc(var(--i) * 0.18s);
+    will-change: opacity, transform;
+  }
+  
+  /* Ablauf: sichtbar → ausblenden → sichtbar */
+  @keyframes dot-cycle {
+    0%   { opacity: 1; transform: scale(1); }
+    35%  { opacity: 0; transform: scale(0.6); }
+    65%  { opacity: 0; transform: scale(0.6); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  
+  /* Barrierearmut: Bei reduzierter Bewegung Animation abschalten */
+  @media (prefers-reduced-motion: reduce) {
+    .loading__dot { animation: none; opacity: 1; transform: none; }
+  }
+  

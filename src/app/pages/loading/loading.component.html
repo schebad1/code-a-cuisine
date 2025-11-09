@@ -1,1 +1,18 @@
-<p>loading works!</p>
+<app-header-primary></app-header-primary>
+
+<main class="loading">
+  <div class="loading__container" role="status" aria-live="polite">
+    <!-- Platzhalter für die spätere Animation (Topf etc.) -->
+    <div class="loading__visual" aria-hidden="true"></div>
+
+    <!-- Text + Dots-Animation (Dots kommen per CSS) -->
+    <span class="loading__text">
+      Generating
+      <span class="loading__dots" aria-hidden="true">
+        <span class="loading__dot" style="--i:0"></span>
+        <span class="loading__dot" style="--i:1"></span>
+        <span class="loading__dot" style="--i:2"></span>
+      </span>
+    </span>
+  </div>
+</main>
