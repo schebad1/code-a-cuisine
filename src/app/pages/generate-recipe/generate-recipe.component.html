@@ -1,10 +1,138 @@
 <app-header-secondary></app-header-secondary>
 
-<main class="generate">
-  <section>
-    <h1>Generate Recipe</h1>
-    <p>Hier kannst du dein Rezept generieren lassen.</p>
-
-    <a routerLink="/preferences" class="btn">Weiter</a>
+<main>
+  <section
+    id="generate-recipe"
+    class="generate"
+    aria-labelledby="generate-title"
+  >
+    <header class="generate__header">
+      <h1 id="generate-title" class="generate__title">Generate Recipe</h1>
+      <span class="generate__subtitle">
+        Got random stuff in your kitchen? Pop it in — we've got the perfect
+        recipe waiting.
+      </span>
+    </header>
+    <section class="generate__content">
+      <article class="generate__form" aria-label="Ingredient input form">
+        <div class="generate__input-group">
+          <div class="generate__ingredient-section">
+            <label for="ingredient-search" class="generate__label"
+              >Ingredient</label
+            >
+            <div class="generate__ingredient-autocomplete">
+              <div class="generate__ingredient-input">
+                <input
+                  type="text"
+                  id="ingredient-search"
+                  placeholder="Search ingredient..."
+                  class="generate__search"
+                />
+              </div>
+              <div
+                class="generate__suggestion-dropdown"
+                aria-label="Ingredient suggestions"
+              >
+                <div class="generate__suggestion-option">
+                  <span>Apple</span>
+                </div>
+                <div class="generate__suggestion-option">
+                  <span>Avocado</span>
+                </div>
+                <div class="generate__suggestion-option">
+                  <span>Almond</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="generate__serving-section">
+            <div class="generate__serving-labels">
+              <span class="generate__label">Serving size</span>
+            </div>
+            <div class="generate__serving-inputs">
+              <div class="generate__quantity-wrapper">
+                <input
+                  type="number"
+                  id="quantity"
+                  placeholder=""
+                  min="0"
+                  class="generate__quantity"
+                />
+              </div>
+              <div class="generate__unit-wrapper">
+                <div class="generate__unit-display">
+                  <span class="generate__unit-text">gram</span>
+                  <img
+                    src="assets/generate-recipe/arrow_drop_down.svg"
+                    alt="Open unit selection"
+                    class="generate__unit-arrow"
+                  />
+                </div>
+                <div class="generate__unit-dropdown" aria-label="Unit options">
+                  <div class="generate__unit-option">
+                    <span>piece</span>
+                  </div>
+                  <div class="generate__unit-option">
+                    <span>ml</span>
+                  </div>
+                  <div class="generate__unit-option">
+                    <span>gram</span>
+                  </div>
+                </div>
+              </div>
+              <div class="generate__add-wrapper">
+                <div
+                  class="generate__add"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Add ingredient"
+                >
+                  <img
+                    src="assets/generate-recipe/add-icon-green.svg"
+                    alt="Add"
+                    class="generate__add-icon"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="generate__list" aria-label="Listed ingredients">
+        <span class="generate__list-title">List of your Ingredients</span>
+        <ul class="generate__ingredients">
+          <li class="generate__ingredient">
+            <div class="generate__ingredient-row">
+              <div class="generate__ingredient-info">
+                <span class="generate__bullet" aria-hidden="true"></span>
+                <span class="generate__ingredient-amount">150g</span>
+                <span class="generate__ingredient-name">Pasta</span>
+              </div>
+              <div class="generate__ingredient-actions">
+                <div
+                  class="generate__ingredient-action generate__ingredient-edit"
+                >
+                  <img
+                    src="assets/generate-recipe/edit-pencil.svg"
+                    alt="Edit ingredient"
+                  />
+                </div>
+                <div
+                  class="generate__ingredient-action generate__ingredient-delete"
+                >
+                  <img
+                    src="assets/generate-recipe/trash-icon.svg"
+                    alt="Delete ingredient"
+                  />
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </article>
+    </section>
+    <p class="generate-recipe-cta">
+      <a routerLink="/preferences" class="btn" role="button">Next step</a>
+    </p>
   </section>
 </main>
