@@ -13,6 +13,14 @@ main {
     height: 309px;
     border-radius: 20px;
     background-color: rgba(196, 208, 196, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading__gif {
+  width: 200px;
+  height: 200px;
 }
 
 .loading__container {
@@ -66,4 +74,3 @@ main {
   @media (prefers-reduced-motion: reduce) {
     .loading__dot { animation: none; opacity: 1; transform: none; }
   }
-  
