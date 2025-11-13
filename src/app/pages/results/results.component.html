@@ -1,1 +1,99 @@
-<p>results works!</p>
+<app-header-primary></app-header-primary>
+
+<main class="results" aria-labelledby="results-title">
+  <section class="results__content">
+    <div class="results__layout">
+      <header class="results__header">
+        <h1 id="results-title" class="results__title">The recipe results</h1>
+        <p class="results__subtitle">
+          We took what you have and let our AI do the thinking. <br>
+          Here are 3 easy recipes you can make right now!
+        </p>
+        <div class="results__tags">
+          <span class="results__tag results__tag--cuisine">Italian</span>
+          <span class="results__tag results__tag--speed">Quick</span>
+        </div>
+      </header>
+
+      <figure class="results__visual">
+        <img
+          class="results__image"
+          src="./assets/results/visual.svg"
+          alt="Preview of generated recipes"
+        />
+      </figure>
+    </div>
+
+    <div class="results-list">
+
+      <article class="results-card">
+        <div class="results-card__label">
+          <img class="results-card__icon" src="./assets/results/cloche.svg" alt="">
+          <span class="results-card__number">Recipe 1</span>
+        </div>
+    
+        <p class="results-card__title">Pasta with spinach and cherry tomatoes</p>
+    
+        <div class="results-card__meta">
+          <img class="results-card__meta-icon" src="./assets/preferences/schedule.svg" alt="">
+          <span class="results-card__meta-text">Cooking time: 20min</span>
+        </div>
+    
+        <div class="results-card__action">
+          <a class="results-card__action-link btn" routerLink="/recipe-view">View</a>
+        </div>
+        
+      </article>
+    
+    
+      <article class="results-card">
+        <div class="results-card__label">
+          <img class="results-card__icon" src="./assets/results/cloche.svg" alt="">
+          <span class="results-card__number">Recipe 2</span>
+        </div>
+    
+        <p class="results-card__title">Creamy garlic shrimp pasta</p>
+    
+        <div class="results-card__meta">
+          <img class="results-card__meta-icon" src="./assets/preferences/schedule.svg" alt="">
+          <span class="results-card__meta-text">Cooking time: 22min</span>
+        </div>
+    
+        <div class="results-card__action">
+          <a class="results-card__action-link btn" routerLink="/recipe-view">View</a>
+        </div>
+        
+      </article>
+    
+    
+      <article class="results-card">
+        <div class="results-card__label">
+          <img class="results-card__icon" src="./assets/results/cloche.svg" alt="">
+          <span class="results-card__number">Recipe 3</span>
+        </div>
+    
+        <p class="results-card__title">Pasta alla Trapanese (Sicilian Tomato Pesto)</p>
+    
+        <div class="results-card__meta">
+          <img class="results-card__meta-icon" src="./assets/preferences/schedule.svg" alt="">
+          <span class="results-card__meta-text">Cooking time: 20min</span>
+        </div>
+    
+        <div class="results-card__action">
+          <a class="results-card__action-link btn" routerLink="/recipe-view">View</a>
+        </div>
+        
+      </article>
+    
+    </div>
+    <div class="test">
+      <div class="hero__link-section">
+        <a routerLink="/generate-recipe" class="hero__link">
+          Generate new recipie
+          <img src="./assets/hero/arraow-creme-left.svg" alt="" class="hero__arrow" />
+        </a>
+      </div>
+    </div>
+
+  </section>
+</main>

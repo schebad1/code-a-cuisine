@@ -1,0 +1,142 @@
+main {
+    background-color: rgb(57,96,57);
+    height: calc(100vh - 136px);
+    color: rgba(250, 240, 230, 1);
+    padding: 0 0 36px 36px;
+    display: flex;
+    justify-content: center;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    gap: 88px;
+}
+
+.results__layout {
+    display: flex;
+    gap: 96px;
+    justify-content: space-between;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.results__subtitle {
+    font-size: 24px;
+}
+
+.results__title {
+    font-size: 54px;
+}
+
+.results__tag {
+    font-size: 18px;
+    background-color: rgba(250, 240, 230, 1);
+    width: 72px;
+    height: 32px;
+    border-radius: 30px;
+    padding: 6px 12px;
+    color: rgba(30, 85, 21, 1);
+}
+
+.results__tags {
+    display: flex;
+    gap: 16px;
+}
+
+.results-card {
+    background-color: rgba(219, 224, 219, 1);
+    width: 411px;
+    height: 338px;
+    border-radius: 20px;
+    padding: 32px 24px;
+}
+
+.results-list {
+    display: flex;
+    gap: 24px;
+}
+
+.results-card__number {
+    color: rgba(30, 85, 21, 1);
+    font-size: 24px;
+}
+
+.results-card__label {
+    display: flex;
+    gap: 16px;
+}
+
+.results-card__title {
+    font-size: 32px;
+    color: rgba(16, 49, 11, 1);
+    height: 74px;
+    margin-top: 20px;
+}
+
+.results-card__meta-text {
+    font-size: 20px;
+    color: rgba(57, 96, 57, 1);
+}
+
+.results-card__meta {
+    display: flex;
+    gap: 4px;
+    margin-top: 10px;
+}
+
+.btn {
+    width: 106px;
+    height: 60px;
+    background-color: rgba(250, 240, 230, 1);
+    color: rgba(0, 128, 0, 1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-top: 55px;
+}
+
+.btn:hover {
+    font-weight: bold;
+    background-color: rgba(250, 224, 198, 1);
+}
+
+
+.hero__link {
+    font-size: 20px;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.hero__link-section {
+    width: 230px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.hero__link-section:hover {
+    background-color: rgba(250, 224, 198, 0.2);
+}
+
+.hero__arrow {
+     width: 30px;
+     height: 24px;
+     transform: scaleX(-1);
+}
+ 
+.test {
+
+    display: flex;
+    justify-content: flex-end;
+}

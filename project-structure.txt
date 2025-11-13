@@ -1,0 +1,33 @@
+.
+├── README.md
+├── angular.json
+├── package-lock.json
+├── package.json
+├── project-structure.txt
+├── src
+│   ├── app
+│   │   ├── app.component.html
+│   │   ├── app.component.scss
+│   │   ├── app.component.spec.ts
+│   │   ├── app.component.ts
+│   │   ├── app.config.ts
+│   │   ├── app.routes.ts
+│   │   ├── layout
+│   │   └── pages
+│   ├── assets
+│   │   ├── generate-recipe
+│   │   ├── header-primary
+│   │   ├── header-secondary
+│   │   ├── hero
+│   │   ├── loading
+│   │   ├── preferences
+│   │   └── results
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── main.ts
+│   └── styles.scss
+├── tsconfig.app.json
+├── tsconfig.json
+└── tsconfig.spec.json
+
+13 directories, 18 files
