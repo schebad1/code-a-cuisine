@@ -1,0 +1,344 @@
+main {
+  height: calc(100vh - 136px);
+  color: rgb(57, 96, 57);
+  padding: 36px 36px 36px 36px;
+}
+
+.recipe-view__container {
+  background-color: rgba(250, 240, 230, 0.3);
+  border: 4px solid rgba(250, 240, 230, 1);
+  border-radius: 20px;
+  padding: 40px 48px;
+}
+
+.recipe-view__layout {
+  background-color: rgba(250, 240, 230, 1);
+  padding: 24px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recipe-view__meta-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.recipe-view__meta-text {
+  font-size: 20px;
+}
+
+.recipe-view__title {
+  font-size: 54px;
+}
+
+.recipe-view__main {
+  width: 619px;
+}
+
+.recipe-view__meta-details {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.recipe-view__servings {
+  font-size: 20px;
+}
+
+.recipe-view__chef-name {
+  font-size: 18px;
+}
+
+.recipe-view__chef-first {
+  display: flex;
+  gap: 4px;
+  background-color: rgba(215, 223, 215, 1);
+  border-radius: 6px;
+  padding: 2px 4px 2px 4px;
+  width: 88.5px;
+}
+
+.recipe-view__chef-second {
+  display: flex;
+  gap: 4px;
+  background-color: rgba(255, 217, 179, 1);
+  border-radius: 6px;
+  padding: 2px 4px 2px 4px;
+}
+
+.recipe-view__badges {
+  display: flex;
+  gap: 16px;
+}
+
+.recipe-view__badge {
+  background-color: rgba(57, 96, 57, 0.2);
+  padding: 6px 12px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-view__badge--score {
+  gap: 4px;
+}
+
+.recipe-view__nutrition-title {
+  color: rgba(16, 49, 11, 1);
+  font-size: 18px;
+}
+
+.recipe-view__nutrition-row {
+  display: flex;
+  flex-direction: column;
+  color: rgba(16, 49, 11, 1);
+}
+
+.recipe-view__nutrition {
+  display: flex;
+  gap: 24px;
+}
+
+.recipe-view__nutrition-label {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.recipe-view__nutrition-value {
+  font-size: 20px;
+}
+
+.recipe-view__nutrition-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 8px;
+}
+
+.recipe-view__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.recipe-view__ingredients-heading {
+  font-size: 32px;
+  color: rgba(30, 85, 21, 1);
+}
+
+.recipe-view__ingredients-title {
+  background-color: rgba(250, 240, 230, 1);
+  border-radius: 18px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.recipe-view__ingredients-lists {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 40px;
+  font-size: 24px;
+}
+
+.recipe-view__ingredients-block-title {
+  color: rgba(0, 128, 0, 1);
+}
+
+.recipe-view__ingredients-block {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recipe-view__list-wrapper {
+  padding-left: 32px;
+}
+
+.recipe-view__list {
+  list-style: disc;
+  margin: 0;
+  padding-left: 0;
+}
+
+.recipe-view__list-item {
+  list-style: disc;
+}
+
+.recipe-view__amount {
+  display: inline-block;
+  min-width: 80px;
+}
+
+.recipe-view__directions-title {
+  background-color: rgba(250, 240, 230, 1);
+  border-radius: 18px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.recipe-view__directions-heading {
+  font-size: 32px;
+  color: rgba(30, 85, 21, 1);
+}
+
+.recipe-view__direction-index {
+  background-color: rgba(250, 240, 230, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 31.5px;
+  width: 32px;
+  height: 32px;
+}
+
+.recipe-view__direction-title {
+  font-size: 24px;
+  color: rgba(16, 49, 11, 1);
+}
+
+.recipe-view__direction-header {
+  display: flex;
+  align-items: center;
+  gap: 72px;
+}
+
+.recipe-view__direction-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recipe-view__direction-text-wrapper {
+  width: 343.14px;
+  margin-top: 30px;
+  font-size: 18px;
+}
+
+.recipe-view__directions-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.recipe-view__directions-row {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+
+.recipe-view__direction-step {
+  max-width: 360px;
+}
+
+.recipe-view__rating-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.recipe-view__rating-subtitle {
+  font-size: 16px;
+}
+
+.recipe-view__rating-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recipe-view__rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+  gap: 20px;
+}
+
+.recipe-view__rating-icon {
+  cursor: pointer;
+}
+
+.btn {
+  width: 183px;
+  height: 60px;
+  background-color: rgba(57, 96, 57, 1);
+  color: rgba(250, 240, 230, 1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.btn:hover {
+  background-color: rgba(5, 94, 5, 1);
+  color: rgba(255, 255, 255, 1);
+}
+
+.recipe-view__cta {
+  height: 142px;
+  background-color: rgba(57, 96, 57, 0.1);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 50px;
+}
+
+.recipe-view__cta-text {
+  color: rgba(16, 49, 11, 1);
+  font-size: 24px;
+}
+
+.hero__link {
+  font-size: 20px;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.hero__link-section {
+  width: 230px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+
+.hero__link-section:hover {
+  background-color: rgba(250, 224, 198, 0.2);
+}
+
+.hero__arrow {
+  width: 30px;
+  height: 24px;
+}
+
+.hero__link-section-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.preferences__back-link {
+  display: flex;
+  gap: 4px;
+  color: rgba(30, 85, 21, 1);
+  cursor: pointer;
+}
+
+nav {
+  padding-left: 32px;
+}

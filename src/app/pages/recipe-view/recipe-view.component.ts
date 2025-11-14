@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
+import { HeaderSecondaryComponent } from '../../layout/headers/header-secondary/header-secondary.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-view',
   standalone: true,
-  imports: [],
+  imports: [HeaderSecondaryComponent, RouterLink],
   templateUrl: './recipe-view.component.html',
-  styleUrl: './recipe-view.component.scss'
+  styleUrls: ['./recipe-view.component.scss']
 })
-export class RecipeViewComponent {
-
-}
+export class RecipeViewComponent {}
