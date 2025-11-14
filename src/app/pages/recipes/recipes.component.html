@@ -1,1 +1,156 @@
-<p>recipes works!</p>
+<app-header-secondary></app-header-secondary>
+<nav class="preferences__back" aria-label="Back to previous">
+  <a class="preferences__back-link" href="/cookbook">
+    <img
+      src="assets/preferences/back-arrow.svg"
+      alt=""
+      class="preferences__back-icon"
+    />
+    <span class="preferences__back-text">Cookbook</span>
+  </a>
+</nav>
+<main>
+  <p class="preferences-cta">
+    <a routerLink="/generate-recipe" class="btn" role="button"
+      >Generate a recipe</a
+    >
+  </p>
+
+  <div class="recipe-view__ingredients-title">
+    <span class="recipe-view__ingredients-heading">Italian cuisine</span>
+  </div>
+
+  <div class="recipe-card">
+    <div class="recipe-card__top">
+      <div class="recipe-card__meta">
+        <div class="recipe-card__index__wrapper">
+          <div class="recipe-card__index">
+            <span class="recipe-card__index-number">1.</span>
+          </div>
+        </div>
+
+        <div class="recipe-card__wrapper">
+          <div class="recipe-card__time">
+            <img
+              class="recipe-card__time-icon"
+              src="assets/preferences/schedule.svg"
+              alt=""
+            />
+            <span class="recipe-card__time-text">Cooking time: 20min</span>
+          </div>
+
+          <div class="recipe-card__title-block">
+            <span class="recipe-card__title">
+              Pasta with spinach and cherry tomatoes
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card__tags">
+        <div class="recipe-card__tag">
+          <span class="recipe-card__tag-text">Vegetarian</span>
+        </div>
+
+        <div class="recipe-card__tag">
+          <span class="recipe-card__tag-text">Quick</span>
+        </div>
+
+        <div class="recipe-card__tag recipe-card__tag--icon">
+          <img
+            class="recipe-card__tag-icon"
+            src="assets/cookbook/heart-empty-darkgreen-smal.svg"
+            alt=""
+          />
+          <span class="recipe-card__tag-text">66</span>
+        </div>
+      </div>
+    </div>
+    <div class="recipe-card__top">
+      <div class="recipe-card__meta">
+        <div class="recipe-card__index__wrapper">
+          <div class="recipe-card__index">
+            <span class="recipe-card__index-number">2.</span>
+          </div>
+        </div>
+
+        <div class="recipe-card__wrapper">
+          <div class="recipe-card__time">
+            <img
+              class="recipe-card__time-icon"
+              src="assets/preferences/schedule.svg"
+              alt=""
+            />
+            <span class="recipe-card__time-text">Cooking time: 15min</span>
+          </div>
+
+          <div class="recipe-card__title-block">
+            <span class="recipe-card__title">Creamy lemon garlic gnocchi</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-card__tags">
+        <div class="recipe-card__tag">
+          <span class="recipe-card__tag-text">Vegetarian</span>
+        </div>
+        <div class="recipe-card__tag">
+          <span class="recipe-card__tag-text">Easy</span>
+        </div>
+        <div class="recipe-card__tag recipe-card__tag--icon">
+          <img
+            class="recipe-card__tag-icon"
+            src="assets/cookbook/heart-empty-darkgreen-smal.svg"
+            alt=""
+          />
+          <span class="recipe-card__tag-text">41</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="pagination" aria-label="Recipe pages">
+    <ul class="pagination__list">
+      <li class="pagination__item pagination__item--control">
+        <button
+          class="pagination__link"
+          type="button"
+          aria-label="Previous page"
+        >
+          &lt;
+        </button>
+      </li>
+
+      <li class="pagination__item">
+        <button class="pagination__link" type="button">1</button>
+      </li>
+
+      <li class="pagination__item">
+        <button class="pagination__link" type="button">2</button>
+      </li>
+
+      <li class="pagination__item pagination__item--current">
+        <button class="pagination__link" type="button" aria-current="page">
+          3
+        </button>
+      </li>
+
+      <li
+        class="pagination__item pagination__item--ellipsis"
+        aria-hidden="true"
+      >
+        <span class="pagination__ellipsis">…</span>
+      </li>
+
+      <li class="pagination__item">
+        <button class="pagination__link" type="button">8</button>
+      </li>
+
+      <li class="pagination__item pagination__item--control">
+        <button class="pagination__link" type="button" aria-label="Next page">
+          &gt;
+        </button>
+      </li>
+    </ul>
+  </nav>
+</main>

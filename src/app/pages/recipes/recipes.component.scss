@@ -1,0 +1,166 @@
+main {
+  height: calc(100vh - 136px);
+  color: rgba(57, 96, 57, 1);
+  padding: 36px;
+}
+
+.btn {
+  width: 200px;
+  height: 60px;
+  background-color: rgba(57, 96, 57, 1);
+  color: rgba(250, 240, 230, 1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.btn:hover {
+  background-color: rgba(5, 94, 5, 1);
+  color: rgba(255, 255, 255, 1);
+}
+
+.preferences-cta {
+  display: flex;
+  margin-top: 65px;
+  justify-content: end;
+}
+
+.preferences__back-link {
+  display: flex;
+  gap: 4px;
+  color: rgba(30, 85, 21, 1);
+}
+
+.recipe-view__ingredients-heading {
+  font-size: 32px;
+  color: rgba(30, 85, 21, 1);
+}
+
+.recipe-view__ingredients-title {
+  background-color: rgba(250, 240, 230, 1);
+  border-radius: 18px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.recipe-card__time-text {
+  font-size: 16px;
+}
+
+.recipe-card__title {
+  font-size: 24px;
+}
+
+.recipe-card__index-number {
+  font-size: 18px;
+}
+
+.recipe-card__index {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(250, 240, 230, 1);
+  width: 30px;
+  height: 30px;
+  border-radius: 31.5px;
+}
+
+.recipe-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recipe-card__time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.recipe-card__meta {
+  display: flex;
+  gap: 8px;
+}
+
+.recipe-card__index__wrapper {
+  display: flex;
+  align-items: flex-end;
+}
+
+.recipe-card__tags {
+  display: flex;
+  gap: 8px;
+}
+
+.recipe-card__tag {
+  padding: 6px 12px;
+  border-radius: 30px;
+  background-color: rgba(57, 96, 57, 0.2);
+}
+
+.recipe-card__tag--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 40px;
+}
+
+.recipe-card__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.pagination__list {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pagination__item {
+  display: flex;
+}
+
+.pagination__link {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: rgba(30, 85, 21, 1);
+  cursor: pointer;
+}
+
+.pagination__item--current .pagination__link {
+  font-weight: 600;
+}
+
+.pagination__item--ellipsis .pagination__ellipsis {
+  letter-spacing: 4px;
+}
+
+.pagination__item--control .pagination__link {
+  font-size: 16px;
+}
+
+nav {
+  padding-left: 32px;
+}

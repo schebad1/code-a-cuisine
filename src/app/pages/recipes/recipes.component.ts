@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
+import { HeaderSecondaryComponent } from '../../layout/headers/header-secondary/header-secondary.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-recipes',
   standalone: true,
-  imports: [],
+  imports: [
+    HeaderSecondaryComponent,
+    RouterModule
+  ],
   templateUrl: './recipes.component.html',
-  styleUrl: './recipes.component.scss'
+  styleUrls: ['./recipes.component.scss']
 })
-export class RecipesComponent {
-
-}
+export class RecipesComponent {}
