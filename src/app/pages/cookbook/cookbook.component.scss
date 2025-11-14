@@ -1,0 +1,182 @@
+.cookbook {
+  height: calc(100vh - 136px);
+  color: rgba(30, 85, 21, 1);
+  padding: 36px;
+  overflow-x: hidden;
+}
+
+.cookbook__content {
+  background-color: rgba(57, 96, 57, 0.04);
+  padding: 40px 24px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cookbook__title {
+  font-size: 64px;
+}
+
+.cookbook__subtitle {
+  width: 454px;
+  font-size: 23px;
+}
+
+.cookbook__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 0 0 30%;
+}
+
+.cookbook__section-title {
+  font-size: 24px;
+}
+
+.cookbook__section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cookbook__list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding-bottom: 4px;
+
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+
+  scrollbar-width: none;
+}
+.cookbook__list::-webkit-scrollbar {
+  display: none;
+}
+
+.cookbook-card__time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cookbook-card__time-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.cookbook-card__time-text {
+  font-size: 16px;
+}
+
+.cookbook-card__meta {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cookbook-card {
+  flex: 0 0 370px;
+  height: 124px;
+  border-radius: 16px;
+  padding: 16px 12px;
+  background-color: rgba(219, 224, 219, 0.7);
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+
+.cookbook-card__title {
+  font-size: 24px;
+}
+
+.cookbook-card__likes {
+  background-color: rgba(57, 96, 57, 0.3);
+  border-radius: 30px;
+  padding: 6px 12px;
+  width: 64px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.cookbook__section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-top: 20px;
+}
+
+.cookbook-cuisines {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 79px;
+  margin-top: 40px;
+}
+
+.cookbook-cuisines__name {
+  font-size: 28px;
+}
+
+.cookbook-cuisines__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cookbook-cuisines__item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.hero__link {
+  font-size: 20px;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.hero__link-section {
+  width: 230px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+
+.hero__link-section:hover {
+  background-color: rgba(250, 224, 198, 0.2);
+}
+
+.hero__arrow {
+  width: 30px;
+  height: 24px;
+}
+
+.hero__link-section-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.preferences__back-link {
+  display: flex;
+  gap: 4px;
+  color: rgba(30, 85, 21, 1);
+  cursor: pointer;
+}
+
+nav {
+  padding-left: 32px;
+}

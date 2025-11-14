@@ -1,1 +1,297 @@
-<p>cookbook works!</p>
+<app-header-secondary></app-header-secondary>
+<nav class="preferences__back" aria-label="Back to previous">
+  <a
+    class="preferences__back-link"
+    href="#"
+    (click)="goBack(); $event.preventDefault()"
+  >
+    <img
+      src="assets/preferences/back-arrow.svg"
+      alt=""
+      class="preferences__back-icon"
+    />
+    <span class="preferences__back-text">Back</span>
+  </a>
+</nav>
+
+<main class="cookbook" aria-labelledby="cookbook-title">
+  <section class="cookbook__content">
+    <header class="cookbook__intro">
+      <h1 id="cookbook-title" class="cookbook__title">Cookbook</h1>
+      <p class="cookbook__subtitle">
+        From quick bites to gourmet delights, explore them all in our ultimate
+        cookbook and get inspired for your next culinary adventure.
+      </p>
+    </header>
+
+    <section
+      class="cookbook__section cookbook__section--most-liked"
+      aria-labelledby="cookbook-most-liked-title"
+    >
+      <div class="cookbook__section-header">
+        <h2 id="cookbook-most-liked-title" class="cookbook__section-title">
+          Most liked recipes
+        </h2>
+        <img
+          class="cookbook__section-icon"
+          src="assets/cookbook/heart-empty-green-smal.svg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+
+      <div class="cookbook__list" role="list">
+        <article class="cookbook-card" role="listitem">
+          <div class="cookbook-card__meta">
+            <div class="cookbook-card__time">
+              <img
+                class="cookbook-card__time-icon"
+                src="assets/preferences/schedule.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__time-text">Cooking time: 20min</span>
+            </div>
+            <div class="cookbook-card__likes">
+              <img
+                class="cookbook-card__likes-icon"
+                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__likes-count">66</span>
+            </div>
+          </div>
+
+          <h3 class="cookbook-card__title">
+            Pasta with spinach and cherry tomatoes
+          </h3>
+        </article>
+
+        <article class="cookbook-card" role="listitem">
+          <div class="cookbook-card__meta">
+            <div class="cookbook-card__time">
+              <img
+                class="cookbook-card__time-icon"
+                src="assets/preferences/schedule.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__time-text">Cooking time: 235min</span>
+            </div>
+            <div class="cookbook-card__likes">
+              <img
+                class="cookbook-card__likes-icon"
+                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__likes-count">57</span>
+            </div>
+          </div>
+
+          <h3 class="cookbook-card__title">
+            Low Carb Vegan No-Bake Paleo Bars
+          </h3>
+        </article>
+
+        <article class="cookbook-card" role="listitem">
+          <div class="cookbook-card__meta">
+            <div class="cookbook-card__time">
+              <img
+                class="cookbook-card__time-icon"
+                src="assets/preferences/schedule.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__time-text">Cooking time: 20min</span>
+            </div>
+            <div class="cookbook-card__likes">
+              <img
+                class="cookbook-card__likes-icon"
+                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__likes-count">66</span>
+            </div>
+          </div>
+
+          <h3 class="cookbook-card__title">
+            Pasta with spinach and cherry tomatoes
+          </h3>
+        </article>
+
+        <article class="cookbook-card" role="listitem">
+          <div class="cookbook-card__meta">
+            <div class="cookbook-card__time">
+              <img
+                class="cookbook-card__time-icon"
+                src="assets/preferences/schedule.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__time-text">Cooking time: 20min</span>
+            </div>
+            <div class="cookbook-card__likes">
+              <img
+                class="cookbook-card__likes-icon"
+                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__likes-count">66</span>
+            </div>
+          </div>
+
+          <h3 class="cookbook-card__title">
+            Pasta with spinach and cherry tomatoes
+          </h3>
+        </article>
+
+        <article class="cookbook-card" role="listitem">
+          <div class="cookbook-card__meta">
+            <div class="cookbook-card__time">
+              <img
+                class="cookbook-card__time-icon"
+                src="assets/preferences/schedule.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__time-text">Cooking time: 20min</span>
+            </div>
+            <div class="cookbook-card__likes">
+              <img
+                class="cookbook-card__likes-icon"
+                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
+                alt=""
+                aria-hidden="true"
+              />
+              <span class="cookbook-card__likes-count">66</span>
+            </div>
+          </div>
+
+          <h3 class="cookbook-card__title">
+            Pasta with spinach and cherry tomatoes
+          </h3>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <section class="cookbook-cuisines" aria-label="Browse by cuisine">
+    <div class="cookbook-cuisines__item">
+      <div class="cookbook-cuisines__header">
+        <span class="cookbook-cuisines__name">Italian cuisine</span>
+        <img
+          class="cookbook-cuisines__icon"
+          src="assets/cookbook/italian-icon.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <img
+        class="cookbook-cuisines__image"
+        src="assets/cookbook/italian-picture.svg"
+        alt="Italian cuisine"
+      />
+    </div>
+
+    <div class="cookbook-cuisines__item">
+      <div class="cookbook-cuisines__header">
+        <span class="cookbook-cuisines__name">German cuisine</span>
+        <img
+          class="cookbook-cuisines__icon"
+          src="assets/cookbook/german-icon.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <img
+        class="cookbook-cuisines__image"
+        src="assets/cookbook/german-picture.svg"
+        alt="German cuisine"
+      />
+    </div>
+
+    <div class="cookbook-cuisines__item">
+      <div class="cookbook-cuisines__header">
+        <span class="cookbook-cuisines__name">Japanese cuisine</span>
+        <img
+          class="cookbook-cuisines__icon"
+          src="assets/cookbook/japanese-icon.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <img
+        class="cookbook-cuisines__image"
+        src="assets/cookbook/japanese-picture.svg"
+        alt="Japanese cuisine"
+      />
+    </div>
+
+    <div class="cookbook-cuisines__item">
+      <div class="cookbook-cuisines__header">
+        <span class="cookbook-cuisines__name">Gourmet cuisine</span>
+        <img
+          class="cookbook-cuisines__icon"
+          src="assets/cookbook/gourmet-icon.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <img
+        class="cookbook-cuisines__image"
+        src="assets/cookbook/gourmet-picture.svg"
+        alt="Gourmet cuisine"
+      />
+    </div>
+
+    <div class="cookbook-cuisines__item">
+      <div class="cookbook-cuisines__header">
+        <span class="cookbook-cuisines__name">Indian cuisine</span>
+        <img
+          class="cookbook-cuisines__icon"
+          src="assets/cookbook/indian-icon.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <img
+        class="cookbook-cuisines__image"
+        src="assets/cookbook/indian-picture.svg"
+        alt="Indian cuisine"
+      />
+    </div>
+
+    <div class="cookbook-cuisines__item">
+      <div class="cookbook-cuisines__header">
+        <span class="cookbook-cuisines__name">Fusion cuisine</span>
+        <img
+          class="cookbook-cuisines__icon"
+          src="assets/cookbook/fusion-icon.jpg"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <img
+        class="cookbook-cuisines__image"
+        src="assets/cookbook/fusion-picture.svg"
+        alt="Fusion cuisine"
+      />
+    </div>
+  </section>
+  <div class="hero__link-section-wrapper">
+    <div class="hero__link-section">
+      <a routerLink="/generate-recipe" class="hero__link">
+        Generate new recipie
+        <img
+          src="assets/recipe-view/arrow-green-right.svg"
+          alt=""
+          class="hero__arrow"
+        />
+      </a>
+    </div>
+  </div>
+</main>
