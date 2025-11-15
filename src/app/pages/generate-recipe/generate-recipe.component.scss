@@ -1,7 +1,7 @@
 main {
   height: calc(100vh - 136px);
   color: rgb(57, 96, 57);
-  padding: 0 0 36px 36px;
+  padding: 0 36px 36px 36px;
 }
 
 header {
@@ -237,7 +237,7 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 2px 4px 2px 4px; 
+  padding: 2px 4px 2px 4px;
 }
 
 .generate__ingredient-info {
@@ -250,12 +250,11 @@ header {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: currentColor; 
-  flex: 0 0 6px; 
+  background: currentColor;
+  flex: 0 0 6px;
   display: inline-block;
-  margin-right: 2px; 
+  margin-right: 2px;
 }
-
 
 .generate__ingredient-actions {
   display: flex;
@@ -321,4 +320,133 @@ header {
   justify-content: flex-end;
   margin-right: 350px;
   margin-top: 65px;
+}
+
+@media (max-width: 1270px) {
+  .generate__form {
+    width: 500px;
+  }
+
+  .generate__ingredient-input {
+    width: 265px;
+  }
+
+  .generate__list {
+    width: 500px;
+  }
+}
+
+@media (max-width: 1140px) {
+  .generate__content {
+    flex-direction: column;
+  }
+
+  .generate-recipe-cta {
+    justify-content: center;
+    margin-right: 0;
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .generate__content {
+    flex-direction: column;
+  }
+
+  .generate-recipe-cta {
+    justify-content: center;
+    margin-right: 0;
+    margin-top: 40px;
+  }
+
+  .generate__subtitle {
+    width: 368px;
+    font-size: 20px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 550px) {
+  .generate {
+    padding-top: 50px;
+  }
+
+  header {
+    gap: 8px;
+    align-items: start;
+  }
+
+  .generate__subtitle {
+    width: 302px;
+    font-size: 18px;
+    text-align: start;
+  }
+
+  .generate__title[_ngcontent-ng-c351528576] {
+    font-size: 36px;
+  }
+
+  .generate__content {
+    margin-top: 30px;
+    gap: 20px;
+  }
+
+  .generate__form {
+    width: 100%;
+    height: 340px;
+    padding: 12px 12px;
+    font-size: 18px;
+  }
+
+  .generate__ingredient-input {
+    width: 100%;
+  }
+
+  .generate__list {
+    width: 100%;
+    height: 185px;
+    padding: 12px 12px;
+    font-size: 18px;
+  }
+
+  .generate__input-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .generate__suggestion-option {
+    font-size: 16px;
+  }
+
+  .btn {
+    font-size: 16px;
+    width: 115px;
+    height: 40px;
+  }
+
+  .generate-recipe-cta {
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+
+  main {
+    overflow: auto;
+    height: calc(100vh - 55px);
+    padding: 0 36px 0px 36px;
+  }
+}
+
+@media (max-width: 365px) {
+  .generate {
+    padding-top: 15px;
+  }
+
+  .generate__subtitle {
+    font-size: 16px;
+    width: 275px;
+  }
+
+  .generate__title {
+    font-size: 32px;
+  }
 }

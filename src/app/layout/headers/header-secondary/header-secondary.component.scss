@@ -1,4 +1,17 @@
 header {
     height: 136px;
     padding: 40px 40px 32px;
+    background-color: white;
+}
+
+@media  (max-width: 550px) {
+    header {
+        padding: 10px 10px;
+        height: 55px;
+    }
+
+    header img {
+        width: 95px;
+        height: 42px;
+    }
 }
