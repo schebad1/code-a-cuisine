@@ -4,14 +4,14 @@ header {
     padding: 40px 40px 32px;
 }
 
-@media (min-width: 320px) {
+@media  (max-width: 550px) {
     header {
         padding: 10px 10px;
-        height: 0;
+        height: 55px;
     }
 
     header img {
         width: 95px;
-        height: 32px;
+        height: 42px;
     }
-  }
+}
