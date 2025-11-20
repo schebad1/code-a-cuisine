@@ -222,4 +222,10 @@ nav {
   main {
     height: calc(100vh - 55px);
   }
+
+  .preferences__back-link {
+    position: absolute;
+    top: 55px;
+    left: 20px;
+  }
 }
