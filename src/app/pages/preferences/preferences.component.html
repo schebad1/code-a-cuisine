@@ -11,64 +11,88 @@
       <span class="preferences__back-text">Ingredients</span>
     </a>
   </nav>
+
   <section class="preferences__section" aria-labelledby="preferences-title">
     <div class="preferences-title-container">
       <h2 id="preferences-title" class="preferences__title">
         Choose your preferences
       </h2>
     </div>
+
     <div class="preferences__portion-group">
       <div class="preferences__portion">
         <span class="preferences__label">How many portions do you need?</span>
+
         <div class="preferences__portion-control">
           <div
             class="preferences__portion-btn preferences__portion-btn--minus"
             role="button"
             tabindex="0"
             aria-label="Decrease portions"
+            (click)="decreasePortions()"
+            [class.preferences__portion-btn--disabled]="portions === 1"
+            [attr.aria-disabled]="portions === 1"
           >
             <img src="assets/preferences/minus.svg" alt="" />
           </div>
+
           <div class="preferences__portion-display" aria-live="polite">
-            <span class="preferences__portion-value">1</span>
+            <span class="preferences__portion-value">{{ portions }}</span>
           </div>
+
           <span class="preferences__portion-unit">Portions</span>
+
           <div
             class="preferences__portion-btn preferences__portion-btn--plus"
             role="button"
             tabindex="0"
             aria-label="Increase portions"
+            (click)="increasePortions()"
+            [class.preferences__portion-btn--disabled]="portions === 12"
+            [attr.aria-disabled]="portions === 12"
           >
             <img src="assets/preferences/plus.svg" alt="" />
           </div>
         </div>
       </div>
+
       <div class="preferences__portion">
         <span class="preferences__label">How many are cooking?</span>
+
         <div class="preferences__portion-control">
           <div
             class="preferences__portion-btn preferences__portion-btn--minus"
             role="button"
             tabindex="0"
-            aria-label="Decrease portions"
+            aria-label="Decrease cooking"
+            (click)="decreaseCooking()"
+            [class.preferences__portion-btn--disabled]="cooking === 1"
+            [attr.aria-disabled]="cooking === 1"
           >
             <img src="assets/preferences/minus.svg" alt="" />
           </div>
+
           <div class="preferences__portion-display" aria-live="polite">
-            <span class="preferences__portion-value">1</span>
+            <span class="preferences__portion-value">{{ cooking }}</span>
           </div>
+
           <span class="preferences__portion-unit">Person</span>
+
           <div
             class="preferences__portion-btn preferences__portion-btn--plus"
             role="button"
             tabindex="0"
-            aria-label="Increase portions"
+            aria-label="Increase cooking"
+            (click)="increaseCooking()"
+            [class.preferences__portion-btn--disabled]="cooking === 3"
+            [attr.aria-disabled]="cooking === 3"
           >
             <img src="assets/preferences/plus.svg" alt="" />
           </div>
         </div>
       </div>
     </div>
+
     <div class="preferences__categories">
       <section class="preferences__category preferences__category--time">
         <header class="preferences__category-header">
@@ -79,28 +103,43 @@
           />
           <span class="preferences__category-title">Cooking time:</span>
         </header>
+
         <div class="preferences__options">
           <div class="preferences__option">
-            <div class="preferences__option-box">
+            <div
+              class="preferences__option-box"
+              (click)="selectTimeCategory('quick')"
+              [class.preferences__option-box--active]="timeCategory === 'quick'"
+            >
               <span class="preferences__option-label">Quick</span>
             </div>
             <span class="preferences__option-desc">up to 20 min</span>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box">
+            <div
+              class="preferences__option-box"
+              (click)="selectTimeCategory('medium')"
+              [class.preferences__option-box--active]="timeCategory === 'medium'"
+            >
               <span class="preferences__option-label">Medium</span>
             </div>
             <span class="preferences__option-desc">25–40 min</span>
           </div>
 
           <div class="preferences__option">
-            <div class="preferences__option-box">
+            <div
+              class="preferences__option-box"
+              (click)="selectTimeCategory('complex')"
+              [class.preferences__option-box--active]="timeCategory === 'complex'"
+            >
               <span class="preferences__option-label">Complex</span>
             </div>
             <span class="preferences__option-desc">over 45 min</span>
           </div>
         </div>
       </section>
+
       <section class="preferences__category preferences__category--cuisine">
         <header class="preferences__category-header">
           <img
@@ -110,27 +149,70 @@
           />
           <span class="preferences__category-title">Cuisine</span>
         </header>
+
         <div class="preferences__options">
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>German</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectCuisine('german')"
+              [class.preferences__option-box--active]="cuisine === 'german'"
+            >
+              <span>German</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Italian</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectCuisine('italian')"
+              [class.preferences__option-box--active]="cuisine === 'italian'"
+            >
+              <span>Italian</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Indian</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectCuisine('indian')"
+              [class.preferences__option-box--active]="cuisine === 'indian'"
+            >
+              <span>Indian</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Japanese</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectCuisine('japanese')"
+              [class.preferences__option-box--active]="cuisine === 'japanese'"
+            >
+              <span>Japanese</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Gourmet</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectCuisine('gourmet')"
+              [class.preferences__option-box--active]="cuisine === 'gourmet'"
+            >
+              <span>Gourmet</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Fusion</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectCuisine('fusion')"
+              [class.preferences__option-box--active]="cuisine === 'fusion'"
+            >
+              <span>Fusion</span>
+            </div>
           </div>
         </div>
       </section>
+
       <section class="preferences__category preferences__category--diet">
         <header class="preferences__category-header">
           <img
@@ -140,26 +222,61 @@
           />
           <span class="preferences__category-title">Diet preferences</span>
         </header>
+
         <div class="preferences__options">
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Vegetarian</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectDiet('vegetarian')"
+              [class.preferences__option-box--active]="diet === 'vegetarian'"
+            >
+              <span>Vegetarian</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Vegan</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectDiet('vegan')"
+              [class.preferences__option-box--active]="diet === 'vegan'"
+            >
+              <span>Vegan</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box"><span>Keto</span></div>
+            <div
+              class="preferences__option-box"
+              (click)="selectDiet('keto')"
+              [class.preferences__option-box--active]="diet === 'keto'"
+            >
+              <span>Keto</span>
+            </div>
           </div>
+
           <div class="preferences__option">
-            <div class="preferences__option-box">
+            <div
+              class="preferences__option-box"
+              (click)="selectDiet('none')"
+              [class.preferences__option-box--active]="diet === 'none'"
+            >
               <span>No preferences</span>
             </div>
           </div>
         </div>
       </section>
     </div>
+
     <p class="preferences-cta">
-      <a routerLink="/loading" class="btn" role="button">Generate a recipe</a>
+      <a
+      [routerLink]="isPreferencesComplete ? '/loading' : null"
+      class="btn"
+      [class.btn--disabled]="!isPreferencesComplete"
+      [attr.aria-disabled]="!isPreferencesComplete"
+      role="button"
+    >
+      Generate a recipe
+    </a>    
     </p>
   </section>
 </main>

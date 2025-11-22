@@ -322,6 +322,11 @@ header {
   margin-top: 65px;
 }
 
+.btn--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 @media (max-width: 1270px) {
   .generate__form {
     width: 500px;

@@ -27,20 +27,22 @@
                   id="ingredient-search"
                   placeholder="Search ingredient..."
                   class="generate__search"
+                  [(ngModel)]="ingredientName"
+                  (ngModelChange)="onIngredientNameChange($event)"
+                  name="ingredientName"
                 />
               </div>
               <div
                 class="generate__suggestion-dropdown"
                 aria-label="Ingredient suggestions"
+                *ngIf="filteredIngredientNames.length > 0"
               >
-                <div class="generate__suggestion-option">
-                  <span>Apple</span>
-                </div>
-                <div class="generate__suggestion-option">
-                  <span>Avocado</span>
-                </div>
-                <div class="generate__suggestion-option">
-                  <span>Almond</span>
+                <div
+                  class="generate__suggestion-option"
+                  *ngFor="let suggestion of filteredIngredientNames"
+                  (click)="selectIngredientSuggestion(suggestion)"
+                >
+                  <span>{{ suggestion }}</span>
                 </div>
               </div>
             </div>
@@ -57,25 +59,50 @@
                   placeholder=""
                   min="0"
                   class="generate__quantity"
+                  [(ngModel)]="ingredientQuantity"
+                  name="quantity"
                 />
               </div>
               <div class="generate__unit-wrapper">
-                <div class="generate__unit-display">
-                  <span class="generate__unit-text">gram</span>
+                <div
+                  class="generate__unit-display"
+                  role="button"
+                  tabindex="0"
+                  (click)="toggleUnitDropdown()"
+                  [attr.aria-expanded]="isUnitDropdownOpen"
+                  aria-haspopup="listbox"
+                >
+                  <span class="generate__unit-text">{{ selectedUnit }}</span>
+
                   <img
-                    src="assets/generate-recipe/arrow_drop_down.svg"
-                    alt="Open unit selection"
+                    [src]="
+                      isUnitDropdownOpen
+                        ? 'assets/generate-recipe/arrow_drop_down_up.svg'
+                        : 'assets/generate-recipe/arrow_drop_down.svg'
+                    "
+                    alt="Toggle unit selection"
                     class="generate__unit-arrow"
                   />
                 </div>
-                <div class="generate__unit-dropdown" aria-label="Unit options">
-                  <div class="generate__unit-option">
+
+                <div
+                  class="generate__unit-dropdown"
+                  aria-label="Unit options"
+                  *ngIf="isUnitDropdownOpen"
+                >
+                  <div
+                    class="generate__unit-option"
+                    (click)="selectUnit('piece')"
+                  >
                     <span>piece</span>
                   </div>
-                  <div class="generate__unit-option">
+                  <div class="generate__unit-option" (click)="selectUnit('ml')">
                     <span>ml</span>
                   </div>
-                  <div class="generate__unit-option">
+                  <div
+                    class="generate__unit-option"
+                    (click)="selectUnit('gram')"
+                  >
                     <span>gram</span>
                   </div>
                 </div>
@@ -86,6 +113,7 @@
                   role="button"
                   tabindex="0"
                   aria-label="Add ingredient"
+                  (click)="addIngredient()"
                 >
                   <img
                     src="assets/generate-recipe/add-icon-green.svg"
@@ -101,12 +129,19 @@
       <article class="generate__list" aria-label="Listed ingredients">
         <span class="generate__list-title">List of your Ingredients</span>
         <ul class="generate__ingredients">
-          <li class="generate__ingredient">
+          <li
+            class="generate__ingredient"
+            *ngFor="let ingredient of ingredients; let i = index"
+          >
             <div class="generate__ingredient-row">
               <div class="generate__ingredient-info">
                 <span class="generate__bullet" aria-hidden="true"></span>
-                <span class="generate__ingredient-amount">150g</span>
-                <span class="generate__ingredient-name">Pasta</span>
+                <span class="generate__ingredient-amount">
+                  {{ ingredient.quantity }} {{ ingredient.unit }}
+                </span>
+                <span class="generate__ingredient-name">
+                  {{ ingredient.name }}
+                </span>
               </div>
               <div class="generate__ingredient-actions">
                 <div
@@ -119,6 +154,7 @@
                 </div>
                 <div
                   class="generate__ingredient-action generate__ingredient-delete"
+                  (click)="removeIngredient(i)"
                 >
                   <img
                     src="assets/generate-recipe/trash-icon.svg"
@@ -132,7 +168,15 @@
       </article>
     </section>
     <p class="generate-recipe-cta">
-      <a routerLink="/preferences" class="btn" role="button">Next step</a>
+      <a
+      [routerLink]="canGoNext ? '/preferences' : null"
+      class="btn"
+      role="button"
+      [class.btn--disabled]="!canGoNext"
+      [attr.aria-disabled]="!canGoNext"
+    >
+      Next step
+    </a>    
     </p>
   </section>
 </main>
