@@ -1,0 +1,28 @@
+POST https://schebad.app.n8n.cloud/webhook-test/recipes/generate
+Content-Type: application/json
+
+{
+  "ingredients": [
+    {
+      "name": "Tomato",
+      "quantity": 3,
+      "unit": "piece"
+    },
+    {
+      "name": "Pasta",
+      "quantity": 200,
+      "unit": "gram"
+    }
+  ],
+  "preferences": {
+    "portions": 2,
+    "cookingHelpers": 1,
+    "timeCategory": "quick",
+    "cuisine": "italian",
+    "diet": "vegetarian"
+  },
+  "clientMeta": {
+    "appVersion": "0.1.0",
+    "locale": "de-DE"
+  }
+}

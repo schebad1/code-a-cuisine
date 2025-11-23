@@ -9,7 +9,12 @@
     <span class="preferences__back-text">Recipe results</span>
   </a>
 </nav>
-<main class="recipe-view" aria-labelledby="recipe-view-title">
+
+<main
+  class="recipe-view"
+  aria-labelledby="recipe-view-title"
+  *ngIf="recipe"
+>
   <div class="recipe-view__container">
     <div class="recipe-view__layout">
       <article class="recipe-view__main">
@@ -20,11 +25,13 @@
               src="assets/preferences/schedule.svg"
               alt=""
             />
-            <span class="recipe-view__meta-text">Cooking time: 20min</span>
+            <span class="recipe-view__meta-text">
+              Cooking time: {{ recipe?.totalMinutes }}min
+            </span>
           </div>
 
           <h1 id="recipe-view-title" class="recipe-view__title">
-            Pasta with spinach and cherry tomatoes
+            {{ recipe?.title }}
           </h1>
 
           <div class="recipe-view__meta-details">
@@ -55,10 +62,10 @@
       <aside class="recipe-view__sidebar">
         <div class="recipe-view__badges">
           <div class="recipe-view__badge recipe-view__badge--diet">
-            <span class="recipe-view__badge-text">Vegetarian</span>
+            <span class="recipe-view__badge-text">{{ dietLabel }}</span>
           </div>
           <div class="recipe-view__badge recipe-view__badge--speed">
-            <span class="recipe-view__badge-text">Quick</span>
+            <span class="recipe-view__badge-text">{{ timeCategoryLabel }}</span>
           </div>
           <div class="recipe-view__badge recipe-view__badge--score">
             <img
@@ -66,7 +73,7 @@
               src="assets/recipe-view/heart-empty.svg"
               alt=""
             />
-            <span class="recipe-view__badge-text">66</span>
+            <span class="recipe-view__badge-text">{{ randomLikes }}</span>
           </div>
         </div>
 
@@ -76,22 +83,30 @@
           <div class="recipe-view__nutrition">
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Energy</span>
-              <span class="recipe-view__nutrition-value">630 kcal</span>
+              <span class="recipe-view__nutrition-value">
+                {{ recipe?.nutrition?.energyKcalPerPortion || '630' }} kcal
+              </span>
             </div>
 
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Protein</span>
-              <span class="recipe-view__nutrition-value">18g</span>
+              <span class="recipe-view__nutrition-value">
+                {{ recipe?.nutrition?.proteinGramsPerPortion || '18' }}g
+              </span>
             </div>
 
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Fat</span>
-              <span class="recipe-view__nutrition-value">24g</span>
+              <span class="recipe-view__nutrition-value">
+                {{ recipe?.nutrition?.fatGramsPerPortion || '24' }}g
+              </span>
             </div>
 
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Carbs</span>
-              <span class="recipe-view__nutrition-value">58g</span>
+              <span class="recipe-view__nutrition-value">
+                {{ recipe?.nutrition?.carbsGramsPerPortion || '58' }}g
+              </span>
             </div>
           </div>
         </div>
@@ -105,52 +120,44 @@
 
       <div class="recipe-view__ingredients-lists">
         <div class="recipe-view__ingredients-block">
-          <span class="recipe-view__ingredients-block-title"
-            >Your ingredients</span
-          >
+          <span class="recipe-view__ingredients-block-title">
+            Your ingredients
+          </span>
 
           <div class="recipe-view__list-wrapper">
             <ul class="recipe-view__list">
-              <li class="recipe-view__list-item">
-                <span class="recipe-view__amount">80g</span>
-                <span class="recipe-view__ingredient">Pasta noodles</span>
-              </li>
-              <li class="recipe-view__list-item">
-                <span class="recipe-view__amount">100g</span>
-                <span class="recipe-view__ingredient">Baby spinach</span>
-              </li>
-              <li class="recipe-view__list-item">
-                <span class="recipe-view__amount">150g</span>
-                <span class="recipe-view__ingredient">Cherry tomatoes</span>
-              </li>
-              <li class="recipe-view__list-item">
-                <span class="recipe-view__amount">1 piece</span>
-                <span class="recipe-view__ingredient">Egg</span>
+              <li
+                class="recipe-view__list-item"
+                *ngFor="let ing of userIngredients"
+              >
+                <span class="recipe-view__amount">
+                  {{ ing.quantity }} {{ ing.unit }}
+                </span>
+                <span class="recipe-view__ingredient">
+                  {{ ing.name }}
+                </span>
               </li>
             </ul>
           </div>
         </div>
 
         <div class="recipe-view__ingredients-block">
-          <span class="recipe-view__ingredients-block-title"
-            >Extra ingredients</span
-          >
+          <span class="recipe-view__ingredients-block-title">
+            Extra ingredients
+          </span>
 
           <div class="recipe-view__list-wrapper">
             <ul class="recipe-view__list">
-              <li class="recipe-view__list-item">
-                <span class="recipe-view__amount">40g</span>
-                <span class="recipe-view__ingredient">Parmesan cheese</span>
-              </li>
-              <li class="recipe-view__list-item">
-                <span class="recipe-view__amount">30ml</span>
-                <span class="recipe-view__ingredient">Olive oil</span>
-              </li>
-              <li class="recipe-view__list-item">
-                <span class="recipe-view__amount">Herbs</span>
-                <span class="recipe-view__ingredient"
-                  >(dry basil, oregano, garlic)</span
-                >
+              <li
+                class="recipe-view__list-item"
+                *ngFor="let ing of extraIngredients"
+              >
+                <span class="recipe-view__amount">
+                  {{ ing.quantity }} {{ ing.unit }}
+                </span>
+                <span class="recipe-view__ingredient">
+                  {{ ing.name }}
+                </span>
               </li>
             </ul>
           </div>
@@ -164,17 +171,28 @@
       </div>
 
       <div class="recipe-view__directions-layout">
+        <!-- Erste Reihe dynamisch -->
         <div class="recipe-view__directions-row">
-          <div class="recipe-view__direction-step">
+          <div
+            class="recipe-view__direction-step"
+            *ngFor="let step of stepsRow1"
+          >
             <div class="recipe-view__direction-header">
               <div class="recipe-view__direction-heading">
                 <div class="recipe-view__direction-index">
-                  <span class="recipe-view__direction-index-text">1.</span>
+                  <span class="recipe-view__direction-index-text">
+                    {{ step.order }}.
+                  </span>
                 </div>
-                <span class="recipe-view__direction-title">Cook the pasta</span>
+                <span class="recipe-view__direction-title">
+                  Step {{ step.order }}
+                </span>
               </div>
 
-              <div class="recipe-view__chef-first">
+              <div
+                class="recipe-view__chef-first"
+                *ngIf="step.assignedToHelper === 1"
+              >
                 <img
                   class="recipe-view__chef-avatar"
                   src="assets/recipe-view/toque.svg"
@@ -182,26 +200,11 @@
                 />
                 <span class="recipe-view__chef-name">Chef 1</span>
               </div>
-            </div>
 
-            <div class="recipe-view__direction-text-wrapper">
-              <span class="recipe-view__direction-text">
-                Cook your noodles in boiling, salted water, until the pasta is
-                al dente. Drain the pasta and reserve some of the pasta water.
-              </span>
-            </div>
-          </div>
-
-          <div class="recipe-view__direction-step">
-            <div class="recipe-view__direction-header">
-              <div class="recipe-view__direction-heading">
-                <div class="recipe-view__direction-index">
-                  <span class="recipe-view__direction-index-text">2.</span>
-                </div>
-                <span class="recipe-view__direction-title">Make the sauce</span>
-              </div>
-
-              <div class="recipe-view__chef-second">
+              <div
+                class="recipe-view__chef-second"
+                *ngIf="step.assignedToHelper === 2"
+              >
                 <img
                   class="recipe-view__chef-avatar"
                   src="assets/recipe-view/cooking-tools.svg"
@@ -213,28 +216,41 @@
 
             <div class="recipe-view__direction-text-wrapper">
               <span class="recipe-view__direction-text">
-                While the pasta is cooking, heat olive oil in a pan over medium
-                heat. Add the garlic, and sauté until it starts to turn golden.
-                Add the tomatoes, oregano, salt, and pepper, and cook for 3–4
-                minutes.
+                {{ step.text }}
+              </span>
+
+              <span
+                class="recipe-view__direction-duration"
+                *ngIf="step.durationMinutes"
+              >
+                ~{{ step.durationMinutes }} min
               </span>
             </div>
           </div>
         </div>
 
+        <!-- Zweite Reihe dynamisch -->
         <div class="recipe-view__directions-row">
-          <div class="recipe-view__direction-step">
+          <div
+            class="recipe-view__direction-step"
+            *ngFor="let step of stepsRow2"
+          >
             <div class="recipe-view__direction-header">
               <div class="recipe-view__direction-heading">
                 <div class="recipe-view__direction-index">
-                  <span class="recipe-view__direction-index-text">3.</span>
+                  <span class="recipe-view__direction-index-text">
+                    {{ step.order }}.
+                  </span>
                 </div>
-                <span class="recipe-view__direction-title"
-                  >Finish the pasta</span
-                >
+                <span class="recipe-view__direction-title">
+                  Step {{ step.order }}
+                </span>
               </div>
 
-              <div class="recipe-view__chef-first">
+              <div
+                class="recipe-view__chef-first"
+                *ngIf="step.assignedToHelper === 1"
+              >
                 <img
                   class="recipe-view__chef-avatar"
                   src="assets/recipe-view/toque.svg"
@@ -242,27 +258,11 @@
                 />
                 <span class="recipe-view__chef-name">Chef 1</span>
               </div>
-            </div>
 
-            <div class="recipe-view__direction-text-wrapper">
-              <span class="recipe-view__direction-text">
-                Add the noodles to the sauce, then add pasta water until the
-                sauce is the right consistency. Simmer for 1 minute, then add
-                the spinach, basil, chili flakes, and parmesan.
-              </span>
-            </div>
-          </div>
-
-          <div class="recipe-view__direction-step">
-            <div class="recipe-view__direction-header">
-              <div class="recipe-view__direction-heading">
-                <div class="recipe-view__direction-index">
-                  <span class="recipe-view__direction-index-text">4.</span>
-                </div>
-                <span class="recipe-view__direction-title">Make the sauce</span>
-              </div>
-
-              <div class="recipe-view__chef-second">
+              <div
+                class="recipe-view__chef-second"
+                *ngIf="step.assignedToHelper === 2"
+              >
                 <img
                   class="recipe-view__chef-avatar"
                   src="assets/recipe-view/cooking-tools.svg"
@@ -274,8 +274,14 @@
 
             <div class="recipe-view__direction-text-wrapper">
               <span class="recipe-view__direction-text">
-                Lower the heat to low, stir until mixed, and remove from the
-                heat. Season to taste, top with parmesan cheese, and enjoy.
+                {{ step.text }}
+              </span>
+
+              <span
+                class="recipe-view__direction-duration"
+                *ngIf="step.durationMinutes"
+              >
+                ~{{ step.durationMinutes }} min
               </span>
             </div>
           </div>
@@ -286,9 +292,9 @@
     <div class="recipe-view__rating">
       <div class="recipe-view__rating-text">
         <span class="recipe-view__rating-title">Just finished this meal?</span>
-        <span class="recipe-view__rating-subtitle"
-          >Give it a heart, so that the others know this is delicious.</span
-        >
+        <span class="recipe-view__rating-subtitle">
+          Give it a heart, so that the others know this is delicious.
+        </span>
       </div>
 
       <img
@@ -304,13 +310,13 @@
       <span class="recipe-view__cta-text">
         Find inspiration for your next culinary adventure!
       </span>
-  
+
       <p class="generate-recipe-cta">
         <a routerLink="/cookbook" class="btn" role="button">Cookbook</a>
       </p>
     </div>
-   
   </section>
+
   <div class="hero__link-section-wrapper">
     <div class="hero__link-section">
       <a routerLink="/generate-recipe" class="hero__link">

@@ -17,9 +17,13 @@
           Here are 3 easy recipes you can make right now!
         </p>
         <div class="results__tags">
-          <span class="results__tag results__tag--cuisine">Italian</span>
-          <span class="results__tag results__tag--speed">Quick</span>
-        </div>
+          <span class="results__tag results__tag--cuisine">
+            {{ cuisineLabel }}
+          </span>
+          <span class="results__tag results__tag--speed">
+            {{ timeCategoryLabel }}
+          </span>
+        </div>        
       </header>
 
       <figure class="results__visual">
@@ -31,68 +35,53 @@
       </figure>
     </div>
 
-    <div class="results-list">
+    <div class="results-list" *ngIf="recipes.length; else noResults">
+      <article
+        class="results-card"
+        *ngFor="let recipe of recipes; let i = index"
+      >
+        <div class="results-card__label">
+          <img
+            class="results-card__icon"
+            src="./assets/results/cloche.svg"
+            alt=""
+          />
+          <span class="results-card__number">Recipe {{ i + 1 }}</span>
+        </div>
 
-      <article class="results-card">
-        <div class="results-card__label">
-          <img class="results-card__icon" src="./assets/results/cloche.svg" alt="">
-          <span class="results-card__number">Recipe 1</span>
-        </div>
-    
-        <p class="results-card__title">Pasta with spinach and cherry tomatoes</p>
-    
+        <p class="results-card__title">
+          {{ recipe.title }}
+        </p>
+
         <div class="results-card__meta">
-          <img class="results-card__meta-icon" src="./assets/preferences/schedule.svg" alt="">
-          <span class="results-card__meta-text">Cooking time: 20min</span>
+          <img
+            class="results-card__meta-icon"
+            src="./assets/preferences/schedule.svg"
+            alt=""
+          />
+          <span class="results-card__meta-text">
+            Cooking time: {{ recipe.totalMinutes }}min
+          </span>
         </div>
-    
+
         <div class="results-card__action">
-          <a class="results-card__action-link btn" routerLink="/recipe-view">View</a>
+          <a
+            class="results-card__action-link btn"
+            [routerLink]="['/recipe-view']"
+            [state]="{ recipe }"
+          >
+            View
+          </a>
         </div>
-        
       </article>
-    
-    
-      <article class="results-card">
-        <div class="results-card__label">
-          <img class="results-card__icon" src="./assets/results/cloche.svg" alt="">
-          <span class="results-card__number">Recipe 2</span>
-        </div>
-    
-        <p class="results-card__title">Creamy garlic shrimp pasta</p>
-    
-        <div class="results-card__meta">
-          <img class="results-card__meta-icon" src="./assets/preferences/schedule.svg" alt="">
-          <span class="results-card__meta-text">Cooking time: 22min</span>
-        </div>
-    
-        <div class="results-card__action">
-          <a class="results-card__action-link btn" routerLink="/recipe-view">View</a>
-        </div>
-        
-      </article>
-    
-    
-      <article class="results-card">
-        <div class="results-card__label">
-          <img class="results-card__icon" src="./assets/results/cloche.svg" alt="">
-          <span class="results-card__number">Recipe 3</span>
-        </div>
-    
-        <p class="results-card__title">Pasta alla Trapanese (Sicilian Tomato Pesto)</p>
-    
-        <div class="results-card__meta">
-          <img class="results-card__meta-icon" src="./assets/preferences/schedule.svg" alt="">
-          <span class="results-card__meta-text">Cooking time: 20min</span>
-        </div>
-    
-        <div class="results-card__action">
-          <a class="results-card__action-link btn" routerLink="/recipe-view">View</a>
-        </div>
-        
-      </article>
-    
     </div>
+
+    <ng-template #noResults>
+      <p class="results__subtitle">
+        No recipes available. Please go back and try again.
+      </p>
+    </ng-template>
+
     <div class="hero__link-section-wrapper">
       <div class="hero__link-section">
         <a routerLink="/generate-recipe" class="hero__link">
