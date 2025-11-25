@@ -230,12 +230,15 @@ main {
   flex-direction: column;
   gap: 32px;
   margin-top: 40px;
+  align-items: center;
 }
 
 .recipe-view__directions-row {
   display: flex;
   gap: 40px;
   justify-content: center;
+  flex-wrap: wrap;
+  width: 727px;
 }
 
 .recipe-view__direction-step {

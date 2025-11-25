@@ -16,6 +16,7 @@ export class RecipeViewComponent implements OnInit {
   dietLabel = '';
   timeCategoryLabel = '';
   randomLikes = 0;
+  helperCount = 1;
 
   userIngredients: GeneratedRecipe['ingredients'] = [];
   extraIngredients: GeneratedRecipe['ingredients'] = [];
@@ -36,30 +37,55 @@ export class RecipeViewComponent implements OnInit {
     const nav = this.router.getCurrentNavigation();
     const stateFromNav = nav?.extras.state as
       | {
-          recipe?: GeneratedRecipe;
+          recipe?: unknown;
         }
       | undefined;
-    const stateFromHistory = history.state as { recipe?: GeneratedRecipe } | undefined;
+    const stateFromHistory = history.state as { recipe?: unknown } | undefined;
 
-    const recipe = stateFromNav?.recipe ?? stateFromHistory?.recipe;
+    const recipeFromState = stateFromNav?.recipe ?? stateFromHistory?.recipe;
 
-    if (!recipe) {
+    if (!recipeFromState) {
       console.warn('Kein Rezept im Router-State – zurück zu /results');
       this.router.navigate(['/results']);
       return;
     }
 
+    // Wir gehen davon aus, dass das Objekt das GeneratedRecipe-Schema hat
+    // oder zumindest kompatible Felder (title, totalMinutes, diet, steps).
+    const recipe = recipeFromState as GeneratedRecipe;
     this.recipe = recipe;
+
     this.dietLabel = this.getDietLabel(recipe.diet);
     this.timeCategoryLabel = this.getTimeCategoryLabel(recipe.totalMinutes);
     this.randomLikes = Math.floor(Math.random() * 52) + 48;
 
-    this.userIngredients = recipe.ingredients.filter((ing) => ing.isFromUser);
-    this.extraIngredients = recipe.ingredients.filter((ing) => !ing.isFromUser);
+    // Helfer-Anzahl aus den Steps ableiten (max assignedToHelper, mind. 1, max. 3)
+    if (Array.isArray(recipe.steps) && recipe.steps.length > 0) {
+      const maxHelper = Math.max(
+        ...recipe.steps.map((s) => (s.assignedToHelper ?? 1)),
+      );
+      this.helperCount = Math.min(Math.max(maxHelper, 1), 3);
+    } else {
+      this.helperCount = 1;
+    }
 
-    if (recipe.steps && recipe.steps.length > 0) {
+    // Ingredients robust behandeln – können bei Library-Rezepten fehlen
+    const ingredientsAny = (recipe as any).ingredients;
+    if (Array.isArray(ingredientsAny)) {
+      this.userIngredients = ingredientsAny.filter(
+        (ing: any) => ing && ing.isFromUser,
+      );
+      this.extraIngredients = ingredientsAny.filter(
+        (ing: any) => ing && !ing.isFromUser,
+      );
+    } else {
+      this.userIngredients = [];
+      this.extraIngredients = [];
+    }
+
+    // Steps sortieren und in zwei Spalten splitten – nur wenn vorhanden
+    if (Array.isArray(recipe.steps) && recipe.steps.length > 0) {
       const sortedSteps = [...recipe.steps].sort((a, b) => a.order - b.order);
-
       const middleIndex = Math.ceil(sortedSteps.length / 2);
 
       this.stepsRow1 = sortedSteps.slice(0, middleIndex);
@@ -96,4 +122,29 @@ export class RecipeViewComponent implements OnInit {
     }
   }
 
+  getStepTitle(step: GeneratedStep): string {
+    if (!step?.text) {
+      return `Step ${step.order}`;
+    }
+
+    const text = step.text.trim();
+    const sentenceEnd = text.search(/[.!?]/);
+
+    let candidate: string;
+    if (sentenceEnd > 0 && sentenceEnd <= 80) {
+      candidate = text.slice(0, sentenceEnd);
+    } else {
+      candidate = text.length > 80 ? text.slice(0, 77) + '…' : text;
+    }
+
+    return candidate.charAt(0).toUpperCase() + candidate.slice(1);
+  }
+
+  isStepForHelper(step: GeneratedStep, helperIndex: number): boolean {
+    if (!step.assignedToHelper) {
+      // Fallback: wenn nichts gesetzt, landet es bei Chef 1
+      return helperIndex === 1;
+    }
+    return step.assignedToHelper === helperIndex;
+  }
 }

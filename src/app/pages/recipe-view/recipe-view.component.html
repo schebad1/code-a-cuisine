@@ -10,11 +10,7 @@
   </a>
 </nav>
 
-<main
-  class="recipe-view"
-  aria-labelledby="recipe-view-title"
-  *ngIf="recipe"
->
+<main class="recipe-view" aria-labelledby="recipe-view-title" *ngIf="recipe">
   <div class="recipe-view__container">
     <div class="recipe-view__layout">
       <article class="recipe-view__main">
@@ -35,9 +31,10 @@
           </h1>
 
           <div class="recipe-view__meta-details">
-            <span class="recipe-view__servings">Cooking person: 2</span>
-
-            <div class="recipe-view__chef-first">
+            <span class="recipe-view__servings">
+              Cooking person: {{ helperCount }}
+            </span>
+            <div class="recipe-view__chef-first" *ngIf="helperCount >= 1">
               <img
                 class="recipe-view__chef-avatar"
                 src="assets/recipe-view/toque.svg"
@@ -46,7 +43,7 @@
               <span class="recipe-view__chef-name">Chef 1</span>
             </div>
 
-            <div class="recipe-view__chef-second">
+            <div class="recipe-view__chef-second" *ngIf="helperCount >= 2">
               <img
                 class="recipe-view__chef-avatar"
                 src="assets/recipe-view/cooking-tools.svg"
@@ -84,28 +81,28 @@
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Energy</span>
               <span class="recipe-view__nutrition-value">
-                {{ recipe?.nutrition?.energyKcalPerPortion || '630' }} kcal
+                {{ recipe?.nutrition?.energyKcalPerPortion || "630" }} kcal
               </span>
             </div>
 
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Protein</span>
               <span class="recipe-view__nutrition-value">
-                {{ recipe?.nutrition?.proteinGramsPerPortion || '18' }}g
+                {{ recipe?.nutrition?.proteinGramsPerPortion || "18" }}g
               </span>
             </div>
 
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Fat</span>
               <span class="recipe-view__nutrition-value">
-                {{ recipe?.nutrition?.fatGramsPerPortion || '24' }}g
+                {{ recipe?.nutrition?.fatGramsPerPortion || "24" }}g
               </span>
             </div>
 
             <div class="recipe-view__nutrition-row">
               <span class="recipe-view__nutrition-label">Carbs</span>
               <span class="recipe-view__nutrition-value">
-                {{ recipe?.nutrition?.carbsGramsPerPortion || '58' }}g
+                {{ recipe?.nutrition?.carbsGramsPerPortion || "58" }}g
               </span>
             </div>
           </div>
@@ -185,13 +182,13 @@
                   </span>
                 </div>
                 <span class="recipe-view__direction-title">
-                  Step {{ step.order }}
+                  {{ getStepTitle(step) }}
                 </span>
               </div>
 
               <div
                 class="recipe-view__chef-first"
-                *ngIf="step.assignedToHelper === 1"
+                *ngIf="isStepForHelper(step, 1)"
               >
                 <img
                   class="recipe-view__chef-avatar"
@@ -203,7 +200,7 @@
 
               <div
                 class="recipe-view__chef-second"
-                *ngIf="step.assignedToHelper === 2"
+                *ngIf="helperCount >= 2 && isStepForHelper(step, 2)"
               >
                 <img
                   class="recipe-view__chef-avatar"
@@ -243,13 +240,13 @@
                   </span>
                 </div>
                 <span class="recipe-view__direction-title">
-                  Step {{ step.order }}
+                  {{ getStepTitle(step) }}
                 </span>
               </div>
 
               <div
                 class="recipe-view__chef-first"
-                *ngIf="step.assignedToHelper === 1"
+                *ngIf="isStepForHelper(step, 1)"
               >
                 <img
                   class="recipe-view__chef-avatar"
@@ -261,7 +258,7 @@
 
               <div
                 class="recipe-view__chef-second"
-                *ngIf="step.assignedToHelper === 2"
+                *ngIf="helperCount >= 2 && isStepForHelper(step, 2)"
               >
                 <img
                   class="recipe-view__chef-avatar"
