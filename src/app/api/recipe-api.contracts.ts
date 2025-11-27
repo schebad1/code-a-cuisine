@@ -1,4 +1,3 @@
-// recipe-api.contracts.ts
 import { Ingredient } from '../pages/generate-recipe/ingredients-state.service';
 import {
   TimeCategory,
