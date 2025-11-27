@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HeaderSecondaryComponent } from '../../layout/headers/header-secondary/header-secondary.component';
 import { NgForOf } from '@angular/common';
-import {
-  Cuisine,
-  RecipeListItem,
-  RecipeLibraryService,
-} from '../../api/recipe-library.service';
+import { RecipeListItem, RecipeLibraryService } from '../../api/recipe-library.service';
+import { Cuisine } from '../../api/recipe-seed.data';
 
 @Component({
   selector: 'app-recipes',
@@ -24,7 +21,6 @@ export class RecipesComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly recipeLibrary: RecipeLibraryService,
-    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -76,12 +72,6 @@ export class RecipesComponent implements OnInit {
   private loadRecipes(): void {
     this.recipeLibrary.getRecipesByCuisine(this.cuisine).subscribe((recipes) => {
       this.recipes = recipes;
-    });
-  }
-
-  openRecipe(recipe: RecipeListItem): void {
-    this.router.navigate(['/recipe-view'], {
-      state: { recipe },
     });
   }
 }

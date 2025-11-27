@@ -1,5 +1,4 @@
-// src/app/app.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderPrimaryComponent } from './layout/headers/header-primary/header-primary.component';
@@ -12,18 +11,8 @@ import { RecipeSeedService } from './api/recipe-seed.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'code-a-cuisine';
 
-  constructor(private readonly recipeSeedService: RecipeSeedService) { }
-
-  // async ngOnInit(): Promise<void> {
-  //   try {
-  //     await this.recipeSeedService.seedInitialRecipes();
-  //     console.log('Seed done');
-  //   } catch (err) {
-  //     console.error('Seed error', err);
-  //   }
-  // }
-  
+  constructor(private readonly recipeSeedService: RecipeSeedService) {}
 }
