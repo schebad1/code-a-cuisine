@@ -26,13 +26,12 @@
 
   <!-- DYNAMISCHE REZEPTE -->
   <a
-  class="recipe-card"
-  *ngFor="let recipe of recipes; let i = index"
-  [routerLink]="['/recipes', recipe.id]"
-  tabindex="0"
-  role="link"
->
-
+    class="recipe-card"
+    *ngFor="let recipe of recipes; let i = index"
+    [routerLink]="['/recipes', recipe.id]"
+    tabindex="0"
+    role="link"
+  >
     <div class="recipe-card__top">
       <div class="recipe-card__meta">
         <div class="recipe-card__index__wrapper">
@@ -82,49 +81,59 @@
     </div>
   </a>
 
-  <!-- PAGINATION bleibt noch statisch -->
-  <div class="pagination" aria-label="Recipe pages">
+  <!-- ECHTE PAGINATION -->
+  <div
+    class="pagination"
+    aria-label="Recipe pages"
+    *ngIf="totalPages > 0"
+  >
     <ul class="pagination__list">
+      <!-- PREVIOUS -->
       <li class="pagination__item pagination__item--control">
         <button
           class="pagination__link"
           type="button"
           aria-label="Previous page"
+          (click)="prevPage()"
+          [disabled]="isLoading || currentPageIndex === 0"
         >
           &lt;
         </button>
       </li>
 
-      <li class="pagination__item">
-        <button class="pagination__link" type="button">1</button>
-      </li>
-
-      <li class="pagination__item">
-        <button class="pagination__link" type="button">2</button>
-      </li>
-
-      <li class="pagination__item pagination__item--current">
-        <button class="pagination__link" type="button" aria-current="page">
-          3
+      <!-- SEITENZAHLEN -->
+      <li
+        class="pagination__item"
+        *ngFor="let pageIndex of pagesArray"
+        [class.pagination__item--current]="pageIndex === currentPageIndex"
+      >
+        <button
+          class="pagination__link"
+          type="button"
+          (click)="goToPage(pageIndex)"
+          [attr.aria-current]="pageIndex === currentPageIndex ? 'page' : null"
+        >
+          {{ pageIndex + 1 }}
         </button>
       </li>
 
+      <!-- ELLIPSIS, WENN ES NOCH WEITERE SEITEN GIBT -->
       <li
         class="pagination__item pagination__item--ellipsis"
         aria-hidden="true"
+        *ngIf="hasMore"
       >
         <span class="pagination__ellipsis">…</span>
       </li>
 
-      <li class="pagination__item">
-        <button class="pagination__link" type="button">8</button>
-      </li>
-
+      <!-- NEXT -->
       <li class="pagination__item pagination__item--control">
         <button
           class="pagination__link"
           type="button"
           aria-label="Next page"
+          (click)="nextPage()"
+          [disabled]="isLoading || (!hasMore && currentPageIndex === totalPages - 1)"
         >
           &gt;
         </button>

@@ -10,6 +10,11 @@ import {
   addDoc,
   serverTimestamp,
   getDocs,
+  orderBy,
+  limit,
+  startAfter,
+  QueryDocumentSnapshot,
+  DocumentData,
 } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -26,6 +31,11 @@ export interface RecipeListItem {
   speed: string;
   likes: number;
   cuisine: Cuisine;
+}
+
+export interface RecipePageResult {
+  items: RecipeListItem[];
+  lastDoc: QueryDocumentSnapshot<DocumentData> | null;
 }
 
 @Injectable({
@@ -66,8 +76,42 @@ export class RecipeLibraryService {
     }
 
     return collectionData(q, { idField: 'id' }).pipe(
-      map((docs: any[]) => docs.map((d) => this.mapToListItem(d))),
+      map((docs: any[]) => docs.map((d) => this.mapToListItem(d)))
     );
+  }
+
+  async getRecipesPage(
+    cuisine: Cuisine | null,
+    pageSize: number,
+    startAfterDoc?: QueryDocumentSnapshot<DocumentData> | null
+  ): Promise<RecipePageResult> {
+    const constraints: any[] = [];
+
+    if (cuisine) {
+      constraints.push(where('cuisine', '==', cuisine));
+    }
+
+    constraints.push(orderBy('createdAt', 'desc'));
+    constraints.push(limit(pageSize));
+
+    if (startAfterDoc) {
+      constraints.push(startAfter(startAfterDoc));
+    }
+
+    const q = query(this.recipesCollection, ...constraints);
+    const snapshot = await getDocs(q);
+    const docs = snapshot.docs;
+
+    const items: RecipeListItem[] = docs.map((d) =>
+      this.mapToListItem({
+        id: d.id,
+        ...(d.data() as any),
+      })
+    );
+
+    const lastDoc = docs.length > 0 ? docs[docs.length - 1] : null;
+
+    return { items, lastDoc };
   }
 
   getRecipeById(id: string): Observable<FirestoreRecipe | null> {
@@ -75,7 +119,7 @@ export class RecipeLibraryService {
 
     return docData(ref, { idField: 'id' }).pipe(
       map((d: any) => (d ? (d as FirestoreRecipe) : null)),
-      catchError(() => of(null)),
+      catchError(() => of(null))
     );
   }
 
