@@ -66,12 +66,14 @@
 
         <div class="results-card__action">
           <a
-            class="results-card__action-link btn"
-            [routerLink]="['/recipe-view']"
-            [state]="{ recipe }"
-          >
-            View
-          </a>
+          class="results-card__action-link btn"
+          role="button"
+          href="#"
+          (click)="openRecipe(i); $event.preventDefault()"
+        >
+          View
+        </a>
+        
         </div>
       </article>
     </div>

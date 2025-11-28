@@ -7,11 +7,14 @@ import {
   where,
   doc,
   docData,
+  addDoc,
+  serverTimestamp,
+  getDocs,
 } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Cuisine } from './recipe-seed.data';
-import { FirestoreRecipe } from './recipe-seed.data';
+import { FirestoreRecipe, Cuisine } from './recipe-seed.data';
+import { GeneratedRecipe } from './recipe-api.contracts';
 
 export { Cuisine } from './recipe-seed.data';
 
@@ -63,7 +66,7 @@ export class RecipeLibraryService {
     }
 
     return collectionData(q, { idField: 'id' }).pipe(
-      map((docs: any[]) => docs.map((d) => this.mapToListItem(d)))
+      map((docs: any[]) => docs.map((d) => this.mapToListItem(d))),
     );
   }
 
@@ -72,7 +75,113 @@ export class RecipeLibraryService {
 
     return docData(ref, { idField: 'id' }).pipe(
       map((d: any) => (d ? (d as FirestoreRecipe) : null)),
-      catchError(() => of(null))
+      catchError(() => of(null)),
     );
+  }
+
+  private cleanUndefined(value: any): any {
+    if (Array.isArray(value)) {
+      return value.map((v) => this.cleanUndefined(v));
+    }
+
+    if (value && typeof value === 'object') {
+      const cleaned: any = {};
+      for (const key of Object.keys(value)) {
+        const val = value[key];
+        cleaned[key] = val === undefined ? null : this.cleanUndefined(val);
+      }
+      return cleaned;
+    }
+
+    return value;
+  }
+
+  private calculateRecipeHash(recipe: GeneratedRecipe): string {
+    const payload = {
+      title: recipe.title ?? '',
+      totalMinutes: recipe.totalMinutes ?? 0,
+      diet: recipe.diet ?? 'none',
+      cuisine: recipe.cuisine ?? '',
+      ingredients: (recipe.ingredients || []).map((ing: any) => ({
+        name: ing.name ?? '',
+        quantity: ing.quantity ?? 0,
+        unit: ing.unit ?? '',
+      })),
+      steps: (recipe.steps || []).map((step: any) => ({
+        text: step.text ?? '',
+      })),
+    };
+
+    const str = JSON.stringify(payload);
+    let hash = 0;
+
+    for (let i = 0; i < str.length; i++) {
+      const chr = str.charCodeAt(i);
+      hash = (hash << 5) - hash + chr;
+      hash |= 0;
+    }
+
+    return hash.toString();
+  }
+
+  private async findExistingRecipeByHash(checksum: string): Promise<string | null> {
+    const q = query(this.recipesCollection, where('checksum', '==', checksum));
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      return null;
+    }
+
+    const firstDoc = snapshot.docs[0];
+    return firstDoc.id;
+  }
+
+  async saveGeneratedRecipe(recipe: GeneratedRecipe): Promise<string> {
+    const checksum = this.calculateRecipeHash(recipe);
+
+    const existingId = await this.findExistingRecipeByHash(checksum);
+    if (existingId) {
+      return existingId;
+    }
+
+    const ingredients = (recipe.ingredients || []).map((ing: any) => ({
+      name: ing.name,
+      quantity: ing.quantity,
+      unit: ing.unit,
+      isFromUser: ing.isFromUser ?? false,
+      isOptional: ing.isOptional ?? false,
+    }));
+
+    const steps = (recipe.steps || []).map((step: any, i: number) => ({
+      order: step.order ?? i + 1,
+      text: step.text,
+      durationMinutes: step.durationMinutes ?? undefined,
+      parallelGroup: step.parallelGroup ?? undefined,
+      assignedToHelper:
+        step.assignedToHelper === 1 || step.assignedToHelper === 2
+          ? step.assignedToHelper
+          : i % 2 === 0
+          ? 1
+          : 2,
+    }));
+
+    const data: Omit<FirestoreRecipe, 'id'> & { checksum: string } = {
+      title: recipe.title,
+      description: recipe.description ?? '',
+      diet: recipe.diet ?? 'none',
+      totalMinutes: recipe.totalMinutes ?? 0,
+      cuisine: recipe.cuisine as Cuisine,
+      ingredients,
+      steps,
+      nutrition: recipe.nutrition,
+      likes: 0,
+      source: 'ai',
+      createdAt: serverTimestamp() as any,
+      checksum,
+    };
+
+    const cleaned = this.cleanUndefined(data);
+    const docRef = await addDoc(this.recipesCollection, cleaned as any);
+    return docRef.id;
   }
 }

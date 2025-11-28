@@ -16,6 +16,10 @@ import { GeneratedStep } from '../../api/recipe-api.contracts';
 })
 export class RecipeViewComponent implements OnInit {
   recipe: FirestoreRecipe | null = null;
+
+  isLoading = true;
+  notFound = false;
+
   dietLabel = '';
   timeCategoryLabel = '';
   randomLikes = 0;
@@ -34,10 +38,21 @@ export class RecipeViewComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (!id) return;
+
+    if (!id) {
+      this.isLoading = false;
+      this.notFound = true;
+      return;
+    }
 
     this.recipeLibrary.getRecipeById(id).subscribe((r) => {
-      if (!r) return;
+      this.isLoading = false;
+
+      if (!r) {
+        this.notFound = true;
+        return;
+      }
+
       this.recipe = r;
 
       this.dietLabel = this.getDietLabel(r.diet);
@@ -53,21 +68,15 @@ export class RecipeViewComponent implements OnInit {
 
       const ingredientsAny = r.ingredients;
       if (Array.isArray(ingredientsAny)) {
-        this.userIngredients = ingredientsAny.filter((ing: any) => ing && ing.isFromUser);
-        this.extraIngredients = ingredientsAny.filter((ing: any) => ing && !ing.isFromUser);
-      } else {
-        this.userIngredients = [];
-        this.extraIngredients = [];
+        this.userIngredients = ingredientsAny.filter((ing: any) => ing?.isFromUser);
+        this.extraIngredients = ingredientsAny.filter((ing: any) => !ing?.isFromUser);
       }
 
       if (Array.isArray(r.steps) && r.steps.length > 0) {
-        const sortedSteps = [...r.steps].sort((a, b) => a.order - b.order);
-        const middleIndex = Math.ceil(sortedSteps.length / 2);
-        this.stepsRow1 = sortedSteps.slice(0, middleIndex);
-        this.stepsRow2 = sortedSteps.slice(middleIndex);
-      } else {
-        this.stepsRow1 = [];
-        this.stepsRow2 = [];
+        const sorted = [...r.steps].sort((a, b) => a.order - b.order);
+        const middle = Math.ceil(sorted.length / 2);
+        this.stepsRow1 = sorted.slice(0, middle);
+        this.stepsRow2 = sorted.slice(middle);
       }
     });
   }
@@ -80,29 +89,22 @@ export class RecipeViewComponent implements OnInit {
 
   private getDietLabel(diet: string): string {
     switch (diet) {
-      case 'vegetarian':
-        return 'Vegetarian';
-      case 'vegan':
-        return 'Vegan';
-      case 'keto':
-        return 'Keto';
+      case 'vegetarian': return 'Vegetarian';
+      case 'vegan': return 'Vegan';
+      case 'keto': return 'Keto';
       case 'none':
-      default:
-        return 'No preferences';
+      default: return 'No preferences';
     }
   }
 
   getStepTitle(step: GeneratedStep): string {
     if (!step?.text) return `Step ${step.order}`;
     const text = step.text.trim();
-    const sentenceEnd = text.search(/[.!?]/);
-    let candidate: string;
-    if (sentenceEnd > 0 && sentenceEnd <= 80) {
-      candidate = text.slice(0, sentenceEnd);
-    } else {
-      candidate = text.length > 80 ? text.slice(0, 77) + '…' : text;
-    }
-    return candidate.charAt(0).toUpperCase() + candidate.slice(1);
+    const end = text.search(/[.!?]/);
+    let cut: string;
+    if (end > 0 && end <= 80) cut = text.slice(0, end);
+    else cut = text.length > 80 ? text.slice(0, 77) + '…' : text;
+    return cut.charAt(0).toUpperCase() + cut.slice(1);
   }
 
   isStepForHelper(step: GeneratedStep, helperIndex: number): boolean {

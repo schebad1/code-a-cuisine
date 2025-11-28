@@ -4,7 +4,15 @@ import { RecipeApiService } from '../../api/recipe-api.service';
 import { IngredientsStateService } from '../generate-recipe/ingredients-state.service';
 import { PreferencesStateService } from '../preferences/preferences-state.service';
 import { Router } from '@angular/router';
-import { RecipeGenerationResponse } from '../../api/recipe-api.contracts';
+import {
+  RecipeGenerationResponse,
+  GeneratedRecipe,
+} from '../../api/recipe-api.contracts';
+import { RecipeLibraryService } from '../../api/recipe-library.service';
+
+type RecipeResponseWithRecipes = RecipeGenerationResponse & {
+  recipes: GeneratedRecipe[];
+};
 
 @Component({
   selector: 'app-loading',
@@ -19,6 +27,7 @@ export class LoadingComponent implements OnInit {
     private readonly ingredientsState: IngredientsStateService,
     private readonly preferencesState: PreferencesStateService,
     private readonly router: Router,
+    private readonly recipeLibrary: RecipeLibraryService,
   ) {}
 
   ngOnInit(): void {
@@ -40,74 +49,80 @@ export class LoadingComponent implements OnInit {
       },
     };
 
-    console.log('Sende Request an n8n:', request);
-
     this.recipeApi.generateRecipes(request).subscribe({
-      next: (apiResponse: any) => {
-        console.log('n8n Antwort raw:', apiResponse);
-
+      next: async (apiResponse: any) => {
         const normalized = this.normalizeApiResponse(apiResponse);
 
         if (!normalized) {
-          console.error('Konnte API-Response nicht normalisieren, gehe zurück.');
           this.router.navigate(['/generate-recipe']);
           return;
         }
 
-        console.log('Normalisierte Antwort für /results:', normalized);
+        try {
+          const recipeIds = await this.saveAllRecipes(normalized.recipes);
 
-        this.router.navigate(['/results'], {
-          state: { data: normalized },
-        });
+          this.router.navigate(['/results'], {
+            state: {
+              data: {
+                ...normalized,
+                recipeIds,
+              },
+            },
+          });
+        } catch {
+          this.router.navigate(['/generate-recipe']);
+        }
       },
-      error: (err) => {
-        console.error('Fehler bei der Rezept-Generierung:', err);
+      error: () => {
         this.router.navigate(['/generate-recipe']);
       },
     });
   }
 
-  private normalizeApiResponse(apiResponse: any): RecipeGenerationResponse | null {
+  private async saveAllRecipes(recipes: GeneratedRecipe[]): Promise<string[]> {
+    const ids: string[] = [];
+
+    for (const recipe of recipes) {
+      const id = await this.recipeLibrary.saveGeneratedRecipe(recipe);
+      ids.push(id);
+    }
+
+    return ids;
+  }
+
+  private normalizeApiResponse(
+    apiResponse: any,
+  ): RecipeResponseWithRecipes | null {
     let body: any = apiResponse;
 
     if (typeof body === 'string') {
       try {
-        console.log('Versuche String-Response zu parsen...');
         body = JSON.parse(body);
-      } catch (e) {
-        console.error('Konnte String-Response nicht parsen:', e, 'Body:', body);
+      } catch {
         return null;
       }
     }
 
     if (Array.isArray(body) && body.length > 0) {
-      console.log('Response ist ein Array, nehme erstes Element.');
       body = body[0];
     }
 
     if (body && body.body) {
-      console.log('Wrapper body gefunden, entpacke.');
       body = body.body;
     }
 
     if (body && body.json) {
-      console.log('Wrapper json gefunden, entpacke.');
       body = body.json;
     }
 
     if (body && body.data) {
-      console.log('Wrapper data gefunden, entpacke.');
       body = body.data;
     }
 
     if (!body || !Array.isArray(body.recipes)) {
-      console.error(
-        'Normalisierte Response hat kein recipes-Array:',
-        body,
-      );
       return null;
     }
 
-    return body as RecipeGenerationResponse;
+    return body as RecipeResponseWithRecipes;
   }
 }
