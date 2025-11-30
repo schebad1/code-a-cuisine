@@ -14,7 +14,7 @@ export interface SeedStep {
   text: string;
   durationMinutes?: number;
   parallelGroup?: string;
-  assignedToHelper: 1 | 2;   // <-- jetzt Pflicht
+  assignedToHelper: 1 | 2 | 3 | 4; 
 }
 
 export interface SeedNutrition {

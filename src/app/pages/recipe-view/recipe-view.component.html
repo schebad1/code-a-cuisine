@@ -32,25 +32,20 @@
 
           <div class="recipe-view__meta-details">
             <span class="recipe-view__servings">
-              Cooking person: {{ helperCount }}
+              Cooking helpers: {{ helperCount }}
             </span>
-            <div class="recipe-view__chef-first" *ngIf="helperCount >= 1">
-              <img
-                class="recipe-view__chef-avatar"
-                src="assets/recipe-view/toque.svg"
-                alt=""
-              />
-              <span class="recipe-view__chef-name">Chef 1</span>
-            </div>
 
-            <div class="recipe-view__chef-second" *ngIf="helperCount >= 2">
-              <img
-                class="recipe-view__chef-avatar"
-                src="assets/recipe-view/cooking-tools.svg"
-                alt=""
-              />
-              <span class="recipe-view__chef-name">Chef 2</span>
-            </div>
+            <!-- OBEN: Helfer-Icons nur bis helperCount, OHNE slice -->
+            <ng-container *ngFor="let h of helperConfigs; let i = index">
+              <div *ngIf="i < helperCount" [ngClass]="h.className">
+                <img
+                  class="recipe-view__chef-avatar"
+                  [src]="h.icon"
+                  [alt]="h.label"
+                />
+                <span class="recipe-view__chef-name">{{ h.label }}</span>
+              </div>
+            </ng-container>
           </div>
         </div>
       </article>
@@ -168,11 +163,10 @@
       </div>
 
       <div class="recipe-view__directions-layout">
-        <!-- Erste Reihe dynamisch -->
         <div class="recipe-view__directions-row">
           <div
             class="recipe-view__direction-step"
-            *ngFor="let step of stepsRow1"
+            *ngFor="let step of steps"
           >
             <div class="recipe-view__direction-header">
               <div class="recipe-view__direction-heading">
@@ -186,87 +180,20 @@
                 </span>
               </div>
 
-              <div
-                class="recipe-view__chef-first"
-                *ngIf="isStepForHelper(step, 1)"
-              >
-                <img
-                  class="recipe-view__chef-avatar"
-                  src="assets/recipe-view/toque.svg"
-                  alt=""
-                />
-                <span class="recipe-view__chef-name">Chef 1</span>
-              </div>
-
-              <div
-                class="recipe-view__chef-second"
-                *ngIf="helperCount >= 2 && isStepForHelper(step, 2)"
-              >
-                <img
-                  class="recipe-view__chef-avatar"
-                  src="assets/recipe-view/cooking-tools.svg"
-                  alt=""
-                />
-                <span class="recipe-view__chef-name">Chef 2</span>
-              </div>
-            </div>
-
-            <div class="recipe-view__direction-text-wrapper">
-              <span class="recipe-view__direction-text">
-                {{ step.text }}
-              </span>
-
-              <span
-                class="recipe-view__direction-duration"
-                *ngIf="step.durationMinutes"
-              >
-                ~{{ step.durationMinutes }} min
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Zweite Reihe dynamisch -->
-        <div class="recipe-view__directions-row">
-          <div
-            class="recipe-view__direction-step"
-            *ngFor="let step of stepsRow2"
-          >
-            <div class="recipe-view__direction-header">
-              <div class="recipe-view__direction-heading">
-                <div class="recipe-view__direction-index">
-                  <span class="recipe-view__direction-index-text">
-                    {{ step.order }}.
-                  </span>
+              <!-- DIRECTIONS: gleicher Helper-Loop, aber gefiltert per helperCount UND assignedToHelper -->
+              <ng-container *ngFor="let h of helperConfigs; let i = index">
+                <div
+                  [ngClass]="h.className"
+                  *ngIf="i < helperCount && isStepForHelper(step, h.index)"
+                >
+                  <img
+                    class="recipe-view__chef-avatar"
+                    [src]="h.icon"
+                    [alt]="h.label"
+                  />
+                  <span class="recipe-view__chef-name">{{ h.label }}</span>
                 </div>
-                <span class="recipe-view__direction-title">
-                  {{ getStepTitle(step) }}
-                </span>
-              </div>
-
-              <div
-                class="recipe-view__chef-first"
-                *ngIf="isStepForHelper(step, 1)"
-              >
-                <img
-                  class="recipe-view__chef-avatar"
-                  src="assets/recipe-view/toque.svg"
-                  alt=""
-                />
-                <span class="recipe-view__chef-name">Chef 1</span>
-              </div>
-
-              <div
-                class="recipe-view__chef-second"
-                *ngIf="helperCount >= 2 && isStepForHelper(step, 2)"
-              >
-                <img
-                  class="recipe-view__chef-avatar"
-                  src="assets/recipe-view/cooking-tools.svg"
-                  alt=""
-                />
-                <span class="recipe-view__chef-name">Chef 2</span>
-              </div>
+              </ng-container>
             </div>
 
             <div class="recipe-view__direction-text-wrapper">
@@ -296,8 +223,14 @@
 
       <img
         class="recipe-view__rating-icon"
-        src="assets/recipe-view/heart-empty-green.svg"
-        alt="Rate this recipe with a heart"
+        [ngClass]="hasLiked ? 'heart-liked' : 'heart-unliked'"
+        [src]="hasLiked
+          ? 'assets/recipe-view/heart-green-full.svg'
+          : 'assets/recipe-view/heart-empty-green.svg'"
+        [alt]="hasLiked
+          ? 'You liked this recipe'
+          : 'Rate this recipe with a heart'"
+        (click)="toggleLike()"
       />
     </div>
   </div>

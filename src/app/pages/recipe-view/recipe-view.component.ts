@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HeaderSecondaryComponent } from '../../layout/headers/header-secondary/header-secondary.component';
-import { NgIf, NgForOf } from '@angular/common';
+import { NgIf, NgForOf, NgClass } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { RecipeLibraryService } from '../../api/recipe-library.service';
 import { FirestoreRecipe } from '../../api/recipe-seed.data';
@@ -10,7 +10,7 @@ import { GeneratedStep } from '../../api/recipe-api.contracts';
 @Component({
   selector: 'app-recipe-view',
   standalone: true,
-  imports: [HeaderSecondaryComponent, RouterLink, NgIf, NgForOf],
+  imports: [HeaderSecondaryComponent, RouterLink, NgIf, NgForOf, NgClass],
   templateUrl: './recipe-view.component.html',
   styleUrls: ['./recipe-view.component.scss'],
 })
@@ -27,9 +27,38 @@ export class RecipeViewComponent implements OnInit {
 
   userIngredients: any[] = [];
   extraIngredients: any[] = [];
+  steps: GeneratedStep[] = [];
 
-  stepsRow1: GeneratedStep[] = [];
-  stepsRow2: GeneratedStep[] = [];
+  // Herz-Status
+  hasLiked = false;
+
+  // Helper-Konfiguration (1–4)
+  helperConfigs = [
+    {
+      index: 1,
+      label: 'Chef 1',
+      className: 'recipe-view__chef-first',
+      icon: 'assets/recipe-view/toque.svg',
+    },
+    {
+      index: 2,
+      label: 'Chef 2',
+      className: 'recipe-view__chef-second',
+      icon: 'assets/recipe-view/cooking-tools.svg',
+    },
+    {
+      index: 3,
+      label: 'Chef 3',
+      className: 'recipe-view__chef-third',
+      icon: 'assets/recipe-view/apron.svg',
+    },
+    {
+      index: 4,
+      label: 'Chef 4',
+      className: 'recipe-view__chef-fourth',
+      icon: 'assets/recipe-view/toque-second.svg',
+    },
+  ];
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -59,26 +88,36 @@ export class RecipeViewComponent implements OnInit {
       this.timeCategoryLabel = this.getTimeCategoryLabel(r.totalMinutes);
       this.randomLikes = r.likes ?? 0;
 
+      // Helper-Anzahl aus Steps berechnen (max assignedToHelper, 1–4)
       if (Array.isArray(r.steps) && r.steps.length > 0) {
-        const maxHelper = Math.max(...r.steps.map((s) => s.assignedToHelper ?? 1));
-        this.helperCount = Math.min(Math.max(maxHelper, 1), 3);
+        const maxHelper = Math.max(
+          ...r.steps.map((s) => s.assignedToHelper ?? 1)
+        );
+        this.helperCount = Math.min(Math.max(maxHelper, 1), 4);
       } else {
         this.helperCount = 1;
       }
 
       const ingredientsAny = r.ingredients;
       if (Array.isArray(ingredientsAny)) {
-        this.userIngredients = ingredientsAny.filter((ing: any) => ing?.isFromUser);
-        this.extraIngredients = ingredientsAny.filter((ing: any) => !ing?.isFromUser);
+        this.userIngredients = ingredientsAny.filter(
+          (ing: any) => ing?.isFromUser
+        );
+        this.extraIngredients = ingredientsAny.filter(
+          (ing: any) => !ing?.isFromUser
+        );
       }
 
       if (Array.isArray(r.steps) && r.steps.length > 0) {
-        const sorted = [...r.steps].sort((a, b) => a.order - b.order);
-        const middle = Math.ceil(sorted.length / 2);
-        this.stepsRow1 = sorted.slice(0, middle);
-        this.stepsRow2 = sorted.slice(middle);
+        this.steps = [...r.steps].sort((a, b) => a.order - b.order);
+      } else {
+        this.steps = [];
       }
     });
+  }
+
+  toggleLike(): void {
+    this.hasLiked = !this.hasLiked;
   }
 
   private getTimeCategoryLabel(totalMinutes: number): string {
@@ -89,11 +128,15 @@ export class RecipeViewComponent implements OnInit {
 
   private getDietLabel(diet: string): string {
     switch (diet) {
-      case 'vegetarian': return 'Vegetarian';
-      case 'vegan': return 'Vegan';
-      case 'keto': return 'Keto';
+      case 'vegetarian':
+        return 'Vegetarian';
+      case 'vegan':
+        return 'Vegan';
+      case 'keto':
+        return 'Keto';
       case 'none':
-      default: return 'No preferences';
+      default:
+        return 'No preferences';
     }
   }
 

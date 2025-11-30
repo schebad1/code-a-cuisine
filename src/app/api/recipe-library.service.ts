@@ -44,7 +44,7 @@ export interface RecipePageResult {
 export class RecipeLibraryService {
   private readonly recipesCollection = collection(this.firestore, 'recipes');
 
-  constructor(private readonly firestore: Firestore) {}
+  constructor(private readonly firestore: Firestore) { }
 
   private mapSpeed(totalMinutes: number): string {
     if (totalMinutes <= 20) return 'Quick';
@@ -196,18 +196,23 @@ export class RecipeLibraryService {
       isOptional: ing.isOptional ?? false,
     }));
 
-    const steps = (recipe.steps || []).map((step: any, i: number) => ({
-      order: step.order ?? i + 1,
-      text: step.text,
-      durationMinutes: step.durationMinutes ?? undefined,
-      parallelGroup: step.parallelGroup ?? undefined,
-      assignedToHelper:
-        step.assignedToHelper === 1 || step.assignedToHelper === 2
-          ? step.assignedToHelper
-          : i % 2 === 0
-          ? 1
-          : 2,
-    }));
+    const steps = (recipe.steps || []).map((step: any, i: number) => {
+      const raw = step.assignedToHelper;
+
+      const assigned: 1 | 2 | 3 | 4 =
+        typeof raw === 'number' && raw >= 1 && raw <= 4
+          ? (raw as 1 | 2 | 3 | 4)
+          : 1;
+
+      return {
+        order: step.order ?? i + 1,
+        text: step.text,
+        durationMinutes: step.durationMinutes ?? undefined,
+        parallelGroup: step.parallelGroup ?? undefined,
+        assignedToHelper: assigned,
+      };
+    });
+
 
     const data: Omit<FirestoreRecipe, 'id'> & { checksum: string } = {
       title: recipe.title,

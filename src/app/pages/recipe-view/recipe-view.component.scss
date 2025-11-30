@@ -58,9 +58,10 @@ main {
   background-color: rgba(215, 223, 215, 1);
   border-radius: 6px;
   padding: 2px 4px 2px 4px;
-  width: 88.5px;
+  width: 90.5px;
   align-items: center;
   justify-content: center;
+  height: 27px;
 }
 
 .recipe-view__chef-second {
@@ -71,6 +72,29 @@ main {
   padding: 2px 4px 2px 4px;
   align-items: center;
   justify-content: center;
+  height: 27px;
+}
+
+.recipe-view__chef-third {
+  display: flex;
+  gap: 4px;
+  background-color: rgba(207, 215, 0, 0.3);
+  border-radius: 6px;
+  padding: 2px 4px 2px 4px;
+  align-items: center;
+  justify-content: center;
+  height: 27px;
+}
+
+.recipe-view__chef-fourth {
+  display: flex;
+  gap: 4px;
+  background-color: rgba(0, 128, 0, 0.4);
+  border-radius: 6px;
+  padding: 2px 4px 2px 4px;
+  align-items: center;
+  justify-content: center;
+  height: 27px;
 }
 
 .recipe-view__badges {
@@ -205,44 +229,42 @@ main {
 .recipe-view__direction-title {
   font-size: 24px;
   color: rgba(16, 49, 11, 1);
+  width: 324px;
 }
 
 .recipe-view__direction-header {
   display: flex;
-  align-items: center;
-  gap: 72px;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.recipe-view__direction-step {
+  width: 480px;
 }
 
 .recipe-view__direction-heading {
   display: flex;
-  align-items: center;
   gap: 8px;
 }
 
 .recipe-view__direction-text-wrapper {
-  width: 343.14px;
+  width: 100%;
   margin-top: 30px;
   font-size: 18px;
 }
 
 .recipe-view__directions-layout {
   display: flex;
-  flex-direction: column;
-  gap: 32px;
   margin-top: 40px;
-  align-items: center;
+  justify-content: center;
 }
 
 .recipe-view__directions-row {
   display: flex;
-  gap: 40px;
+  gap: 70px;
   justify-content: center;
   flex-wrap: wrap;
-  width: 727px;
-}
-
-.recipe-view__direction-step {
-  max-width: 360px;
+  width: 1030px;
 }
 
 .recipe-view__rating-title {
@@ -315,8 +337,8 @@ main {
 }
 
 .hero__link-section {
-  width: 230px;
-  height: 52px;
+  width: 260px;
+  height: 51px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -349,6 +371,12 @@ main {
 nav {
   padding-left: 32px;
 }
+
+.heart-unliked {
+  width: 52px;
+  height: 48px;
+}
+
 
 @media (max-width: 950px) {
   .recipe-view__ingredients-lists {
