@@ -13,13 +13,15 @@
         recipe waiting.
       </span>
     </header>
+
     <section class="generate__content">
       <article class="generate__form" aria-label="Ingredient input form">
         <div class="generate__input-group">
           <div class="generate__ingredient-section">
-            <label for="ingredient-search" class="generate__label"
-              >Ingredient</label
-            >
+            <label for="ingredient-search" class="generate__label">
+              Ingredient
+            </label>
+
             <div class="generate__ingredient-autocomplete">
               <div class="generate__ingredient-input">
                 <input
@@ -32,6 +34,7 @@
                   name="ingredientName"
                 />
               </div>
+
               <div
                 class="generate__suggestion-dropdown"
                 aria-label="Ingredient suggestions"
@@ -47,10 +50,12 @@
               </div>
             </div>
           </div>
+
           <div class="generate__serving-section">
             <div class="generate__serving-labels">
               <span class="generate__label">Serving size</span>
             </div>
+
             <div class="generate__serving-inputs">
               <div class="generate__quantity-wrapper">
                 <input
@@ -63,12 +68,13 @@
                   name="quantity"
                 />
               </div>
+
               <div class="generate__unit-wrapper">
                 <div
                   class="generate__unit-display"
                   role="button"
                   tabindex="0"
-                  (click)="toggleUnitDropdown()"
+                  (click)="toggleUnitDropdown()"  
                   [attr.aria-expanded]="isUnitDropdownOpen"
                   aria-haspopup="listbox"
                 >
@@ -96,7 +102,10 @@
                   >
                     <span>piece</span>
                   </div>
-                  <div class="generate__unit-option" (click)="selectUnit('ml')">
+                  <div
+                    class="generate__unit-option"
+                    (click)="selectUnit('ml')"
+                  >
                     <span>ml</span>
                   </div>
                   <div
@@ -107,6 +116,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="generate__add-wrapper">
                 <div
                   class="generate__add"
@@ -126,32 +136,125 @@
           </div>
         </div>
       </article>
+
       <article class="generate__list" aria-label="Listed ingredients">
         <span class="generate__list-title">List of your Ingredients</span>
+
         <ul class="generate__ingredients">
           <li
-            class="generate__ingredient"
-            *ngFor="let ingredient of ingredients; let i = index"
-          >
+          class="generate__ingredient"
+          *ngFor="let ingredient of ingredients; let i = index"
+          [class.generate__ingredient--editing]="i === editingIndex"
+          [class.generate__ingredient--dropdown-open]="i === editingIndex && editingUnitDropdownOpen"
+        >
+        
+        
             <div class="generate__ingredient-row">
-              <div class="generate__ingredient-info">
+              <!-- Anzeige vs. Edit-Modus -->
+              <div
+                class="generate__ingredient-info"
+                *ngIf="editingIndex !== i; else editMode"
+              >
                 <span class="generate__bullet" aria-hidden="true"></span>
+
                 <span class="generate__ingredient-amount">
-                  {{ ingredient.quantity }} {{ ingredient.unit }}
+                  {{ formatIngredientAmount(ingredient) }}
                 </span>
+                
                 <span class="generate__ingredient-name">
                   {{ ingredient.name }}
                 </span>
               </div>
+
+              <ng-template #editMode>
+                <div class="generate__ingredient-info generate__ingredient-info--edit">
+                  <span class="generate__bullet" aria-hidden="true"></span>
+
+                  <div class="generate__quantity-wrapper generate__quantity-wrapper--inline">
+                    <input
+                      type="number"
+                      min="0"
+                      class="generate__quantity"
+                      [(ngModel)]="editingQuantity"
+                      name="editingQuantity-{{ i }}"
+                    />
+                  </div>
+
+                  <div class="generate__unit-wrapper generate__unit-wrapper--inline">
+                    <div
+                      class="generate__unit-display"
+                      role="button"
+                      tabindex="0"
+                      (click)="toggleEditingUnitDropdown()"
+                      [attr.aria-expanded]="editingUnitDropdownOpen"
+                      aria-haspopup="listbox"
+                    >
+                      <span class="generate__unit-text">{{ editingUnit }}</span>
+
+                      <img
+                        [src]="
+                          editingUnitDropdownOpen
+                            ? 'assets/generate-recipe/arrow_drop_down_up.svg'
+                            : 'assets/generate-recipe/arrow_drop_down.svg'
+                        "
+                        alt="Toggle unit selection"
+                        class="generate__unit-arrow"
+                      />
+                    </div>
+
+                    <div
+                      class="generate__unit-dropdown"
+                      aria-label="Unit options"
+                      *ngIf="editingUnitDropdownOpen"
+                    >
+                      <div
+                        class="generate__unit-option"
+                        (click)="selectEditingUnit('piece')"
+                      >
+                        <span>piece</span>
+                      </div>
+                      <div
+                        class="generate__unit-option"
+                        (click)="selectEditingUnit('ml')"
+                      >
+                        <span>ml</span>
+                      </div>
+                      <div
+                        class="generate__unit-option"
+                        (click)="selectEditingUnit('gram')"
+                      >
+                        <span>gram</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <input
+                    class="generate__ingredient-name-input"
+                    type="text"
+                    [(ngModel)]="editingName"
+                    name="editingName-{{ i }}"
+                  />
+                </div>
+              </ng-template>
+
               <div class="generate__ingredient-actions">
                 <div
                   class="generate__ingredient-action generate__ingredient-edit"
                 >
                   <img
+                    *ngIf="editingIndex !== i"
                     src="assets/generate-recipe/edit-pencil.svg"
                     alt="Edit ingredient"
+                    (click)="startEdit(i)"
+                  />
+                  <img
+                    *ngIf="editingIndex === i"
+                    src="assets/generate-recipe/check.svg"
+                    alt="Confirm ingredient"
+                    (click)="confirmEdit()"
                   />
                 </div>
+
                 <div
                   class="generate__ingredient-action generate__ingredient-delete"
                   (click)="removeIngredient(i)"
@@ -167,16 +270,17 @@
         </ul>
       </article>
     </section>
+
     <p class="generate-recipe-cta">
       <a
-      [routerLink]="canGoNext ? '/preferences' : null"
-      class="btn"
-      role="button"
-      [class.btn--disabled]="!canGoNext"
-      [attr.aria-disabled]="!canGoNext"
-    >
-      Next step
-    </a>    
+        [routerLink]="canGoNext ? '/preferences' : null"
+        class="btn"
+        role="button"
+        [class.btn--disabled]="!canGoNext"
+        [attr.aria-disabled]="!canGoNext"
+      >
+        Next step
+      </a>
     </p>
   </section>
 </main>

@@ -47,7 +47,7 @@ export class PreferencesStateService {
   }
 
   increaseCooking(): void {
-    if (this._preferences.cooking < 3) {
+    if (this._preferences.cooking < 4) {
       this._preferences.cooking++;
     }
   }
