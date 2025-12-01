@@ -269,14 +269,16 @@
 
     <p class="preferences-cta">
       <a
-      [routerLink]="isPreferencesComplete ? '/loading' : null"
-      class="btn"
-      [class.btn--disabled]="!isPreferencesComplete"
-      [attr.aria-disabled]="!isPreferencesComplete"
-      role="button"
-    >
-      Generate a recipe
-    </a>    
+        href="#"
+        class="btn"
+        [class.btn--disabled]="!isPreferencesComplete"
+        [attr.aria-disabled]="!isPreferencesComplete"
+        role="button"
+        (click)="onGenerate(); $event.preventDefault()"
+      >
+        Generate a recipe
+      </a>
     </p>
+    
   </section>
 </main>

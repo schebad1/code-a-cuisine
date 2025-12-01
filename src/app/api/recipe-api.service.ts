@@ -15,7 +15,7 @@ export class RecipeApiService {
   generateRecipes(
     request: RecipeGenerationRequest
   ): Observable<RecipeGenerationResponse> {
-    const url = 'https://schebad.app.n8n.cloud/webhook-test/recipes/generate';
+    const url = 'https://schebad.app.n8n.cloud/webhook/recipes/generate';
   
     return this.http.post<RecipeGenerationResponse>(url, request);
   }

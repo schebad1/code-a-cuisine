@@ -41,7 +41,14 @@
       </div>
 
       <div class="cookbook__list" role="list">
-        <article class="cookbook-card" role="listitem">
+        <article
+          class="cookbook-card"
+          role="listitem"
+          *ngFor="let recipe of mostLikedRecipes"
+          (click)="openRecipe(recipe.id)"
+          tabindex="0"
+          (keyup.enter)="openRecipe(recipe.id)"
+        >
           <div class="cookbook-card__meta">
             <div class="cookbook-card__time">
               <img
@@ -50,9 +57,9 @@
                 alt=""
                 aria-hidden="true"
               />
-              <span class="cookbook-card__time-text"
-                >Cooking time: 20min</span
-              >
+              <span class="cookbook-card__time-text">
+                Cooking time: {{ recipe.cookingTime }}min
+              </span>
             </div>
             <div class="cookbook-card__likes">
               <img
@@ -61,128 +68,14 @@
                 alt=""
                 aria-hidden="true"
               />
-              <span class="cookbook-card__likes-count">66</span>
+              <span class="cookbook-card__likes-count">
+                {{ recipe.likes }}
+              </span>
             </div>
           </div>
 
           <h3 class="cookbook-card__title">
-            Pasta with spinach and cherry tomatoes
-          </h3>
-        </article>
-
-        <article class="cookbook-card" role="listitem">
-          <div class="cookbook-card__meta">
-            <div class="cookbook-card__time">
-              <img
-                class="cookbook-card__time-icon"
-                src="assets/preferences/schedule.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__time-text"
-                >Cooking time: 235min</span
-              >
-            </div>
-            <div class="cookbook-card__likes">
-              <img
-                class="cookbook-card__likes-icon"
-                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__likes-count">57</span>
-            </div>
-          </div>
-
-          <h3 class="cookbook-card__title">
-            Low Carb Vegan No-Bake Paleo Bars
-          </h3>
-        </article>
-
-        <article class="cookbook-card" role="listitem">
-          <div class="cookbook-card__meta">
-            <div class="cookbook-card__time">
-              <img
-                class="cookbook-card__time-icon"
-                src="assets/preferences/schedule.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__time-text"
-                >Cooking time: 20min</span
-              >
-            </div>
-            <div class="cookbook-card__likes">
-              <img
-                class="cookbook-card__likes-icon"
-                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__likes-count">66</span>
-            </div>
-          </div>
-
-          <h3 class="cookbook-card__title">
-            Pasta with spinach and cherry tomatoes
-          </h3>
-        </article>
-
-        <article class="cookbook-card" role="listitem">
-          <div class="cookbook-card__meta">
-            <div class="cookbook-card__time">
-              <img
-                class="cookbook-card__time-icon"
-                src="assets/preferences/schedule.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__time-text"
-                >Cooking time: 20min</span
-              >
-            </div>
-            <div class="cookbook-card__likes">
-              <img
-                class="cookbook-card__likes-icon"
-                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__likes-count">66</span>
-            </div>
-          </div>
-
-          <h3 class="cookbook-card__title">
-            Pasta with spinach and cherry tomatoes
-          </h3>
-        </article>
-
-        <article class="cookbook-card" role="listitem">
-          <div class="cookbook-card__meta">
-            <div class="cookbook-card__time">
-              <img
-                class="cookbook-card__time-icon"
-                src="assets/preferences/schedule.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__time-text"
-                >Cooking time: 20min</span
-              >
-            </div>
-            <div class="cookbook-card__likes">
-              <img
-                class="cookbook-card__likes-icon"
-                src="assets/cookbook/heart-empty-darkgreen-smal.svg"
-                alt=""
-                aria-hidden="true"
-              />
-              <span class="cookbook-card__likes-count">66</span>
-            </div>
-          </div>
-
-          <h3 class="cookbook-card__title">
-            Pasta with spinach and cherry tomatoes
+            {{ recipe.title }}
           </h3>
         </article>
       </div>
@@ -331,7 +224,7 @@
 
   <div class="hero__link-section-wrapper">
     <div class="hero__link-section">
-      <a routerLink="/generate-recipe" class="hero__link">
+      <a class="hero__link" role="button" (click)="startNewRecipe()">
         Generate new recipie
         <img
           src="assets/recipe-view/arrow-green-right.svg"
@@ -339,6 +232,7 @@
           class="hero__arrow"
         />
       </a>
+      
     </div>
   </div>
 </main>

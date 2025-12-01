@@ -41,6 +41,12 @@ export class GenerateRecipeComponent {
     return this.editingIndex !== null;
   }
 
+  // Hilfsfunktion: ersten Buchstaben groß schreiben
+  private capitalizeFirst(value: string): string {
+    if (!value) return value;
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
+
   // ---- LINKS: Unit-Dropdown im Formular ----
   toggleUnitDropdown(): void {
     // Wenn gerade editiert wird, kein Unit-Dropdown links
@@ -70,14 +76,16 @@ export class GenerateRecipeComponent {
       return;
     }
 
-    const name = this.ingredientName.trim();
+    const rawName = this.ingredientName.trim();
 
-    if (!name) {
+    if (!rawName) {
       return;
     }
     if (this.ingredientQuantity === null || this.ingredientQuantity <= 0) {
       return;
     }
+
+    const name = this.capitalizeFirst(rawName);
 
     this.ingredientsState.addIngredient({
       name,
@@ -134,10 +142,12 @@ export class GenerateRecipeComponent {
     if (this.editingQuantity === null || this.editingQuantity <= 0) {
       return;
     }
-    const newName = this.editingName.trim();
-    if (!newName) {
+    const rawName = this.editingName.trim();
+    if (!rawName) {
       return;
     }
+
+    const newName = this.capitalizeFirst(rawName);
 
     const index = this.editingIndex;
     const current = this.ingredients[index];

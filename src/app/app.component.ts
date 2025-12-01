@@ -14,5 +14,8 @@ import { RecipeSeedService } from './api/recipe-seed.service';
 export class AppComponent {
   title = 'code-a-cuisine';
 
-  constructor(private readonly recipeSeedService: RecipeSeedService) {}
+  // constructor(private readonly recipeSeedService: RecipeSeedService) {
+  //   // ⚠️ Nur temporär aktiv lassen, um die Seeds einmal zu schreiben!
+  //   this.recipeSeedService.seedInitialRecipes();
+  // }
 }

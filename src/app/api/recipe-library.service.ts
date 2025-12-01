@@ -223,7 +223,7 @@ export class RecipeLibraryService {
       ingredients,
       steps,
       nutrition: recipe.nutrition,
-      likes: 0,
+      likes: Math.floor(Math.random() * 116) + 5,
       source: 'ai',
       createdAt: serverTimestamp() as any,
       checksum,

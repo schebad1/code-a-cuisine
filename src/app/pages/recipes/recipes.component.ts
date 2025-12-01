@@ -143,11 +143,17 @@ export class RecipesComponent implements OnInit {
     await this.goToPage(prevIndex);
   }
 
+  // Reale Seiten, die bereits geladen wurden
   get totalPages(): number {
     return this.pages.length || (this.recipes.length > 0 ? 1 : 0);
   }
 
-  get pagesArray(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i);
+  // Seiten, die in der UI angezeigt werden sollen:
+  // reale Seiten + ggf. eine "virtuelle" nächste Seite, wenn hasMore = true.
+  get displayPagesArray(): number[] {
+    const realPages = this.totalPages;
+    const extra = this.hasMore ? 1 : 0;
+    const count = realPages + extra;
+    return Array.from({ length: count }, (_, i) => i);
   }
 }

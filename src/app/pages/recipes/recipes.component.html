@@ -104,7 +104,7 @@
       <!-- SEITENZAHLEN -->
       <li
         class="pagination__item"
-        *ngFor="let pageIndex of pagesArray"
+        *ngFor="let pageIndex of displayPagesArray"
         [class.pagination__item--current]="pageIndex === currentPageIndex"
       >
         <button
@@ -115,15 +115,6 @@
         >
           {{ pageIndex + 1 }}
         </button>
-      </li>
-
-      <!-- ELLIPSIS, WENN ES NOCH WEITERE SEITEN GIBT -->
-      <li
-        class="pagination__item pagination__item--ellipsis"
-        aria-hidden="true"
-        *ngIf="hasMore"
-      >
-        <span class="pagination__ellipsis">…</span>
       </li>
 
       <!-- NEXT -->

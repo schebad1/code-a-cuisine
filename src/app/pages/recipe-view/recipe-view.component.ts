@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HeaderSecondaryComponent } from '../../layout/headers/header-secondary/header-secondary.component';
 import { NgIf, NgForOf, NgClass } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { RecipeLibraryService } from '../../api/recipe-library.service';
 import { FirestoreRecipe } from '../../api/recipe-seed.data';
 import { GeneratedStep } from '../../api/recipe-api.contracts';
+import { PreferencesStateService } from '../preferences/preferences-state.service';
 
 @Component({
   selector: 'app-recipe-view',
@@ -62,7 +63,9 @@ export class RecipeViewComponent implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly recipeLibrary: RecipeLibraryService
+    private readonly recipeLibrary: RecipeLibraryService,
+    private readonly router: Router,
+    private readonly preferencesState: PreferencesStateService
   ) {}
 
   ngOnInit(): void {
@@ -101,12 +104,15 @@ export class RecipeViewComponent implements OnInit {
       const ingredientsAny = r.ingredients;
       if (Array.isArray(ingredientsAny)) {
         this.userIngredients = ingredientsAny.filter(
-          (ing: any) => ing?.isFromUser
+          (ing: any) =>
+            ing &&
+            (ing.isFromUser === true || ing.isFromUser === undefined)
         );
         this.extraIngredients = ingredientsAny.filter(
-          (ing: any) => !ing?.isFromUser
+          (ing: any) => ing && ing.isFromUser === false
         );
       }
+      
 
       if (Array.isArray(r.steps) && r.steps.length > 0) {
         this.steps = [...r.steps].sort((a, b) => a.order - b.order);
@@ -153,5 +159,10 @@ export class RecipeViewComponent implements OnInit {
   isStepForHelper(step: GeneratedStep, helperIndex: number): boolean {
     if (!step.assignedToHelper) return helperIndex === 1;
     return step.assignedToHelper === helperIndex;
+  }
+
+  startNewRecipe(): void {
+    this.preferencesState.reset();
+    this.router.navigate(['/generate-recipe']);
   }
 }

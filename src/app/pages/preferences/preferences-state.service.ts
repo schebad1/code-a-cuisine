@@ -69,4 +69,14 @@ export class PreferencesStateService {
   selectDiet(diet: Diet): void {
     this._preferences.diet = diet;
   }
+
+  reset(): void {
+    this._preferences = {
+      portions: 2,
+      cooking: 1,
+      timeCategory: null,
+      cuisine: null,
+      diet: null,
+    };
+  }
 }

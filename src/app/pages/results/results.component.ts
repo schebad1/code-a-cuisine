@@ -6,6 +6,7 @@ import {
   RecipeGenerationResponse,
   GeneratedRecipe,
 } from '../../api/recipe-api.contracts';
+import { PreferencesStateService } from '../preferences/preferences-state.service';
 
 type ResultsData = RecipeGenerationResponse & {
   recipes: GeneratedRecipe[];
@@ -33,7 +34,10 @@ export class ResultsComponent implements OnInit {
   cuisineLabel = '';
   timeCategoryLabel = '';
 
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly preferencesState: PreferencesStateService,
+  ) {}
 
   private hasResultsData(response: any): response is ResultsData {
     return (
@@ -98,5 +102,13 @@ export class ResultsComponent implements OnInit {
     }
 
     this.router.navigate(['/recipes', id]);
+  }
+
+  startNewRecipe(): void {
+    // Preferences auf Default zurücksetzen
+    this.preferencesState.reset();
+
+    // Zur Generate-Recipe-Seite navigieren
+    this.router.navigate(['/generate-recipe']);
   }
 }
