@@ -44,7 +44,7 @@ export interface RecipePageResult {
 export class RecipeLibraryService {
   private readonly recipesCollection = collection(this.firestore, 'recipes');
 
-  constructor(private readonly firestore: Firestore) { }
+  constructor(private readonly firestore: Firestore) {}
 
   private mapSpeed(totalMinutes: number): string {
     if (totalMinutes <= 20) return 'Quick';
@@ -168,7 +168,9 @@ export class RecipeLibraryService {
     return hash.toString();
   }
 
-  private async findExistingRecipeByHash(checksum: string): Promise<string | null> {
+  private async findExistingRecipeByHash(
+    checksum: string
+  ): Promise<string | null> {
     const q = query(this.recipesCollection, where('checksum', '==', checksum));
     const snapshot = await getDocs(q);
 
@@ -178,6 +180,29 @@ export class RecipeLibraryService {
 
     const firstDoc = snapshot.docs[0];
     return firstDoc.id;
+  }
+
+  /**
+   * Normalisiert isFromUser auf echte Booleans.
+   * true / "true" / 1  -> true
+   * false / "false" / 0 -> false
+   * alles andere -> true (defensiv als User-Zutat behandeln)
+   */
+  private normalizeIsFromUser(raw: any): boolean {
+    if (raw === true) return true;
+    if (raw === false) return false;
+
+    if (typeof raw === 'string') {
+      const v = raw.toLowerCase().trim();
+      if (v === 'true') return true;
+      if (v === 'false') return false;
+    }
+
+    if (raw === 1) return true;
+    if (raw === 0) return false;
+
+    // Fallback: lieber als User-Zutat behandeln als als Extra "verlieren"
+    return true;
   }
 
   async saveGeneratedRecipe(recipe: GeneratedRecipe): Promise<string> {
@@ -192,7 +217,7 @@ export class RecipeLibraryService {
       name: ing.name,
       quantity: ing.quantity,
       unit: ing.unit,
-      isFromUser: ing.isFromUser ?? false,
+      isFromUser: this.normalizeIsFromUser(ing.isFromUser),
       isOptional: ing.isOptional ?? false,
     }));
 
@@ -212,7 +237,6 @@ export class RecipeLibraryService {
         assignedToHelper: assigned,
       };
     });
-
 
     const data: Omit<FirestoreRecipe, 'id'> & { checksum: string } = {
       title: recipe.title,

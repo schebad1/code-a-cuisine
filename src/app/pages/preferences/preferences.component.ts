@@ -79,19 +79,17 @@ export class PreferencesComponent {
   /**
    * Wird aufgerufen, wenn der User auf "Generate recipe" klickt.
    * - prüft, ob Preferences vollständig sind
-   * - leert die Ingredients-Liste
    * - navigiert zur Loading-Seite (n8n-Trigger)
+   *
+   * WICHTIG: Ingredients NICHT hier löschen, sonst bekommt n8n ein leeres Array.
+   * Das Zurücksetzen der Zutaten sollte erst nach dem Run passieren
+   * (z.B. bei "Generate new recipe").
    */
   onGenerate(): void {
     if (!this.isPreferencesComplete) {
       return;
     }
 
-    // Zutatenliste zurücksetzen, damit "List of your ingredients"
-    // auf der Generate-Recipe-Seite beim nächsten Mal leer ist.
-    this.ingredientsState.ingredients.length = 0;
-
-    // Weiter zur Loading-Seite, die den n8n-Call auslöst.
     this.router.navigate(['/loading']);
   }
 }

@@ -30,10 +30,8 @@ export class RecipeViewComponent implements OnInit {
   extraIngredients: any[] = [];
   steps: GeneratedStep[] = [];
 
-  // Herz-Status
   hasLiked = false;
 
-  // Helper-Konfiguration (1–4)
   helperConfigs = [
     {
       index: 1,
@@ -91,7 +89,6 @@ export class RecipeViewComponent implements OnInit {
       this.timeCategoryLabel = this.getTimeCategoryLabel(r.totalMinutes);
       this.randomLikes = r.likes ?? 0;
 
-      // Helper-Anzahl aus Steps berechnen (max assignedToHelper, 1–4)
       if (Array.isArray(r.steps) && r.steps.length > 0) {
         const maxHelper = Math.max(
           ...r.steps.map((s) => s.assignedToHelper ?? 1)
@@ -102,17 +99,12 @@ export class RecipeViewComponent implements OnInit {
       }
 
       const ingredientsAny = r.ingredients;
-      if (Array.isArray(ingredientsAny)) {
-        this.userIngredients = ingredientsAny.filter(
-          (ing: any) =>
-            ing &&
-            (ing.isFromUser === true || ing.isFromUser === undefined)
-        );
-        this.extraIngredients = ingredientsAny.filter(
-          (ing: any) => ing && ing.isFromUser === false
-        );
+      if (Array.isArray(ingredientsAny) && ingredientsAny.length > 0) {
+        this.splitIngredients(ingredientsAny);
+      } else {
+        this.userIngredients = [];
+        this.extraIngredients = [];
       }
-      
 
       if (Array.isArray(r.steps) && r.steps.length > 0) {
         this.steps = [...r.steps].sort((a, b) => a.order - b.order);
@@ -151,9 +143,32 @@ export class RecipeViewComponent implements OnInit {
     const text = step.text.trim();
     const end = text.search(/[.!?]/);
     let cut: string;
-    if (end > 0 && end <= 80) cut = text.slice(0, end);
-    else cut = text.length > 80 ? text.slice(0, 77) + '…' : text;
+
+    if (end > 0 && end <= 80) {
+      cut = text.slice(0, end);
+    } else {
+      cut = text.length > 80 ? text.slice(0, 77) + '…' : text;
+    }
+
     return cut.charAt(0).toUpperCase() + cut.slice(1);
+  }
+
+  /**
+   * Gibt den Beschreibungs-Teil eines Steps zurück (alles nach dem ersten Satz).
+   * Wenn es keinen zweiten Satz gibt, wird ein leerer String zurückgegeben.
+   */
+  getStepBody(step: GeneratedStep): string {
+    if (!step?.text) return '';
+
+    const text = step.text.trim();
+    const end = text.search(/[.!?]/);
+
+    if (end === -1) {
+      return '';
+    }
+
+    const rest = text.slice(end + 1).trim();
+    return rest;
   }
 
   isStepForHelper(step: GeneratedStep, helperIndex: number): boolean {
@@ -164,5 +179,46 @@ export class RecipeViewComponent implements OnInit {
   startNewRecipe(): void {
     this.preferencesState.reset();
     this.router.navigate(['/generate-recipe']);
+  }
+
+  private normalizeIsFromUser(raw: any): boolean | null {
+    if (raw === true) return true;
+    if (raw === false) return false;
+
+    if (typeof raw === 'string') {
+      const value = raw.toLowerCase().trim();
+      if (value === 'true') return true;
+      if (value === 'false') return false;
+    }
+
+    if (raw === 1) return true;
+    if (raw === 0) return false;
+
+    return null;
+  }
+
+  private splitIngredients(ingredientsAny: any[]): void {
+    const fromUser: any[] = [];
+    const extras: any[] = [];
+
+    for (const ing of ingredientsAny) {
+      if (!ing) continue;
+
+      const flag = this.normalizeIsFromUser((ing as any).isFromUser);
+
+      if (flag === false) {
+        extras.push(ing);
+      } else {
+        fromUser.push(ing);
+      }
+    }
+
+    if (fromUser.length === 0 && ingredientsAny.length > 0) {
+      this.userIngredients = ingredientsAny.filter(Boolean);
+      this.extraIngredients = [];
+    } else {
+      this.userIngredients = fromUser;
+      this.extraIngredients = extras;
+    }
   }
 }

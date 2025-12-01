@@ -197,8 +197,12 @@
             </div>
 
             <div class="recipe-view__direction-text-wrapper">
-              <span class="recipe-view__direction-text">
-                {{ step.text }}
+              <!-- Nur die Beschreibung (Body) anzeigen, nicht den Titel -->
+              <span
+                class="recipe-view__direction-text"
+                *ngIf="getStepBody(step) as body"
+              >
+                {{ body }}
               </span>
 
               <span
@@ -208,6 +212,7 @@
                 ~{{ step.durationMinutes }} min
               </span>
             </div>
+
           </div>
         </div>
       </div>
@@ -259,5 +264,5 @@
       </a>
     </div>
   </div>
-  
+
 </main>
