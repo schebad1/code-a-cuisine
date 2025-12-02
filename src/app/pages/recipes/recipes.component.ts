@@ -152,8 +152,16 @@ export class RecipesComponent implements OnInit {
   // reale Seiten + ggf. eine "virtuelle" nächste Seite, wenn hasMore = true.
   get displayPagesArray(): number[] {
     const realPages = this.totalPages;
-    const extra = this.hasMore ? 1 : 0;
-    const count = realPages + extra;
+  
+    // Nur wenn genau eine Seite geladen ist und wir noch mehr vermuten,
+    // zeigen wir eine "virtuelle" zweite Seite.
+    const shouldShowExtra =
+      this.hasMore &&
+      realPages === 1 &&
+      this.currentPageIndex === 0;
+  
+    const count = realPages + (shouldShowExtra ? 1 : 0);
     return Array.from({ length: count }, (_, i) => i);
   }
+  
 }
