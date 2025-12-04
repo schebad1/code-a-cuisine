@@ -15,7 +15,7 @@ main {
 
 .hero__title {
   font-size: 140px;
-  font-family: 'Ubuntu';
+  font-family: "Ubuntu";
 }
 
 .hero__cta {
@@ -102,6 +102,20 @@ main {
   }
 }
 
+@media (max-width: 1450px) {
+  .hero__header {
+    padding-top: 15px;
+  }
+
+  .hero__secondary {
+    padding-top: 150px;
+  }
+
+  .hero__art img {
+    right: 0%;
+  }
+}
+
 @media (max-width: 1325px) {
   .hero__subtitle {
     width: 401px;
@@ -110,29 +124,36 @@ main {
   }
 
   .hero__title {
-    width: 417px;
+    width: 453px;
     line-height: 0.9;
   }
 
   .hero__header {
-    padding-top: 60px;
+    padding-top: 15px;
     display: flex;
     flex-direction: column;
     gap: 30px;
   }
 
   .hero__cta {
-    padding-top: 80px;
+    padding-top: 50px;
   }
 
   .hero__secondary {
     align-items: flex-start;
-    padding-top: 65px;
+    padding-top: 35px;
     flex-direction: column;
+    gap: 0;
   }
 
   .hero__link-section {
     justify-content: flex-start;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero__art img {
+    right: -60%;
   }
 }
 
@@ -148,6 +169,12 @@ main {
 
   .hero__title.hero__title {
     font-size: 106px;
+  }
+}
+
+@media (max-width: 912px) {
+  .hero__art img {
+    right: -80%;
   }
 }
 
@@ -229,7 +256,19 @@ main {
 
 @media (max-width: 400px) {
   .hero__art img {
-    right: -160%;
+    right: -130%;
+  }
+}
+
+@media (max-width: 375px) {
+  .hero__art img {
+    right: -110%;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero__art img {
+    right: -125%;
   }
 }
 

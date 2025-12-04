@@ -146,12 +146,35 @@ main {
 .preferences-cta {
   display: flex;
   margin-top: 40px;
+  padding-bottom: 40px !important;
 }
 
 .preferences__back-link {
   display: flex;
   gap: 4px;
   color: rgba(30, 85, 21, 1);
+}
+
+@media (max-width: 1450px) {
+  .preferences__portion-group {
+    margin-top: 40px;
+  }
+
+  .preferences__categories {
+    height: 365px;
+    padding: 26px 24px 26px 24px;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.preferences__category {
+  gap: 16px;
+}
+
+.preferences-cta {
+  margin-top: 25px;
+  padding-bottom: 20px !important;
+}
 }
 
 @media (max-width: 750px) {
