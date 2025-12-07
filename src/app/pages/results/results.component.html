@@ -16,7 +16,7 @@
           We took what you have and let our AI do the thinking. <br />
           Here are 3 easy recipes you can make right now!
         </p>
-        <div class="results__tags">
+        <div class="results__tags" *ngIf="success && recipes.length">
           <span class="results__tag results__tag--cuisine">
             {{ cuisineLabel }}
           </span>

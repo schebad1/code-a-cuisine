@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header-primary',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './header-primary.component.html',
-  styleUrls: ['./header-primary.component.scss'] 
+  styleUrls: ['./header-primary.component.scss'],
 })
 export class HeaderPrimaryComponent {
   /**

@@ -23,18 +23,43 @@ import { GeneratedRecipe } from './recipe-api.contracts';
 
 export { Cuisine } from './recipe-seed.data';
 
+/**
+ * Lightweight representation of a recipe, used for lists and overviews.
+ */
 export interface RecipeListItem {
+  /** Firestore document ID of the recipe. */
   id: string;
+
+  /** Recipe title. */
   title: string;
+
+  /** Total cooking time in minutes. */
   cookingTime: number;
+
+  /** Diet identifier (e.g. "none", "vegan", "vegetarian"). */
   diet: string;
+
+  /** Time category label derived from cooking time (Quick / Medium / Complex). */
   speed: string;
+
+  /** Number of likes for this recipe. */
   likes: number;
+
+  /** Cuisine classification for this recipe. */
   cuisine: Cuisine;
 }
 
+/**
+ * Result of a paginated recipe query.
+ */
 export interface RecipePageResult {
+  /** List of recipes for the requested page. */
   items: RecipeListItem[];
+
+  /**
+   * Firestore document snapshot to be used as a cursor
+   * when loading the next page. `null` if there is no further page.
+   */
   lastDoc: QueryDocumentSnapshot<DocumentData> | null;
 }
 
@@ -42,16 +67,29 @@ export interface RecipePageResult {
   providedIn: 'root',
 })
 export class RecipeLibraryService {
+  /** Firestore collection reference for recipes. */
   private readonly recipesCollection = collection(this.firestore, 'recipes');
 
   constructor(private readonly firestore: Firestore) {}
 
+  /**
+   * Maps total minutes to a human-readable speed label.
+   *
+   * @param totalMinutes - Total preparation and cooking time
+   * @returns "Quick", "Medium" or "Complex"
+   */
   private mapSpeed(totalMinutes: number): string {
     if (totalMinutes <= 20) return 'Quick';
     if (totalMinutes <= 45) return 'Medium';
     return 'Complex';
   }
 
+  /**
+   * Maps a Firestore recipe document into a `RecipeListItem`.
+   *
+   * @param doc - Raw document data (including id)
+   * @returns A normalized list item
+   */
   private mapToListItem(doc: any): RecipeListItem {
     const totalMinutes = doc.totalMinutes ?? 0;
 
@@ -66,6 +104,12 @@ export class RecipeLibraryService {
     };
   }
 
+  /**
+   * Returns all recipes for a given cuisine, or all recipes when cuisine is null.
+   *
+   * @param cuisine - Cuisine filter or null for all cuisines
+   * @returns Observable emitting a list of recipe list items
+   */
   getRecipesByCuisine(cuisine: Cuisine | null): Observable<RecipeListItem[]> {
     let q;
 
@@ -80,6 +124,15 @@ export class RecipeLibraryService {
     );
   }
 
+  /**
+   * Loads a paginated list of recipes for an optional cuisine filter.
+   * Uses Firestore cursors to fetch pages in descending `createdAt` order.
+   *
+   * @param cuisine - Cuisine filter or null for all cuisines
+   * @param pageSize - Number of recipes per page
+   * @param startAfterDoc - Cursor to start after, or null/undefined for first page
+   * @returns A page result containing items and a cursor for the next page
+   */
   async getRecipesPage(
     cuisine: Cuisine | null,
     pageSize: number,
@@ -114,6 +167,12 @@ export class RecipeLibraryService {
     return { items, lastDoc };
   }
 
+  /**
+   * Fetches a single recipe by its Firestore ID.
+   *
+   * @param id - Recipe document ID
+   * @returns Observable emitting the recipe or null if not found or on error
+   */
   getRecipeById(id: string): Observable<FirestoreRecipe | null> {
     const ref = doc(this.firestore, 'recipes', id);
 
@@ -123,6 +182,14 @@ export class RecipeLibraryService {
     );
   }
 
+  /**
+   * Recursively replaces all `undefined` values in the given object/array
+   * with `null`. This is important for Firestore, which does not accept
+   * `undefined` as a field value.
+   *
+   * @param value - Arbitrary value, object or array to clean
+   * @returns Cleaned value with no `undefined` fields
+   */
   private cleanUndefined(value: any): any {
     if (Array.isArray(value)) {
       return value.map((v) => this.cleanUndefined(v));
@@ -140,6 +207,14 @@ export class RecipeLibraryService {
     return value;
   }
 
+  /**
+   * Calculates a deterministic hash string for a generated recipe.
+   * Only stable fields (title, time, diet, cuisine, ingredients, steps)
+   * are included so that the same recipe structure results in the same hash.
+   *
+   * @param recipe - Generated recipe to hash
+   * @returns Hash string representing the recipe payload
+   */
   private calculateRecipeHash(recipe: GeneratedRecipe): string {
     const payload = {
       title: recipe.title ?? '',
@@ -168,6 +243,12 @@ export class RecipeLibraryService {
     return hash.toString();
   }
 
+  /**
+   * Looks for an existing recipe document with the given checksum.
+   *
+   * @param checksum - Previously computed recipe hash
+   * @returns The existing recipe ID if found, otherwise null
+   */
   private async findExistingRecipeByHash(
     checksum: string
   ): Promise<string | null> {
@@ -183,10 +264,14 @@ export class RecipeLibraryService {
   }
 
   /**
-   * Normalisiert isFromUser auf echte Booleans.
-   * true / "true" / 1  -> true
-   * false / "false" / 0 -> false
-   * alles andere -> true (defensiv als User-Zutat behandeln)
+   * Normalizes `isFromUser` into a strict boolean.
+   *
+   * - true / "true" / 1  -> true
+   * - false / "false" / 0 -> false
+   * - everything else -> true (defensively treated as user ingredient)
+   *
+   * @param raw - Raw value from the generated ingredient
+   * @returns Normalized boolean flag
    */
   private normalizeIsFromUser(raw: any): boolean {
     if (raw === true) return true;
@@ -201,10 +286,21 @@ export class RecipeLibraryService {
     if (raw === 1) return true;
     if (raw === 0) return false;
 
-    // Fallback: lieber als User-Zutat behandeln als als Extra "verlieren"
+    // Fallback: prefer treating it as user ingredient rather than losing it as an extra
     return true;
   }
 
+  /**
+   * Saves a generated recipe into Firestore.
+   *
+   * - Computes a checksum and checks if an identical recipe already exists.
+   *   If so, returns the existing document ID.
+   * - Normalizes ingredients and steps, including helper assignments.
+   * - Adds random likes for display purposes.
+   *
+   * @param recipe - Generated recipe to persist
+   * @returns The Firestore document ID of the saved (or existing) recipe
+   */
   async saveGeneratedRecipe(recipe: GeneratedRecipe): Promise<string> {
     const checksum = this.calculateRecipeHash(recipe);
 

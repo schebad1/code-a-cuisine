@@ -12,12 +12,20 @@ import { Observable } from 'rxjs';
 export class RecipeApiService {
   constructor(private readonly http: HttpClient) {}
 
+  /**
+   * Sends a recipe generation request to the backend workflow (n8n).
+   *
+   * The backend takes the user's ingredients and preferences and responds
+   * with either a list of generated recipes or an error including quota info.
+   *
+   * @param request - The recipe generation request payload
+   * @returns Observable emitting a recipe generation response
+   */
   generateRecipes(
     request: RecipeGenerationRequest
   ): Observable<RecipeGenerationResponse> {
-    const url = 'https://schebad.app.n8n.cloud/webhook-test/recipes/generate';
-  
+    const url = 'https://schebad.app.n8n.cloud/webhook/recipes/generate';
+
     return this.http.post<RecipeGenerationResponse>(url, request);
   }
-  
 }
