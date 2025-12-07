@@ -1,0 +1,453 @@
+{
+  "name": "Recipe Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        2368,
+        -288
+      ],
+      "id": "a7fc6875-a9ed-4c5b-be38-7a091ea308fd",
+      "name": "Respond to Webhook",
+      "notesInFlow": true,
+      "notes": "Sends the final JSON response back to the client for the original webhook request, either recipes or a quota error response."
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ JSON.stringify($node[\"Prepare Request + Meta\"].json[\"requestPayload\"]) }}\n",
+        "options": {
+          "systemMessage": "You are an AI cooking and workflow assistant inside an automated system (n8n). You receive a JSON request with user ingredients and cooking preferences. Your job is to generate exactly three different recipes that strictly follow a predefined JSON schema. You MUST respond with valid JSON only – no comments, no markdown, no additional text.\n\n=====================================\nINPUT\n\nYou will receive a single JSON object with this structure:\n\n{\n\"ingredients\": [\n{\n\"name\": string,\n\"quantity\": number,\n\"unit\": string\n}\n],\n\"preferences\": {\n\"portions\": number, // 1–12, default 2\n\"cookingHelpers\": number, // 1–4\n\"timeCategory\": \"quick\" | \"medium\" | \"complex\",\n\"cuisine\": \"german\" | \"italian\" | \"indian\" | \"japanese\" | \"gourmet\" | \"fusion\",\n\"diet\": \"vegetarian\" | \"vegan\" | \"keto\" | \"none\"\n},\n\"clientMeta\": {\n\"appVersion\"?: string,\n\"locale\"?: string\n}\n}\n\n\"ingredients\" are the ingredients the user actually has.\nYou MUST treat them as authoritative.\n\"preferences\" define hard constraints you must respect.\nAll text (titles, descriptions, steps) must be written in clear, simple English.\n\n=====================================\nTIME CATEGORY RULES\n\nYou must make \"totalMinutes\" consistent with the chosen timeCategory from preferences.timeCategory:\n\nFor \"quick\": totalMinutes <= 20\nFor \"medium\": totalMinutes > 20 AND totalMinutes <= 45\nFor \"complex\": totalMinutes > 45\n\nThe sum of \"durationMinutes\" across steps does not need to match exactly, but must be plausible and roughly consistent with \"totalMinutes\".\n\n=====================================\nDIET RULES\n\npreferences.diet can be:\n\n\"vegetarian\"\n\"vegan\"\n\"keto\"\n\"none\"\n\nYou MUST:\n\nAvoid any ingredients that violate the chosen diet:\n\nvegetarian: no meat, no fish.\nvegan: no animal products (no meat, fish, dairy, eggs, honey).\nketo: very low carbs, avoid sugar, pasta, rice, bread, potatoes.\n\nIf \"none\", there are no diet restrictions.\n\n=====================================\nCUISINE RULES\n\npreferences.cuisine can be:\n\n\"german\"\n\"italian\"\n\"indian\"\n\"japanese\"\n\"gourmet\"\n\"fusion\"\n\nYou must:\n\nMake each recipe fit the chosen cuisine in terms of typical ingredients, flavors and cooking techniques.\nFor \"fusion\", you may mix elements from different cuisines, but still keep each recipe coherent.\n\n=====================================\nRECIPE COUNT AND VARIETY\n\nYou must generate exactly three recipes:\nrecipes[0], recipes[1], recipes[2]\n\nAll three recipes must:\n\nUse at least 70% of the user ingredients in a meaningful way (per recipe).\nDiffer in preparation method, flavor profile, or serving style.\nRespect the diet and cuisine preferences.\nDo NOT generate near-duplicates.\n\nRecipe titles MUST be short and concise. Titles must NOT exceed 55 characters.\n\n=====================================\nINGREDIENT RULES (HARD LIMIT ON EXTRAS)\n\nSTRICT USER INGREDIENT MAPPING (MANDATORY):\n\nFor every ingredient in the input array:\n\nPrefer to use it.\n\nIf you use it, you MUST output an ingredient with:\n\nthe same \"name\" (only capitalization may change),\n\na realistic scaled \"quantity\" and \"unit\",\n\n\"isFromUser\": true.\n\nYou are NOT allowed to rename, merge, or generalize user ingredients.\n\"Chicken Breast\" must remain \"Chicken Breast\".\n\"Rice\" must remain \"Rice\".\n\nYou are NOT allowed to invent new ingredients with \"isFromUser\": true.\nEvery ingredient with \"isFromUser\": true MUST correspond to one real input ingredient.\n\nYou must NOT ignore more than 30% of the user ingredients.\nPrefer to use all user ingredients whenever possible.\n\n———\n\nCOVERAGE:\n\nFor each recipe, use at least 70% of the user ingredients meaningfully.\n\n———\n\nExtra ingredients (HARD LIMIT):\n\nYou may add at most 3 additional ingredients per recipe. NEVER exceed 3 extra ingredients.\nEvery extra MUST have \"isFromUser\": false.\nExtras MUST NOT have the same \"name\" as any user ingredient.\nIf needed, combine flavors into one extra ingredient (e.g. \"Italian herb mix\").\nExtras may include \"isOptional\": true.\n\n———\n\nQuantities and units:\n\nQuantities must match the number of portions.\nUse realistic units (\"g\", \"ml\", \"tbsp\", \"tsp\", \"piece\").\n\n=====================================\nSTEPS AND WORKFLOW\n\nEach recipe has an array \"steps\":\n\n\"steps\": [\n{\n\"order\": number,\n\"text\": string,\n\"durationMinutes\"?: number,\n\"parallelGroup\"?: string,\n\"assignedToHelper\"?: number\n}\n]\n\nYou MUST:\n\nORDER:\nStep numbers start at 1 and increase without gaps.\n\nTEXT RULES (VERY IMPORTANT):\n\nEach step.text MUST contain at least two sentences.\n\nThe FIRST sentence MUST be the short action title (max ~10–12 words).\nIt must describe only the core action.\n\nThe remaining sentence(s) MUST provide details, explanations, or additional instructions.\n\nDo NOT include helper names or numbers in the text.\n\nEXAMPLES OF VALID FIRST SENTENCES:\n\"Heat the pan.\"\n\"Chop the onion.\"\n\"Mix the marinade.\"\n\n———\n\nDURATION:\nProvide realistic durationMinutes for most steps.\n\n———\n\nPARALLEL WORK:\nUse parallelGroup (\"A\", \"B\") for steps that can be parallel.\nAt least one step in each group must reference the other group with natural language (\"Meanwhile,…\").\n\n———\n\nCOOKING HELPERS:\nLet H = preferences.cookingHelpers (1–4).\n\nIf H = 1:\nYou may omit assignedToHelper or use 1 for all steps.\n\nIf H >= 2:\nEVERY step MUST include assignedToHelper = 1..H.\nDistribute work fairly and consistently.\nDo NOT mention helpers in the text.\n\n=====================================\nNUTRITION\n\nEach recipe must include nutrition per portion:\n\n\"nutrition\": {\n\"energyKcalPerPortion\": number,\n\"proteinGramsPerPortion\": number,\n\"fatGramsPerPortion\": number,\n\"carbsGramsPerPortion\": number\n}\n\nValues must be plausible (no zeros, no absurd values).\n\n=====================================\nFINAL OUTPUT SCHEMA\n\nYou MUST return a single JSON object in this exact shape:\n\n{\n\"success\": true,\n\"quota\": {\n\"limitPerIp\": number,\n\"remainingForIpToday\": number,\n\"limitGlobal\": number,\n\"remainingGlobalToday\": number\n},\n\"recipes\": [\n{\n\"id\": string,\n\"title\": string,\n\"description\": string,\n\"totalMinutes\": number,\n\"cuisine\": \"german\" | \"italian\" | \"indian\" | \"japanese\" | \"gourmet\" | \"fusion\",\n\"diet\": \"vegetarian\" | \"vegan\" | \"keto\" | \"none\",\n\"ingredients\": [\n{\n\"name\": string,\n\"quantity\": number,\n\"unit\": string,\n\"isFromUser\": boolean,\n\"isOptional\"?: boolean\n}\n],\n\"steps\": [\n{\n\"order\": number,\n\"text\": string,\n\"durationMinutes\"?: number,\n\"parallelGroup\"?: string,\n\"assignedToHelper\"?: number\n}\n],\n\"nutrition\": {\n\"energyKcalPerPortion\": number,\n\"proteinGramsPerPortion\": number,\n\"fatGramsPerPortion\": number,\n\"carbsGramsPerPortion\": number\n}\n}\n]\n}\n\nAdditional rules:\n\n\"success\" must be true.\n\"recipes\" must contain exactly 3 recipes.\nDo NOT exceed 3 extra ingredients per recipe.\nAll output must be valid JSON.\nNo text outside the JSON object."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1792,
+        -416
+      ],
+      "id": "e323d021-16d8-4694-a61e-8b64f3d0b8dd",
+      "name": "AI Agent",
+      "notesInFlow": true,
+      "notes": "Calls the language model with a strict system prompt and the normalized request payload to generate exactly three recipes in the required JSON schema."
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        -192
+      ],
+      "id": "40a82f3a-1396-4152-a7f8-9084271430f4",
+      "name": "Google Gemini Chat Model",
+      "notesInFlow": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "OglDVcno9HuPOTMc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "notes": "Provides the Google Gemini chat model instance used by the AI Agent to generate structured recipe JSON."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Das ursprüngliche Payload aus dem Webhook\nconst originalPayload = $json;\n\n// Header können je nach n8n-Setup unter $json.headers liegen\nconst headers = originalPayload.headers || {};\n\n// IP aus verschiedenen möglichen Headern lesen\nlet clientIp =\n  headers['x-forwarded-for'] ||\n  headers['x-real-ip'] ||\n  headers['cf-connecting-ip'] ||\n  headers['client-ip'] ||\n  headers['x-client-ip'] ||\n  originalPayload.ip ||\n  'unknown';\n\n// x-forwarded-for kann eine Liste sein: \"ip1, ip2, ...\"\nif (typeof clientIp === 'string' && clientIp.includes(',')) {\n  clientIp = clientIp.split(',')[0].trim();\n}\n\n// Heutiges Datum als YYYY-MM-DD (UTC-Basis)\nconst now = new Date();\nconst requestDate = now.toISOString().slice(0, 10);\n\n// Neues JSON bauen: ursprüngliches Payload kapseln wir unter requestPayload\nreturn [\n  {\n    json: {\n      requestPayload: originalPayload,\n      clientIp,\n      requestDate,\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -288
+      ],
+      "id": "55982b61-b5d5-49bd-b84e-a2d68f3c7609",
+      "name": "Prepare Request + Meta",
+      "notesInFlow": true,
+      "notes": "Wraps the raw webhook payload into requestPayload and enriches it with clientIp and requestDate metadata."
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "projectId": "code-a-cuisine-896a5",
+        "collection": "quota",
+        "documentId": "=ip-{{$node[\"Prepare Request + Meta\"].json.requestDate}}-{{$node[\"Prepare Request + Meta\"].json.clientIp}}"
+      },
+      "type": "n8n-nodes-base.googleFirebaseCloudFirestore",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        -288
+      ],
+      "id": "67ee9781-ba81-436e-8a7c-816a8623bb34",
+      "name": "Get IP Quota",
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "credentials": {
+        "googleApi": {
+          "id": "JfA0a98PvUK2j7D0",
+          "name": "Google Service Account account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Reads the per-IP quota document for the current date from the Firestore \"quota\" collection."
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "projectId": "code-a-cuisine-896a5",
+        "collection": "quota",
+        "documentId": "=global-{{$node[\"Prepare Request + Meta\"].json.requestDate}}"
+      },
+      "type": "n8n-nodes-base.googleFirebaseCloudFirestore",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -288
+      ],
+      "id": "08bebd05-5be7-45ae-a7c7-2818118c540c",
+      "name": "Get Global Quota",
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "credentials": {
+        "googleApi": {
+          "id": "JfA0a98PvUK2j7D0",
+          "name": "Google Service Account account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Reads the global quota document for the current date from the Firestore \"quota\" collection."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Meta-Daten aus unserem ersten Node holen\nconst meta = $node[\"Prepare Request + Meta\"].json;\n\n// Ergebnisse der Firestore-Reads holen\nconst ipDoc = $node[\"Get IP Quota\"].json;\nconst globalDoc = $node[\"Get Global Quota\"].json;\n\n// Feste Limits\nconst limitPerIp = 3;\nconst limitGlobal = 12;\n\n// Bisherige Nutzung (Stand VOR dieser Anfrage)\nlet prevUsedForIpToday = 0;\nlet prevUsedGlobalToday = 0;\n\n// IP-Dokument auswerten (egal ob Zahl oder String)\nif (ipDoc && !ipDoc.error && ipDoc.usedForIpToday !== undefined) {\n  const n = Number(ipDoc.usedForIpToday);\n  if (!Number.isNaN(n)) {\n    prevUsedForIpToday = n;\n  }\n}\n\n// Global-Dokument auswerten (egal ob Zahl oder String)\nif (globalDoc && !globalDoc.error && globalDoc.usedGlobalToday !== undefined) {\n  const n = Number(globalDoc.usedGlobalToday);\n  if (!Number.isNaN(n)) {\n    prevUsedGlobalToday = n;\n  }\n}\n\n// Neue Nutzung (Werte NACH dieser Anfrage)\nconst usedForIpToday = prevUsedForIpToday + 1;\nconst usedGlobalToday = prevUsedGlobalToday + 1;\n\n// Verbleibende Quota nach dieser Anfrage (nicht negativ werden lassen)\nconst remainingForIpToday = Math.max(limitPerIp - usedForIpToday, 0);\nconst remainingGlobalToday = Math.max(limitGlobal - usedGlobalToday, 0);\n\n// Quota-Status (BEVOR wir diese Anfrage zählen)\nconst quotaExceededForIp = prevUsedForIpToday >= limitPerIp;\nconst quotaExceededGlobal = prevUsedGlobalToday >= limitGlobal;\nconst quotaExceeded = quotaExceededForIp || quotaExceededGlobal;\n\n// Dokument-IDs für Firestore\nconst ipQuotaDocumentId = `ip-${meta.requestDate}-${meta.clientIp}`;\nconst globalQuotaDocumentId = `global-${meta.requestDate}`;\n\n// Neues JSON bauen, das wir nach vorne reichen\nreturn [\n  {\n    json: {\n      ...meta, // enthält requestPayload, clientIp, requestDate\n\n      // Limits\n      limitPerIp,\n      limitGlobal,\n\n      // Bisherige Nutzung (nur Info)\n      prevUsedForIpToday,\n      prevUsedGlobalToday,\n\n      // Nutzung NACH dieser Anfrage\n      usedForIpToday,\n      usedGlobalToday,\n\n      // Restquota nach dieser Anfrage\n      remainingForIpToday,\n      remainingGlobalToday,\n\n      // Quota-Status\n      quotaExceededForIp,\n      quotaExceededGlobal,\n      quotaExceeded,\n\n      // IDs für die Upsert-Nodes\n      ipQuotaDocumentId,\n      globalQuotaDocumentId,\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        -288
+      ],
+      "id": "44f90002-bc15-49be-9cd5-f58061d984e6",
+      "name": "Check & Prepare Quota",
+      "notesInFlow": true,
+      "notes": "Combines meta and quota data to calculate current usage, remaining quota, quotaExceeded flags, and Firestore document IDs for IP and global counters."
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "upsert",
+        "projectId": "code-a-cuisine-896a5",
+        "collection": "quota",
+        "updateKey": "ipQuotaDocumentId",
+        "columns": "usedForIpToday"
+      },
+      "type": "n8n-nodes-base.googleFirebaseCloudFirestore",
+      "typeVersion": 1.1,
+      "position": [
+        1344,
+        -416
+      ],
+      "id": "2cdfdc81-e036-4829-824a-1ec7717abfaf",
+      "name": "Update IP Quota",
+      "notesInFlow": true,
+      "credentials": {
+        "googleApi": {
+          "id": "JfA0a98PvUK2j7D0",
+          "name": "Google Service Account account"
+        }
+      },
+      "notes": "Upserts the Firestore quota document for this IP and date, updating the usedForIpToday counter."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a27b8df9-da73-40fb-a6cf-1c1b756df75c",
+              "leftValue": "={{$json.prevUsedForIpToday}}",
+              "rightValue": "={{$json.limitPerIp}}\n",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "2ae0a17e-09d9-47b1-99a3-767bdeb26a92",
+              "leftValue": "={{$json.prevUsedGlobalToday}}",
+              "rightValue": "={{$json.limitGlobal}}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        -288
+      ],
+      "id": "917c2ac5-17e7-413a-888a-9761fc180a37",
+      "name": "Check Quota Limit",
+      "notesInFlow": true,
+      "notes": "Checks whether the previous IP or global usage has already reached the configured daily limits and routes the flow accordingly."
+    },
+    {
+      "parameters": {
+        "jsCode": "const {\n  limitPerIp,\n  limitGlobal,\n  prevUsedForIpToday,\n  prevUsedGlobalToday,\n} = $json;\n\nconst remainingForIpToday = Math.max(limitPerIp - prevUsedForIpToday, 0);\nconst remainingGlobalToday = Math.max(limitGlobal - prevUsedGlobalToday, 0);\n\nreturn [\n  {\n    json: {\n      success: false,\n      reason: 'QUOTA_EXCEEDED',\n      quota: {\n        limitPerIp,\n        remainingForIpToday,\n        limitGlobal,\n        remainingGlobalToday,\n      },\n      recipes: [],\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        -176
+      ],
+      "id": "6444eefe-37ce-4be8-950a-d5dec434548b",
+      "name": "Build Quota Error Response",
+      "notesInFlow": true,
+      "notes": "Builds a structured JSON response with success:false, reason:\"QUOTA_EXCEEDED\", and current quota details when limits are exceeded."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "recipes/generate",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -288
+      ],
+      "id": "e21b2657-e700-4eda-80c6-3dfd9cd52606",
+      "name": "API Entry – /recipes/generate",
+      "webhookId": "17178f15-eaf6-4362-a783-49d935184600",
+      "notesInFlow": true,
+      "notes": "Receives POST requests on /recipes/generate with ingredients and user preferences as JSON payload."
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "upsert",
+        "projectId": "code-a-cuisine-896a5",
+        "collection": "quota",
+        "updateKey": "globalQuotaDocumentId",
+        "columns": "usedGlobalToday"
+      },
+      "type": "n8n-nodes-base.googleFirebaseCloudFirestore",
+      "typeVersion": 1.1,
+      "position": [
+        1568,
+        -416
+      ],
+      "id": "55c00cca-58ee-4215-9653-660c745f6364",
+      "name": "Update Global Quota",
+      "notesInFlow": true,
+      "credentials": {
+        "googleApi": {
+          "id": "JfA0a98PvUK2j7D0",
+          "name": "Google Service Account account"
+        }
+      },
+      "notes": "Upserts the Firestore global quota document for the current date, updating the usedGlobalToday counter."
+    },
+    {
+      "parameters": {
+        "jsCode": "// ===== 1) Read raw output from AI Agent =====\nconst raw = $json.output;\n\nif (typeof raw !== 'string') {\n  throw new Error('AI Agent output is not a string. Got: ' + typeof raw);\n}\n\n// Remove ```json fences if the model added them\nlet cleaned = raw\n  .replace(/^```json\\s*/i, '')   // leading ```json\n  .replace(/^```\\s*/i, '')       // or plain ```\n  .replace(/```$/i, '')          // trailing ```\n  .trim();\n\n// ---- Heuristic cleanup for typical LLM garbage ----\n// Case from your error: `} fluvial: [] ]` between array elements.\n// General rule: if there is `} SOMEWORD[: []] ]` inside arrays, collapse to `}]`.\ncleaned = cleaned.replace(\n  /}\\s+[A-Za-z0-9_-]+(?:\\s*:\\s*\\[\\s*\\])?\\s+]/g,\n  '}]'\n);\n\n// Optional: if the model appends junk AFTER the last closing brace, cut it away\nconst lastBraceIndex = cleaned.lastIndexOf('}');\nif (lastBraceIndex !== -1) {\n  cleaned = cleaned.slice(0, lastBraceIndex + 1);\n}\n\n// ===== 2) Parse JSON safely =====\nlet parsed;\ntry {\n  parsed = JSON.parse(cleaned);\n} catch (e) {\n  throw new Error(\n    'Failed to parse AI Agent JSON: ' + e.message + '\\nRaw: ' + cleaned\n  );\n}\n\n// ===== 3) Get user ingredients from original request =====\nconst requestMeta = $node['Prepare Request + Meta'].json;\n\nconst userIngredientsFromRequest =\n  requestMeta?.requestPayload?.body?.ingredients ?? [];\n\n// Simple assert helper\nfunction assert(condition, message) {\n  if (!condition) {\n    throw new Error('Invalid recipe payload from AI Agent: ' + message);\n  }\n}\n\n// Request must contain at least one ingredient (your frontend guarantees this,\n// aber wir schützen uns trotzdem serverseitig)\nassert(\n  Array.isArray(userIngredientsFromRequest) &&\n    userIngredientsFromRequest.length > 0,\n  'requestPayload.body.ingredients must be a non-empty array.'\n);\n\n// Normalize user ingredient names -> set for quick lookup\nconst userIngredientNames = new Set(\n  userIngredientsFromRequest\n    .filter((ing) => ing && typeof ing.name === 'string')\n    .map((ing) => ing.name.trim().toLowerCase())\n);\n\nassert(\n  userIngredientNames.size > 0,\n  'Could not derive any valid ingredient names from requestPayload.body.ingredients.'\n);\n\n// ===== 4) Helper functions =====\nfunction isNonEmptyString(val) {\n  return typeof val === 'string' && val.trim().length > 0;\n}\n\nfunction isNumber(val) {\n  return typeof val === 'number' && !isNaN(val);\n}\n\n// ===== 5) Validate top-level structure =====\nassert(parsed && typeof parsed === 'object', 'Top-level JSON is not an object.');\nassert(parsed.success === true, '\"success\" must be true.');\nassert(\n  parsed.quota && typeof parsed.quota === 'object',\n  '\"quota\" object is missing.'\n);\nassert(Array.isArray(parsed.recipes), '\"recipes\" must be an array.');\nassert(\n  parsed.recipes.length === 3,\n  '\"recipes\" must contain exactly 3 recipes.'\n);\n\n// ===== 6) Validate and normalize each recipe =====\nparsed.recipes.forEach((recipe, recipeIndex) => {\n  const prefix = `recipes[${recipeIndex}] `;\n\n  assert(recipe && typeof recipe === 'object', prefix + 'must be an object.');\n  assert(isNonEmptyString(recipe.id), prefix + '\"id\" must be a non-empty string.');\n  assert(isNonEmptyString(recipe.title), prefix + '\"title\" must be a non-empty string.');\n  assert(isNumber(recipe.totalMinutes), prefix + '\"totalMinutes\" must be a number.');\n  assert(isNonEmptyString(recipe.cuisine), prefix + '\"cuisine\" must be a non-empty string.');\n  assert(isNonEmptyString(recipe.diet), prefix + '\"diet\" must be a non-empty string.');\n\n  // --- Ingredients array ---\n  assert(\n    Array.isArray(recipe.ingredients) && recipe.ingredients.length > 0,\n    prefix + '\"ingredients\" must be a non-empty array.'\n  );\n\n  const userIngredients = [];\n  const extraIngredients = [];\n\n  recipe.ingredients.forEach((ing, ingIndex) => {\n    const ip = `${prefix}ingredients[${ingIndex}] `;\n\n    assert(ing && typeof ing === 'object', ip + 'must be an object.');\n    assert(isNonEmptyString(ing.name), ip + '\"name\" must be a non-empty string.');\n    assert(isNumber(ing.quantity), ip + '\"quantity\" must be a number.');\n    assert(isNonEmptyString(ing.unit), ip + '\"unit\" must be a non-empty string.');\n\n    // Determine isFromUser purely from original request, ignore LLM flag\n    const ingNameLower = ing.name.trim().toLowerCase();\n    const isFromUser = userIngredientNames.has(ingNameLower);\n\n    ing.isFromUser = isFromUser;\n\n    if (isFromUser) {\n      userIngredients.push(ing);\n    } else {\n      extraIngredients.push(ing);\n    }\n  });\n\n  // At least one user ingredient per recipe\n  assert(\n    userIngredients.length > 0,\n    prefix + 'must contain at least one ingredient with isFromUser === true.'\n  );\n\n  // Enforce \"max 3 extras\" ROBUSTLY by trimming, not durch Fehler\n  const trimmedExtras = extraIngredients.slice(0, 3);\n  recipe.ingredients = [...userIngredients, ...trimmedExtras];\n\n  // Safety assert (should always be true now)\n  assert(\n    trimmedExtras.length <= 3,\n    prefix + 'must not contain more than 3 extra ingredients (isFromUser === false).'\n  );\n\n  // --- Steps array ---\n  assert(\n    Array.isArray(recipe.steps) && recipe.steps.length > 0,\n    prefix + '\"steps\" must be a non-empty array.'\n  );\n\n  recipe.steps.forEach((step, stepIndex) => {\n    const sp = `${prefix}steps[${stepIndex}] `;\n\n    assert(step && typeof step === 'object', sp + 'must be an object.');\n    assert(isNumber(step.order), sp + '\"order\" must be a number.');\n    assert(isNonEmptyString(step.text), sp + '\"text\" must be a non-empty string.');\n    if (step.durationMinutes !== undefined) {\n      assert(\n        isNumber(step.durationMinutes),\n        sp + '\"durationMinutes\", if present, must be a number.'\n      );\n    }\n  });\n});\n\n// ===== 7) Overwrite quota with real values from \"Check & Prepare Quota\" =====\nconst quotaMeta = $node['Check & Prepare Quota'].json;\n\nif (quotaMeta) {\n  parsed.quota = {\n    limitPerIp: quotaMeta.limitPerIp,\n    remainingForIpToday: quotaMeta.remainingForIpToday,\n    limitGlobal: quotaMeta.limitGlobal,\n    remainingGlobalToday: quotaMeta.remainingGlobalToday,\n  };\n}\n\n// ===== 8) Return for n8n =====\nreturn [\n  {\n    json: parsed,\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        -416
+      ],
+      "id": "6d470d87-0b83-4b0c-ae5f-3a6d011e8c05",
+      "name": "Validate AI Response",
+      "notesInFlow": true,
+      "notes": "Cleans the raw AI output, parses it as JSON, validates the recipe schema and ingredient rules, fixes isFromUser flags, injects quota data, and returns the final response payload."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Validate AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Request + Meta": {
+      "main": [
+        [
+          {
+            "node": "Get IP Quota",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get IP Quota": {
+      "main": [
+        [
+          {
+            "node": "Get Global Quota",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Get Global Quota": {
+      "main": [
+        [
+          {
+            "node": "Check & Prepare Quota",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Check & Prepare Quota": {
+      "main": [
+        [
+          {
+            "node": "Check Quota Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update IP Quota": {
+      "main": [
+        [
+          {
+            "node": "Update Global Quota",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Quota Limit": {
+      "main": [
+        [
+          {
+            "node": "Build Quota Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update IP Quota",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Quota Error Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Entry – /recipes/generate": {
+      "main": [
+        [
+          {
+            "node": "Prepare Request + Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Global Quota": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate AI Response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "JPjpbUbVWgayCiP0"
+  },
+  "versionId": "932c6e83-7a75-451b-9025-3ff60c86c70b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f537df97b71f2c146ab7e1a92fd3632f776c6dd4b0fcfe9e8e6dfda61e396206"
+  },
+  "id": "KkuIHNfp7QobwJF3",
+  "tags": []
+}

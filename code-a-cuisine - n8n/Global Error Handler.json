@@ -1,0 +1,67 @@
+{
+  "name": "Global Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d9c8f46f-43c1-4bd8-918d-b9c8b5129cd2",
+      "name": "Error Trigger",
+      "notesInFlow": true,
+      "notes": "Starts this workflow whenever another workflow execution fails and exposes workflow, execution, and error details in the JSON payload."
+    },
+    {
+      "parameters": {
+        "sendTo": "badjajscheker@hotmail.com",
+        "subject": "=n8n ERROR in {{$json[\"workflow\"][\"name\"]}} (Exec {{$json[\"execution\"][\"id\"] || \"n/a\"}})",
+        "message": "=Workflow: {{$json[\"workflow\"][\"name\"]}} (ID: {{$json[\"workflow\"][\"id\"]}})\nExecution URL: {{$json[\"execution\"][\"url\"] || \"n/a\"}}\nLast Node: {{$json[\"execution\"][\"lastNodeExecuted\"] || \"n/a\"}}\n\nError Message:\n{{$json[\"execution\"][\"error\"][\"message\"] || \"no message\"}}\n\nStack:\n{{$json[\"execution\"][\"error\"][\"stack\"] || \"no stack\"}}\n\nTimestamp: {{$now}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e6d5f9a9-3795-4eab-ac73-94a053deb068",
+      "name": "Send Error Notification Email",
+      "webhookId": "9eec8623-73eb-49f5-8d9a-764e7996bd85",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "DBAwW3OBwzCLrkw5",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Sends an email notification with workflow name, execution ID, last node, error message, stack trace, and timestamp to the configured recipient."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send Error Notification Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d99288b0-c64d-4321-905b-513d1625d172",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f537df97b71f2c146ab7e1a92fd3632f776c6dd4b0fcfe9e8e6dfda61e396206"
+  },
+  "id": "JPjpbUbVWgayCiP0",
+  "tags": []
+}
