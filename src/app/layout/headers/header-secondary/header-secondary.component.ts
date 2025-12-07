@@ -5,8 +5,14 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './header-secondary.component.html',
-  styleUrl: './header-secondary.component.scss'
+  styleUrls: ['./header-secondary.component.scss'] 
 })
 export class HeaderSecondaryComponent {
-
+  /**
+   * Secondary header component used on pages where a lighter,
+   * less prominent header is appropriate.
+   *
+   * This component is purely presentational and contains no logic.
+   */
+  constructor() {}
 }

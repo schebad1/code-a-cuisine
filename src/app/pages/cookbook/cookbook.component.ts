@@ -18,6 +18,9 @@ import { PreferencesStateService } from '../preferences/preferences-state.servic
   styleUrls: ['./cookbook.component.scss'],
 })
 export class CookbookComponent implements OnInit {
+  /**
+   * Contains the top five recipes with the highest number of likes.
+   */
   mostLikedRecipes: RecipeListItem[] = [];
 
   constructor(
@@ -27,6 +30,10 @@ export class CookbookComponent implements OnInit {
     private readonly preferencesState: PreferencesStateService
   ) {}
 
+  /**
+   * Lifecycle hook: Loads all recipes, sorts them by like count,
+   * and stores the top five.
+   */
   ngOnInit(): void {
     this.recipeLibrary.getRecipesByCuisine(null).subscribe((items) => {
       const sorted = [...items].sort(
@@ -36,20 +43,37 @@ export class CookbookComponent implements OnInit {
     });
   }
 
+  /**
+   * Navigates back to the previous page in the browser history.
+   */
   goBack(): void {
     this.location.back();
   }
 
+  /**
+   * Opens the recipe list filtered by a specific cuisine.
+   *
+   * @param cuisine - The selected cuisine
+   */
   openCuisine(cuisine: Cuisine): void {
     this.router.navigate(['/recipes'], {
       queryParams: { cuisine },
     });
   }
 
+  /**
+   * Opens the detail page for a specific recipe.
+   *
+   * @param id - The recipe ID
+   */
   openRecipe(id: string): void {
     this.router.navigate(['/recipes', id]);
   }
 
+  /**
+   * Starts the creation process for a new recipe.
+   * Resets any previously stored preferences.
+   */
   startNewRecipe(): void {
     this.preferencesState.reset();
     this.router.navigate(['/generate-recipe']);

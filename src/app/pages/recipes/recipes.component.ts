@@ -18,16 +18,37 @@ import { QueryDocumentSnapshot, DocumentData } from '@angular/fire/firestore';
   styleUrls: ['./recipes.component.scss'],
 })
 export class RecipesComponent implements OnInit {
+  /** Currently selected cuisine filter or `null` for all cuisines. */
   cuisine: Cuisine | null = null;
+
+  /** Human-readable label for the currently selected cuisine. */
   cuisineLabel = 'All recipes';
 
+  /** Recipes currently displayed for the active page. */
   recipes: RecipeListItem[] = [];
 
+  /** Number of recipes to load per page. */
   pageSize = 20;
+
+  /** Index of the currently active page (0-based). */
   currentPageIndex = 0;
+
+  /** Cached pages of recipes, each index representing a page. */
   pages: RecipeListItem[][] = [];
+
+  /**
+   * Firestore cursors for each loaded page.
+   * The element at index N is used as `startAfter` for page N.
+   */
   pageCursors: (QueryDocumentSnapshot<DocumentData> | null)[] = [null];
+
+  /** Indicates whether a page is currently being loaded. */
   isLoading = false;
+
+  /**
+   * Indicates if there might be more pages to load.
+   * Set to false when a page is returned with fewer items than `pageSize`.
+   */
   hasMore = true;
 
   constructor(
@@ -35,6 +56,10 @@ export class RecipesComponent implements OnInit {
     private readonly recipeLibrary: RecipeLibraryService
   ) {}
 
+  /**
+   * Lifecycle hook: reads the optional cuisine filter from the query params,
+   * validates it, updates labels, and loads the initial page.
+   */
   ngOnInit(): void {
     const cuisineParam = this.route.snapshot.queryParamMap.get('cuisine') as Cuisine | null;
 
@@ -49,6 +74,12 @@ export class RecipesComponent implements OnInit {
     this.goToPage(0);
   }
 
+  /**
+   * Type guard: checks whether the given string is a valid `Cuisine` value.
+   *
+   * @param value - Raw cuisine value from query parameters
+   * @returns True if the value is a valid cuisine
+   */
   private isValidCuisine(value: string): value is Cuisine {
     return (
       value === 'german' ||
@@ -60,6 +91,12 @@ export class RecipesComponent implements OnInit {
     );
   }
 
+  /**
+   * Maps a cuisine enum value to a user-facing label.
+   *
+   * @param cuisine - Cuisine enum value
+   * @returns Human-readable label for the given cuisine
+   */
   private mapCuisineToLabel(cuisine: Cuisine): string {
     switch (cuisine) {
       case 'german':
@@ -79,6 +116,12 @@ export class RecipesComponent implements OnInit {
     }
   }
 
+  /**
+   * Loads a specific page of recipes from the backend and updates
+   * local pagination state. Uses Firestore cursors for efficient paging.
+   *
+   * @param pageIndex - Zero-based page index to load
+   */
   private async loadPage(pageIndex: number): Promise<void> {
     if (this.isLoading) return;
 
@@ -115,6 +158,12 @@ export class RecipesComponent implements OnInit {
     }
   }
 
+  /**
+   * Navigates to the given page index, using cached data if available.
+   * If the page is not cached yet, it calls `loadPage`.
+   *
+   * @param pageIndex - Zero-based page index to navigate to
+   */
   async goToPage(pageIndex: number): Promise<void> {
     if (pageIndex < 0) return;
 
@@ -131,37 +180,54 @@ export class RecipesComponent implements OnInit {
     await this.loadPage(pageIndex);
   }
 
+  /**
+   * Navigates to the next page if available.
+   */
   async nextPage(): Promise<void> {
     const nextIndex = this.currentPageIndex + 1;
     if (!this.hasMore && nextIndex >= this.pages.length) return;
     await this.goToPage(nextIndex);
   }
 
+  /**
+   * Navigates to the previous page if available.
+   */
   async prevPage(): Promise<void> {
     const prevIndex = this.currentPageIndex - 1;
     if (prevIndex < 0) return;
     await this.goToPage(prevIndex);
   }
 
-  // Reale Seiten, die bereits geladen wurden
+  /**
+   * Number of real pages that have been loaded so far.
+   * If no pages are cached but there are recipes, returns 1.
+   */
   get totalPages(): number {
     return this.pages.length || (this.recipes.length > 0 ? 1 : 0);
   }
 
-  // Seiten, die in der UI angezeigt werden sollen:
-  // reale Seiten + ggf. eine "virtuelle" nächste Seite, wenn hasMore = true.
+  /**
+   * Pages that should be shown in the UI.
+   *
+   * Includes:
+   * - All real pages that have been loaded.
+   * - Optionally one "virtual" next page when:
+   *   - exactly one page is loaded
+   *   - `hasMore` is true
+   *   - the current page is the first one
+   *
+   * This allows the UI to render a clickable "next" page indicator
+   * even if the data has not been preloaded yet.
+   */
   get displayPagesArray(): number[] {
     const realPages = this.totalPages;
-  
-    // Nur wenn genau eine Seite geladen ist und wir noch mehr vermuten,
-    // zeigen wir eine "virtuelle" zweite Seite.
+
     const shouldShowExtra =
       this.hasMore &&
       realPages === 1 &&
       this.currentPageIndex === 0;
-  
+
     const count = realPages + (shouldShowExtra ? 1 : 0);
     return Array.from({ length: count }, (_, i) => i);
   }
-  
 }

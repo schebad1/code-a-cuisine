@@ -1,6 +1,12 @@
+/**
+ * master list of known ingredient names used for autocomplete.
+ *
+ * The ingredients are grouped by category (vegetables, fruits, meat, etc.)
+ * but exported as a single flat string array.
+ */
 export const INGREDIENT_NAMES: string[] = [
 
-  // --- Gemüse ---
+  // --- Vegetables ---
   'Artichoke', 'Arugula', 'Asparagus', 'Bamboo Shoots', 'Beetroot',
   'Bell Pepper', 'Bok Choy', 'Broccoli', 'Brussels Sprouts', 'Butternut Squash',
   'Cabbage', 'Carrot', 'Cassava', 'Cauliflower', 'Celery', 'Chard', 'Chayote',
@@ -13,7 +19,7 @@ export const INGREDIENT_NAMES: string[] = [
   'Sweet Potato', 'Tomato', 'Turnip', 'Water Chestnut', 'Yam', 'Yellow Squash',
   'Zucchini',
 
-  // --- Obst ---
+  // --- Fruit & Nuts (fresh & dried) ---
   'Almond', 'Apple', 'Apricot', 'Avocado', 'Banana', 'Blackberry', 'Blueberry',
   'Cantaloupe', 'Cranberry', 'Currants', 'Date', 'Dragon Fruit', 'Dried Apricots',
   'Dried Cranberries', 'Durian', 'Fig', 'Goji Berries', 'Grape', 'Guava',
@@ -22,7 +28,7 @@ export const INGREDIENT_NAMES: string[] = [
   'Plum', 'Pomegranate', 'Prunes', 'Raspberry', 'Rhubarb', 'Strawberry',
   'Sultanas', 'Tangerine', 'Watermelon',
 
-  // --- Fleisch & Wurst ---
+  // --- Meat & Sausages ---
   'Bacon', 'Beef Kidney', 'Beef Liver', 'Beef Roast', 'Beef Steak', 'Brisket',
   'Chicken Breast', 'Chicken Gizzards', 'Chicken Liver', 'Chicken Thigh',
   'Chicken Wings', 'Duck Breast', 'Duck Legs', 'Goose', 'Ground Beef',
@@ -30,12 +36,12 @@ export const INGREDIENT_NAMES: string[] = [
   'Meatballs', 'Oxtail', 'Pork Belly', 'Pork Chop', 'Pork Ribs', 'Pork Shoulder',
   'Salami', 'Sausage', 'Turkey Breast', 'Turkey',
 
-  // --- Fisch & Meeresfrüchte ---
+  // --- Fish & Seafood ---
   'Anchovies', 'Calamari', 'Clams', 'Cod', 'Crab', 'Herring', 'Lobster',
   'Mackerel', 'Mussels', 'Octopus', 'Prawn', 'Salmon', 'Salt Cod', 'Sardines',
   'Scallops', 'Shrimp', 'Trout', 'Tuna',
 
-  // --- Milchprodukte ---
+  // --- Dairy & Alternatives ---
   'Almond Milk', 'Brioche', 'Butter', 'Buttermilk', 'Camembert', 'Cheddar',
   'Cheese', 'Clotted Cream', 'Coconut Milk', 'Condensed Milk', 'Cream',
   'Cream Cheese', 'Edam', 'Emmental', 'Evaporated Milk', 'Feta', 'Goat Cheese',
@@ -43,60 +49,68 @@ export const INGREDIENT_NAMES: string[] = [
   'Mozzarella', 'Paneer', 'Parmesan', 'Ricotta', 'Roquefort', 'Sour Cream',
   'Whipping Cream', 'Whole Milk', 'Yogurt',
 
-  // --- Pasta & Nudeln ---
+  // --- Pasta & Noodles ---
   'Egg Noodles', 'Fusilli', 'Glass Noodles', 'Gnocchi', 'Linguine', 'Macaroni',
   'Pasta', 'Penne', 'Ramen Noodles', 'Rice Noodles', 'Rigatoni', 'Soba',
   'Spaghetti', 'Tagliatelle', 'Udon',
 
-  // --- Reis & Getreide ---
+  // --- Rice & Grains ---
   'Amaranth', 'Arborio Rice', 'Barley', 'Basmati Rice', 'Brown Rice',
   'Bulgur', 'Couscous', 'Farro', 'Jasmine Rice', 'Millet', 'Oats',
   'Polenta', 'Quinoa', 'Rice', 'Sticky Rice', 'Wild Rice',
 
-  // --- Backwaren ---
+  // --- Baked Goods & Doughs ---
   'Bagel', 'Baguette', 'Bread', 'Bread Crumbs', 'Bun', 'Brioche', 'Ciabatta',
   'Crackers', 'Croissant', 'English Muffin', 'Flatbread', 'Focaccia', 'Naan',
   'Pita', 'Pretzel', 'Sourdough', 'Toast', 'Tortilla', 'Phyllo Dough',
   'Puff Pastry', 'Pizza Dough', 'Cake Mix', 'Brownie Mix',
 
-  // --- Hülsenfrüchte ---
+  // --- Legumes ---
   'Black Beans', 'Borlotti Beans', 'Chickpeas', 'Kidney Beans', 'Lentils',
   'Lima Beans', 'Pinto Beans', 'Soybeans', 'Split Peas', 'White Beans',
 
-  // --- Konserven ---
+  // --- Canned & Jarred ---
   'Canned Beans', 'Canned Chickpeas', 'Canned Coconut Milk', 'Canned Corn',
   'Canned Peas', 'Canned Tomatoes', 'Canned Tuna', 'Tomato Paste', 'Tomato Sauce',
 
-  // --- Grundzutaten ---
+  // --- Pantry Staples & Baking ---
   'Baking Powder', 'Baking Soda', 'Balsamic Vinegar', 'Brown Sugar',
   'Coconut Oil', 'Corn Flour', 'Cornstarch', 'Flour', 'Honey', 'Icing Sugar',
   'Maple Syrup', 'Molasses', 'Mustard', 'Olive Oil', 'Peanut Butter',
   'Salt', 'Soy Sauce', 'Sugar', 'Vegetable Oil', 'Vinegar',
   'Worcestershire Sauce', 'Vanilla Extract', 'Almond Extract',
 
-  // --- Gewürze ---
+  // --- Spices & Seasonings ---
   'Allspice', 'Basil', 'Berbere', 'Cardamom', 'Cinnamon', 'Cloves',
   'Coriander', 'Cumin', 'Curry Powder', 'Fenugreek', 'Five Spice Powder',
   'Harissa', 'Lavender', 'Nutmeg', 'Oregano', 'Paprika', 'Ras el Hanout',
   'Rosemary', 'Saffron', 'Smoked Paprika', 'Star Anise', 'Sumac', 'Thyme',
   'Turmeric', 'Chili Powder', 'Hot Sauce', 'Sriracha',
 
-  // --- Saucen, Öle, Pasten ---
+  // --- Sauces, Oils & Pastes ---
   'BBQ Sauce', 'Chili Sauce', 'Fish Sauce', 'Hoisin Sauce', 'Ketchup',
   'Miso Paste', 'Oyster Sauce', 'Pesto', 'Pesto Rosso', 'Sesame Oil',
   'Tahini', 'Gochujang', 'Curry Paste', 'Tomato Ketchup',
 
-  // --- Tiefkühl ---
+  // --- Frozen ---
   'Frozen Berries', 'Frozen Peas', 'Frozen Pizza', 'Frozen Spinach',
 
-  // --- Nüsse & Snacks ---
+  // --- Nuts, Seeds & Snacks ---
   'Cashews', 'Hazelnuts', 'Macadamia Nuts', 'Nuts', 'Pine Nuts',
   'Pistachios', 'Pumpkin Seeds', 'Sunflower Seeds', 'Trail Mix', 'Granola',
 
-  // --- Süßwaren ---
+  // --- Sweets & Confectionery ---
   'Chocolate', 'Dark Chocolate', 'White Chocolate', 'Cocoa Powder',
   'Cocoa Nibs', 'Jam', 'Marzipan',
 
-  // --- Getränke ---
-  'Coffee', 'Tea', 'Coconut Water', 'Energy Drink'
+  // --- Beverages ---
+  'Coffee', 'Tea', 'Coconut Water', 'Energy Drink',
 ];
+
+/**
+ * Convenience type representing any valid ingredient name from {@link INGREDIENT_NAMES}.
+ *
+ * This is optional but useful if you ever want strict typing for
+ * ingredient name properties.
+ */
+export type IngredientName = (typeof INGREDIENT_NAMES)[number];

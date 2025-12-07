@@ -12,10 +12,16 @@ import { RecipeSeedService } from './api/recipe-seed.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  /** Application title displayed in the root template. */
   title = 'code-a-cuisine';
 
+  /**
+   * Root component of the application.  
+   * The constructor previously allowed seeding initial recipes into Firestore.
+   * This is intentionally commented out because seeding should only happen manually.
+   */
   // constructor(private readonly recipeSeedService: RecipeSeedService) {
-  //   // ⚠️ Nur temporär aktiv lassen, um die Seeds einmal zu schreiben!
+  //   // ⚠️ Only enable temporarily when the database should be seeded once.
   //   this.recipeSeedService.seedInitialRecipes();
   // }
 }

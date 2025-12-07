@@ -18,69 +18,113 @@ export class GenerateRecipeComponent {
     private readonly ingredientsState: IngredientsStateService
   ) {}
 
+  /** All available ingredient names used for autocomplete. */
   allIngredientNames: string[] = INGREDIENT_NAMES;
+
+  /** Filtered list of ingredient suggestions based on user input. */
   filteredIngredientNames: string[] = [];
 
-  // LINKS (Formular)
+  // LEFT SIDE (Form)
+
+  /** Whether the unit dropdown on the form is currently open. */
   isUnitDropdownOpen = false;
+
+  /** The currently selected unit when adding a new ingredient. */
   selectedUnit = 'gram';
 
-  // Eingabe
+  /** Name of the ingredient currently being typed in the form. */
   ingredientName = '';
+
+  /** Quantity of the ingredient currently being typed in the form. */
   ingredientQuantity: number | null = null;
 
-  // RECHTS (Liste / Edit-Modus)
+  // RIGHT SIDE (List / Edit Mode)
+
+  /** Index of the ingredient currently being edited. Null means no edit in progress. */
   editingIndex: number | null = null;
+
+  /** Temporary quantity while editing an ingredient. */
   editingQuantity: number | null = null;
+
+  /** Temporary unit while editing an ingredient. */
   editingUnit: string = 'gram';
+
+  /** Temporary ingredient name while editing an ingredient. */
   editingName = '';
+
+  /** Whether the unit dropdown in edit mode is open. */
   editingUnitDropdownOpen = false;
 
-  // Flag: ist gerade irgendeine Zutat im Edit-Modus?
+  /**
+   * Indicates whether any ingredient is currently in edit mode.
+   */
   get isEditing(): boolean {
     return this.editingIndex !== null;
   }
 
-  // Hilfsfunktion: ersten Buchstaben groß schreiben
+  /**
+   * Capitalizes the first letter of a string.
+   *
+   * @param value - Input string
+   * @returns The string with the first letter capitalized
+   */
   private capitalizeFirst(value: string): string {
     if (!value) return value;
     return value.charAt(0).toUpperCase() + value.slice(1);
   }
 
-  // ---- LINKS: Unit-Dropdown im Formular ----
+  // ---- LEFT SIDE: Unit Dropdown in Form ----
+
+  /**
+   * Toggles the unit dropdown on the form.
+   * Disabled if an ingredient is currently being edited.
+   */
   toggleUnitDropdown(): void {
-    // Wenn gerade editiert wird, kein Unit-Dropdown links
     if (this.isEditing) {
       return;
     }
     this.isUnitDropdownOpen = !this.isUnitDropdownOpen;
   }
 
+  /**
+   * Selects a unit for the ingredient being added.
+   *
+   * @param unit - The chosen unit
+   */
   selectUnit(unit: string): void {
     this.selectedUnit = unit;
     this.isUnitDropdownOpen = false;
   }
 
-  // ---- RECHTS: Zutatenliste / State ----
+  // ---- RIGHT SIDE: Ingredient List / State ----
+
+  /**
+   * Returns the current list of ingredients from the state service.
+   */
   get ingredients(): Ingredient[] {
     return this.ingredientsState.ingredients;
   }
 
+  /**
+   * Whether the user can navigate to the next step.
+   * Requires at least one ingredient.
+   */
   get canGoNext(): boolean {
     return this.ingredients.length > 0;
   }
 
+  /**
+   * Adds an ingredient to the list if form inputs are valid.
+   * Disabled while an edit operation is in progress.
+   */
   addIngredient(): void {
-    // während Edit nicht erlauben
     if (this.isEditing) {
       return;
     }
 
     const rawName = this.ingredientName.trim();
+    if (!rawName) return;
 
-    if (!rawName) {
-      return;
-    }
     if (this.ingredientQuantity === null || this.ingredientQuantity <= 0) {
       return;
     }
@@ -98,8 +142,13 @@ export class GenerateRecipeComponent {
     this.filteredIngredientNames = [];
   }
 
+  /**
+   * Removes an ingredient by index.
+   * Disabled while an ingredient is being edited.
+   *
+   * @param index - Position of the ingredient to remove
+   */
   removeIngredient(index: number): void {
-    // während irgendein Edit läuft: nichts löschen
     if (this.isEditing) {
       return;
     }
@@ -116,42 +165,43 @@ export class GenerateRecipeComponent {
     }
   }
 
+  /**
+   * Activates edit mode for the ingredient at the given index.
+   * Editing is not allowed if another ingredient is already being edited.
+   *
+   * @param index - Index of the ingredient to edit
+   */
   startEdit(index: number): void {
-    // wenn schon editiert wird und es ist eine andere Zeile: blockieren
     if (this.isEditing && this.editingIndex !== index) {
       return;
     }
 
     const ing = this.ingredients[index];
-    if (!ing) {
-      return;
-    }
+    if (!ing) return;
 
     this.editingIndex = index;
     this.editingQuantity = ing.quantity;
     this.editingUnit = ing.unit;
     this.editingName = ing.name;
     this.editingUnitDropdownOpen = false;
-    this.isUnitDropdownOpen = false; // linkes Dropdown sicherheitshalber zu
+    this.isUnitDropdownOpen = false;
   }
 
+  /**
+   * Confirms the edit operation and updates the ingredient.
+   * Validation ensures name and quantity are valid.
+   */
   confirmEdit(): void {
-    if (this.editingIndex === null) {
-      return;
-    }
-    if (this.editingQuantity === null || this.editingQuantity <= 0) {
-      return;
-    }
+    if (this.editingIndex === null) return;
+    if (this.editingQuantity === null || this.editingQuantity <= 0) return;
+
     const rawName = this.editingName.trim();
-    if (!rawName) {
-      return;
-    }
+    if (!rawName) return;
 
     const newName = this.capitalizeFirst(rawName);
-
     const index = this.editingIndex;
-    const current = this.ingredients[index];
 
+    const current = this.ingredients[index];
     if (!current) {
       this.editingIndex = null;
       this.editingQuantity = null;
@@ -173,17 +223,32 @@ export class GenerateRecipeComponent {
     this.editingUnitDropdownOpen = false;
   }
 
-  // ---- RECHTS: Unit-Dropdown im Edit-Modus ----
+  // ---- RIGHT SIDE: Unit Dropdown in Edit Mode ----
+
+  /**
+   * Toggles the unit dropdown while editing an ingredient.
+   */
   toggleEditingUnitDropdown(): void {
     this.editingUnitDropdownOpen = !this.editingUnitDropdownOpen;
   }
 
+  /**
+   * Selects a unit while editing an ingredient.
+   *
+   * @param unit - The chosen unit
+   */
   selectEditingUnit(unit: string): void {
     this.editingUnit = unit;
     this.editingUnitDropdownOpen = false;
   }
 
-  // ---- Autocomplete für Ingredient-Namen ----
+  // ---- Autocomplete for Ingredient Names ----
+
+  /**
+   * Generates autocomplete suggestions based on the current input.
+   *
+   * @param value - The user's input string
+   */
   onIngredientNameChange(value: string): void {
     this.ingredientName = value;
 
@@ -198,32 +263,38 @@ export class GenerateRecipeComponent {
       .slice(0, 3);
   }
 
+  /**
+   * Selects an autocomplete suggestion and fills it into the input.
+   *
+   * @param name - Suggested ingredient name
+   */
   selectIngredientSuggestion(name: string): void {
     this.ingredientName = name;
     this.filteredIngredientNames = [];
   }
 
+  /**
+   * Formats a displayed ingredient amount depending on its unit.
+   *
+   * @param ingredient - The ingredient to format
+   * @returns A human-readable string like "100g" or "2 ml"
+   */
   formatIngredientAmount(ingredient: Ingredient): string {
     const qty = ingredient.quantity;
     const unit = ingredient.unit;
 
     if (unit === 'gram') {
-      // 100g
       return `${qty}g`;
     }
 
     if (unit === 'piece') {
-      // nur Zahl
       return `${qty}`;
     }
 
     if (unit === 'ml') {
-      // 100 ml
       return `${qty} ml`;
     }
 
-    // Fallback, falls irgendwann neue Units dazukommen
     return `${qty} ${unit}`;
   }
-
 }

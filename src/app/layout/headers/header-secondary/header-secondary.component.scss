@@ -1,17 +1,19 @@
+$color-header-bg: white;
+
 header {
-    height: 136px;
-    padding: 40px 40px 32px;
-    background-color: white;
+  height: 136px;
+  padding: 40px 40px 32px;
+  background-color: $color-header-bg;
 }
 
-@media  (max-width: 550px) {
-    header {
-        padding: 10px 10px;
-        height: 55px;
-    }
+@media (max-width: 550px) {
+  header {
+    padding: 10px 10px;
+    height: 55px;
+  }
 
-    header img {
-        width: 95px;
-        height: 42px;
-    }
+  header img {
+    width: 95px;
+    height: 42px;
+  }
 }

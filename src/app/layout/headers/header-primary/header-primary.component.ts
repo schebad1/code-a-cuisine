@@ -5,8 +5,14 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './header-primary.component.html',
-  styleUrl: './header-primary.component.scss'
+  styleUrls: ['./header-primary.component.scss'] 
 })
 export class HeaderPrimaryComponent {
-
+  /**
+   * Primary header component displayed at the top of main application pages.
+   * Typically contains branding, navigation, or entry-point actions.
+   *
+   * This component is layout-only and does not implement any logic.
+   */
+  constructor() {}
 }

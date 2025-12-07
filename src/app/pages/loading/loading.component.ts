@@ -30,6 +30,11 @@ export class LoadingComponent implements OnInit {
     private readonly recipeLibrary: RecipeLibraryService,
   ) {}
 
+  /**
+   * Lifecycle hook: initiates recipe generation based on user-provided
+   * ingredients and preferences. Handles success, error, and quota cases,
+   * and navigates accordingly.
+   */
   ngOnInit(): void {
     const ingredients = this.ingredientsState.ingredients;
     const prefs = this.preferencesState.preferences;
@@ -53,12 +58,13 @@ export class LoadingComponent implements OnInit {
       next: async (apiResponse: any) => {
         const normalized = this.normalizeApiResponse(apiResponse);
 
+        // Failed to normalize → bad or malformed API response
         if (!normalized) {
           this.router.navigate(['/generate-recipe']);
           return;
         }
 
-        // --- QUOTA / ERROR CASE ---
+        // Quota exceeded or API returned no recipes
         if (!normalized.success || !normalized.recipes?.length) {
           this.router.navigate(['/results'], {
             state: {
@@ -71,7 +77,7 @@ export class LoadingComponent implements OnInit {
           return;
         }
 
-        // --- SUCCESS CASE: Save recipes ---
+        // Successful response → save recipes and navigate to results
         try {
           const recipeIds = await this.saveAllRecipes(normalized.recipes);
 
@@ -88,12 +94,19 @@ export class LoadingComponent implements OnInit {
         }
       },
 
+      // Network error or API unreachable
       error: () => {
         this.router.navigate(['/generate-recipe']);
       },
     });
   }
 
+  /**
+   * Saves all generated recipes to the recipe library.
+   *
+   * @param recipes - List of generated recipes
+   * @returns A promise resolving to an array of recipe IDs
+   */
   private async saveAllRecipes(recipes: GeneratedRecipe[]): Promise<string[]> {
     const ids: string[] = [];
 
@@ -105,11 +118,20 @@ export class LoadingComponent implements OnInit {
     return ids;
   }
 
+  /**
+   * Extracts and normalizes the API response so the application can work
+   * with a consistent format. Handles various API wrapper formats, strings,
+   * nested `body`, `json`, `data` fields, and array-wrapped responses.
+   *
+   * @param apiResponse - Raw response returned by the recipe API
+   * @returns A normalized response or `null` if invalid
+   */
   private normalizeApiResponse(
     apiResponse: any,
   ): RecipeResponseWithRecipes | null {
     let body: any = apiResponse;
 
+    // Allow stringified JSON
     if (typeof body === 'string') {
       try {
         body = JSON.parse(body);
@@ -118,22 +140,17 @@ export class LoadingComponent implements OnInit {
       }
     }
 
+    // Some providers wrap data in arrays
     if (Array.isArray(body) && body.length > 0) {
       body = body[0];
     }
 
-    if (body && body.body) {
-      body = body.body;
-    }
+    // Strip common wrapper formats
+    if (body && body.body) body = body.body;
+    if (body && body.json) body = body.json;
+    if (body && body.data) body = body.data;
 
-    if (body && body.json) {
-      body = body.json;
-    }
-
-    if (body && body.data) {
-      body = body.data;
-    }
-
+    // Must have a recipes array to be valid
     if (!body || !Array.isArray(body.recipes)) {
       return null;
     }

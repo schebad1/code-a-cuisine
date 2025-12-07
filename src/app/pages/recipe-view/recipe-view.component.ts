@@ -16,22 +16,35 @@ import { PreferencesStateService } from '../preferences/preferences-state.servic
   styleUrls: ['./recipe-view.component.scss'],
 })
 export class RecipeViewComponent implements OnInit {
+  /** Currently loaded recipe or `null` if not found. */
   recipe: FirestoreRecipe | null = null;
 
+  /** Indicates whether the recipe is currently being loaded. */
   isLoading = true;
+
+  /** Indicates that no recipe was found for the given ID. */
   notFound = false;
 
+  /** Human-readable label for the diet of the recipe. */
   dietLabel = '';
+  /** Human-readable label for the time category derived from total minutes. */
   timeCategoryLabel = '';
+  /** Pseudo-like count for display. Uses saved likes or 0 as fallback. */
   randomLikes = 0;
+  /** Number of helpers used in this recipe (1–4). */
   helperCount = 1;
 
+  /** Ingredients originally coming from the user input. */
   userIngredients: any[] = [];
+  /** Ingredients added by the system / extras beyond user input. */
   extraIngredients: any[] = [];
+  /** Ordered list of generated cooking steps. */
   steps: GeneratedStep[] = [];
 
+  /** Whether the user has "liked" the recipe in the current session. */
   hasLiked = false;
 
+  /** Configuration for helper icons and layout. */
   helperConfigs = [
     {
       index: 1,
@@ -66,6 +79,11 @@ export class RecipeViewComponent implements OnInit {
     private readonly preferencesState: PreferencesStateService
   ) {}
 
+  /**
+   * Lifecycle hook: loads the recipe for the ID in the current route.
+   * Handles not-found cases, derives display labels, splits ingredients
+   * into user vs. extra, and sorts steps.
+   */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
 
@@ -114,16 +132,32 @@ export class RecipeViewComponent implements OnInit {
     });
   }
 
+  /**
+   * Toggles the like state for the current recipe.
+   * Only affects local UI state, not persisted.
+   */
   toggleLike(): void {
     this.hasLiked = !this.hasLiked;
   }
 
+  /**
+   * Maps a total preparation time in minutes to a simple time category label.
+   *
+   * @param totalMinutes - Total time in minutes
+   * @returns A label like "Quick", "Medium", or "Complex"
+   */
   private getTimeCategoryLabel(totalMinutes: number): string {
     if (totalMinutes <= 20) return 'Quick';
     if (totalMinutes <= 40) return 'Medium';
     return 'Complex';
   }
 
+  /**
+   * Maps the stored diet value to a user-facing label.
+   *
+   * @param diet - Diet identifier (e.g. "vegetarian", "vegan", "keto", "none")
+   * @returns A human-readable diet label
+   */
   private getDietLabel(diet: string): string {
     switch (diet) {
       case 'vegetarian':
@@ -138,6 +172,13 @@ export class RecipeViewComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns a concise title for a step, derived from the first sentence
+   * or truncated text if needed.
+   *
+   * @param step - The step for which to build the title
+   * @returns A short, capitalized title string
+   */
   getStepTitle(step: GeneratedStep): string {
     if (!step?.text) return `Step ${step.order}`;
     const text = step.text.trim();
@@ -154,8 +195,11 @@ export class RecipeViewComponent implements OnInit {
   }
 
   /**
-   * Gibt den Beschreibungs-Teil eines Steps zurück (alles nach dem ersten Satz).
-   * Wenn es keinen zweiten Satz gibt, wird ein leerer String zurückgegeben.
+   * Returns the descriptive body of a step (everything after the first sentence).
+   * If there is no second sentence, an empty string is returned.
+   *
+   * @param step - The step whose body should be extracted
+   * @returns The remaining text after the first sentence or an empty string
    */
   getStepBody(step: GeneratedStep): string {
     if (!step?.text) return '';
@@ -171,16 +215,36 @@ export class RecipeViewComponent implements OnInit {
     return rest;
   }
 
+  /**
+   * Checks if a step should be assigned to a given helper index.
+   * Steps without an explicit helper are assigned to helper 1.
+   *
+   * @param step - Step to inspect
+   * @param helperIndex - Helper index (1–4)
+   * @returns True if the step is assigned to that helper
+   */
   isStepForHelper(step: GeneratedStep, helperIndex: number): boolean {
     if (!step.assignedToHelper) return helperIndex === 1;
     return step.assignedToHelper === helperIndex;
   }
 
+  /**
+   * Starts the flow for creating a new recipe:
+   * - resets user preferences
+   * - navigates back to the ingredient selection screen
+   */
   startNewRecipe(): void {
     this.preferencesState.reset();
     this.router.navigate(['/generate-recipe']);
   }
 
+  /**
+   * Normalizes a value that indicates whether an ingredient came from the user.
+   * Accepts booleans, "true"/"false" strings, and 1/0 numbers.
+   *
+   * @param raw - Raw flag value from the recipe data
+   * @returns True/false when recognized, otherwise `null`
+   */
   private normalizeIsFromUser(raw: any): boolean | null {
     if (raw === true) return true;
     if (raw === false) return false;
@@ -197,6 +261,16 @@ export class RecipeViewComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Splits the given list of ingredients into two groups:
+   * - userIngredients: ingredients originating from user input
+   * - extraIngredients: additional ingredients suggested by the system
+   *
+   * If no explicit "isFromUser" information exists, all ingredients
+   * are treated as user ingredients.
+   *
+   * @param ingredientsAny - Raw ingredient array from the recipe
+   */
   private splitIngredients(ingredientsAny: any[]): void {
     const fromUser: any[] = [];
     const extras: any[] = [];

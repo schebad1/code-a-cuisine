@@ -21,9 +21,13 @@ type ResultsData = RecipeGenerationResponse & {
   styleUrls: ['./results.component.scss'],
 })
 export class ResultsComponent implements OnInit {
+  /** List of generated recipes returned by the API. */
   recipes: GeneratedRecipe[] = [];
+
+  /** IDs of the saved recipes in Firestore. */
   recipeIds: string[] = [];
 
+  /** API quota information returned from the backend. */
   quotaInfo = {
     limitPerIp: 0,
     remainingForIpToday: 0,
@@ -31,10 +35,13 @@ export class ResultsComponent implements OnInit {
     remainingGlobalToday: 0,
   };
 
-  // neu: Erfolg/Quota-Status
+  /** Indicates whether the recipe generation request was successful. */
   success = true;
 
+  /** Human-readable label for cuisine of the first recipe. */
   cuisineLabel = '';
+
+  /** Human-readable time category label of the first recipe. */
   timeCategoryLabel = '';
 
   constructor(
@@ -42,6 +49,13 @@ export class ResultsComponent implements OnInit {
     private readonly preferencesState: PreferencesStateService,
   ) {}
 
+  /**
+   * Type guard to determine whether the response contains results data
+   * in the expected format.
+   *
+   * @param response - Raw navigation state
+   * @returns True if the object has valid recipes and recipeIds arrays
+   */
   private hasResultsData(response: any): response is ResultsData {
     return (
       !!response &&
@@ -50,6 +64,11 @@ export class ResultsComponent implements OnInit {
     );
   }
 
+  /**
+   * Lifecycle hook: Reads results data from navigation state or history state.
+   * Redirects back to the generator page if no valid data is present.
+   * Also extracts quota information and derives cuisine/time labels.
+   */
   ngOnInit(): void {
     const nav = this.router.getCurrentNavigation();
     const stateFromNav = nav?.extras.state as { data?: unknown } | undefined;
@@ -64,17 +83,18 @@ export class ResultsComponent implements OnInit {
 
     const response = data as ResultsData;
 
-    // Nur noch prüfen, ob Struktur stimmt – nicht mehr auf recipes.length > 0
     if (!this.hasResultsData(response)) {
       this.router.navigate(['/generate-recipe']);
       return;
     }
 
+    // Valid structure → extract fields
     this.recipes = response.recipes;
     this.recipeIds = response.recipeIds;
     this.quotaInfo = (response as any).quota ?? this.quotaInfo;
     this.success = (response as any).success ?? true;
 
+    // Derive UI labels based on the first recipe
     if (this.recipes.length > 0) {
       const first = this.recipes[0];
 
@@ -92,12 +112,23 @@ export class ResultsComponent implements OnInit {
     }
   }
 
+  /**
+   * Converts total minutes into a human-friendly time category.
+   *
+   * @param totalMinutes - Total cooking time
+   * @returns A label such as "Quick", "Medium", or "Complex"
+   */
   private getTimeCategoryLabel(totalMinutes: number): string {
     if (totalMinutes <= 20) return 'Quick';
     if (totalMinutes <= 40) return 'Medium';
     return 'Complex';
   }
 
+  /**
+   * Opens a generated recipe by its index in the result list.
+   *
+   * @param index - Index of the recipe to open
+   */
   openRecipe(index: number): void {
     const id = this.recipeIds[index];
 
@@ -109,11 +140,12 @@ export class ResultsComponent implements OnInit {
     this.router.navigate(['/recipes', id]);
   }
 
+  /**
+   * Resets preferences and navigates back to the ingredient input screen
+   * to start a completely new recipe generation process.
+   */
   startNewRecipe(): void {
-    // Preferences auf Default zurücksetzen
     this.preferencesState.reset();
-
-    // Zur Generate-Recipe-Seite navigieren
     this.router.navigate(['/generate-recipe']);
   }
 }
