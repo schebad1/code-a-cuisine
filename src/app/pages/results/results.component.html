@@ -13,7 +13,7 @@
           />
         </figure>
         <p class="results__subtitle">
-          We took what you have and let our AI do the thinking. <br>
+          We took what you have and let our AI do the thinking. <br />
           Here are 3 easy recipes you can make right now!
         </p>
         <div class="results__tags">
@@ -24,8 +24,6 @@
             {{ timeCategoryLabel }}
           </span>
         </div>
-
-        <!-- QUOTA BANNER -->
         <div
           class="results__quota"
           *ngIf="quotaInfo.limitPerIp || quotaInfo.limitGlobal"
@@ -55,12 +53,7 @@
         />
       </figure>
     </div>
-
-    <!-- ERFOLGSFALL: Rezepte vorhanden -->
-    <div
-      class="results-list"
-      *ngIf="success && recipes.length; else noResults"
-    >
+    <div class="results-list" *ngIf="success && recipes.length; else noResults">
       <article
         class="results-card"
         *ngFor="let recipe of recipes; let i = index"
@@ -101,22 +94,20 @@
         </div>
       </article>
     </div>
-
-    <!-- FALL: Keine Rezepte (Quota erreicht oder anderer Grund) -->
     <ng-template #noResults>
       <div class="results__no-results">
         <h2 class="results__no-results-title">
-          {{ success ? 'No recipes available' : 'Daily quota reached' }}
+          {{ success ? "No recipes available" : "Daily quota reached" }}
         </h2>
 
         <p class="results__no-results-text" *ngIf="!success">
-          It looks like you have used up today’s recipe quota
-          from this IP or globally.
+          It looks like you have used up today’s recipe quota from this IP or
+          globally.
         </p>
 
         <p class="results__no-results-text" *ngIf="success">
-          We could not generate recipes this time. Please go back and try
-          again with different ingredients or preferences.
+          We could not generate recipes this time. Please go back and try again
+          with different ingredients or preferences.
         </p>
 
         <div

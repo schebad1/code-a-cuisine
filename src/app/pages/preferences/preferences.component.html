@@ -120,7 +120,9 @@
             <div
               class="preferences__option-box"
               (click)="selectTimeCategory('medium')"
-              [class.preferences__option-box--active]="timeCategory === 'medium'"
+              [class.preferences__option-box--active]="
+                timeCategory === 'medium'
+              "
             >
               <span class="preferences__option-label">Medium</span>
             </div>
@@ -131,7 +133,9 @@
             <div
               class="preferences__option-box"
               (click)="selectTimeCategory('complex')"
-              [class.preferences__option-box--active]="timeCategory === 'complex'"
+              [class.preferences__option-box--active]="
+                timeCategory === 'complex'
+              "
             >
               <span class="preferences__option-label">Complex</span>
             </div>
@@ -279,6 +283,5 @@
         Generate a recipe
       </a>
     </p>
-    
   </section>
 </main>

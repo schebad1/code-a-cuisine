@@ -35,7 +35,8 @@
       <div class="recipe-card__meta">
         <div class="recipe-card__index__wrapper">
           <div class="recipe-card__index">
-            <span class="recipe-card__index-number">{{ currentPageIndex * pageSize + i + 1 }}.
+            <span class="recipe-card__index-number"
+              >{{ currentPageIndex * pageSize + i + 1 }}.
             </span>
           </div>
         </div>
@@ -81,14 +82,8 @@
     </div>
   </a>
 
-  <!-- ECHTE PAGINATION -->
-  <div
-    class="pagination"
-    aria-label="Recipe pages"
-    *ngIf="totalPages > 0"
-  >
+  <div class="pagination" aria-label="Recipe pages" *ngIf="totalPages > 0">
     <ul class="pagination__list">
-      <!-- PREVIOUS -->
       <li class="pagination__item pagination__item--control">
         <button
           class="pagination__link"
@@ -100,8 +95,6 @@
           &lt;
         </button>
       </li>
-
-      <!-- SEITENZAHLEN -->
       <li
         class="pagination__item"
         *ngFor="let pageIndex of displayPagesArray"
@@ -116,15 +109,15 @@
           {{ pageIndex + 1 }}
         </button>
       </li>
-
-      <!-- NEXT -->
       <li class="pagination__item pagination__item--control">
         <button
           class="pagination__link"
           type="button"
           aria-label="Next page"
           (click)="nextPage()"
-          [disabled]="isLoading || (!hasMore && currentPageIndex === totalPages - 1)"
+          [disabled]="
+            isLoading || (!hasMore && currentPageIndex === totalPages - 1)
+          "
         >
           &gt;
         </button>

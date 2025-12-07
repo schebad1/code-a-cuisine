@@ -34,8 +34,6 @@
             <span class="recipe-view__servings">
               Cooking helpers: {{ helperCount }}
             </span>
-
-            <!-- OBEN: Helfer-Icons nur bis helperCount, OHNE slice -->
             <ng-container *ngFor="let h of helperConfigs; let i = index">
               <div *ngIf="i < helperCount" [ngClass]="h.className">
                 <img
@@ -49,8 +47,6 @@
           </div>
         </div>
       </article>
-
-      <!-- Rechte Spalte: Tags + Nährwerte -->
       <aside class="recipe-view__sidebar">
         <div class="recipe-view__badges">
           <div class="recipe-view__badge recipe-view__badge--diet">
@@ -164,10 +160,7 @@
 
       <div class="recipe-view__directions-layout">
         <div class="recipe-view__directions-row">
-          <div
-            class="recipe-view__direction-step"
-            *ngFor="let step of steps"
-          >
+          <div class="recipe-view__direction-step" *ngFor="let step of steps">
             <div class="recipe-view__direction-header">
               <div class="recipe-view__direction-heading">
                 <div class="recipe-view__direction-index">
@@ -180,7 +173,6 @@
                 </span>
               </div>
 
-              <!-- DIRECTIONS: gleicher Helper-Loop, aber gefiltert per helperCount UND assignedToHelper -->
               <ng-container *ngFor="let h of helperConfigs; let i = index">
                 <div
                   [ngClass]="h.className"
@@ -197,7 +189,6 @@
             </div>
 
             <div class="recipe-view__direction-text-wrapper">
-              <!-- Nur die Beschreibung (Body) anzeigen, nicht den Titel -->
               <span
                 class="recipe-view__direction-text"
                 *ngIf="getStepBody(step) as body"
@@ -212,7 +203,6 @@
                 ~{{ step.durationMinutes }} min
               </span>
             </div>
-
           </div>
         </div>
       </div>
@@ -229,12 +219,14 @@
       <img
         class="recipe-view__rating-icon"
         [ngClass]="hasLiked ? 'heart-liked' : 'heart-unliked'"
-        [src]="hasLiked
-          ? 'assets/recipe-view/heart-green-full.svg'
-          : 'assets/recipe-view/heart-empty-green.svg'"
-        [alt]="hasLiked
-          ? 'You liked this recipe'
-          : 'Rate this recipe with a heart'"
+        [src]="
+          hasLiked
+            ? 'assets/recipe-view/heart-green-full.svg'
+            : 'assets/recipe-view/heart-empty-green.svg'
+        "
+        [alt]="
+          hasLiked ? 'You liked this recipe' : 'Rate this recipe with a heart'
+        "
         (click)="toggleLike()"
       />
     </div>
@@ -264,5 +256,4 @@
       </a>
     </div>
   </div>
-
 </main>
