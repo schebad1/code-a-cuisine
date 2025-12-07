@@ -1,6 +1,17 @@
+$color-main-text: rgba(57, 96, 57, 1);
+$color-btn-bg: rgba(57, 96, 57, 1);
+$color-btn-text: rgba(250, 240, 230, 1);
+$color-btn-bg-hover: rgba(5, 94, 5, 1);
+$color-btn-text-hover: rgba(255, 255, 255, 1);
+$color-link-text: rgba(30, 85, 21, 1);
+$color-card-hover: rgba(250, 240, 230, 0.7);
+$color-index-bg: rgba(246, 227, 207, 1);
+$color-tag-bg: rgba(57, 96, 57, 0.2);
+$color-ingredients-title-bg: rgba(250, 240, 230, 1);
+
 main {
   height: calc(100vh - 154px);
-  color: rgba(57, 96, 57, 1);
+  color: $color-main-text;
   padding: 36px;
 }
 
@@ -11,8 +22,8 @@ main {
 .btn {
   width: 230px;
   height: 60px;
-  background-color: rgba(57, 96, 57, 1);
-  color: rgba(250, 240, 230, 1);
+  background-color: $color-btn-bg;
+  color: $color-btn-text;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -21,8 +32,8 @@ main {
 }
 
 .btn:hover {
-  background-color: rgba(5, 94, 5, 1);
-  color: rgba(255, 255, 255, 1);
+  background-color: $color-btn-bg-hover;
+  color: $color-btn-text-hover;
 }
 
 .preferences-cta {
@@ -33,16 +44,16 @@ main {
 .preferences__back-link {
   display: flex;
   gap: 4px;
-  color: rgba(30, 85, 21, 1);
+  color: $color-link-text;
 }
 
 .recipe-view__ingredients-heading {
   font-size: 32px;
-  color: rgba(30, 85, 21, 1);
+  color: $color-link-text;
 }
 
 .recipe-view__ingredients-title {
-  background-color: rgba(250, 240, 230, 1);
+  background-color: $color-ingredients-title-bg;
   border-radius: 18px;
   padding: 10px;
   text-align: center;
@@ -65,7 +76,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(246, 227, 207, 1);
+  background-color: $color-index-bg;
   width: 30px;
   height: 30px;
   border-radius: 31.5px;
@@ -80,8 +91,9 @@ main {
 }
 
 .recipe-card__top:hover {
-  background-color: rgba(250, 240, 230, 0.7);
+  background-color: $color-card-hover;
 }
+
 .recipe-card__time {
   display: flex;
   align-items: center;
@@ -106,7 +118,7 @@ main {
 .recipe-card__tag {
   padding: 6px 12px;
   border-radius: 30px;
-  background-color: rgba(57, 96, 57, 0.2);
+  background-color: $color-tag-bg;
 }
 
 .recipe-card__tag--icon {
@@ -153,7 +165,7 @@ main {
   background: none;
   padding: 0;
   font: inherit;
-  color: rgba(30, 85, 21, 1);
+  color: $color-link-text;
   cursor: pointer;
 }
 
@@ -172,7 +184,6 @@ main {
 nav {
   padding-left: 32px;
 }
-
 
 @media (max-width: 770px) {
   .recipe-card__top {

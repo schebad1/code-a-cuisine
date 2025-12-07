@@ -1,18 +1,46 @@
+$color-main-text: rgb(57, 96, 57);
+$color-main-bg-soft: rgba(250, 240, 230, 0.3);
+$color-main-border: rgba(250, 240, 230, 1);
+$color-layout-bg: rgba(250, 240, 230, 1);
+
+$color-text-dark: rgba(16, 49, 11, 1);
+$color-text-accent: rgba(30, 85, 21, 1);
+$color-ingredients-block-title: rgba(0, 128, 0, 1);
+
+$color-badge-bg: rgba(57, 96, 57, 0.2);
+$color-cta-bg: rgba(57, 96, 57, 0.1);
+$color-link-hover-bg: rgba(250, 224, 198, 0.2);
+
+$color-btn-bg: rgba(57, 96, 57, 1);
+$color-btn-bg-hover: rgba(5, 94, 5, 1);
+$color-btn-text: rgba(250, 240, 230, 1);
+$color-btn-text-hover: rgba(255, 255, 255, 1);
+
+%recipe-view__chef-badge {
+  display: flex;
+  gap: 4px;
+  border-radius: 6px;
+  padding: 2px 4px 2px 4px;
+  align-items: center;
+  justify-content: center;
+  height: 27px;
+}
+
 main {
   height: calc(100vh - 136px);
-  color: rgb(57, 96, 57);
+  color: $color-main-text;
   padding: 36px 36px 36px 36px;
 }
 
 .recipe-view__container {
-  background-color: rgba(250, 240, 230, 0.3);
-  border: 4px solid rgba(250, 240, 230, 1);
+  background-color: $color-main-bg-soft;
+  border: 4px solid $color-main-border;
   border-radius: 20px;
   padding: 40px 48px;
 }
 
 .recipe-view__layout {
-  background-color: rgba(250, 240, 230, 1);
+  background-color: $color-layout-bg;
   padding: 24px;
   border-radius: 20px;
   display: flex;
@@ -53,50 +81,26 @@ main {
 }
 
 .recipe-view__chef-first {
-  display: flex;
-  gap: 4px;
+  @extend %recipe-view__chef-badge;
   background-color: rgba(215, 223, 215, 1);
-  border-radius: 6px;
-  padding: 2px 4px 2px 4px;
   width: 90.5px;
-  align-items: center;
-  justify-content: center;
-  height: 27px;
 }
 
 .recipe-view__chef-second {
-  display: flex;
-  gap: 4px;
+  @extend %recipe-view__chef-badge;
   background-color: rgba(255, 217, 179, 1);
-  border-radius: 6px;
-  padding: 2px 4px 2px 4px;
-  align-items: center;
-  justify-content: center;
-  height: 27px;
   width: 91.5px;
 }
 
 .recipe-view__chef-third {
-  display: flex;
-  gap: 4px;
+  @extend %recipe-view__chef-badge;
   background-color: rgba(207, 215, 0, 0.3);
-  border-radius: 6px;
-  padding: 2px 4px 2px 4px;
-  align-items: center;
-  justify-content: center;
-  height: 27px;
   width: 91.5px;
 }
 
 .recipe-view__chef-fourth {
-  display: flex;
-  gap: 4px;
+  @extend %recipe-view__chef-badge;
   background-color: rgba(0, 128, 0, 0.4);
-  border-radius: 6px;
-  padding: 2px 4px 2px 4px;
-  align-items: center;
-  justify-content: center;
-  height: 27px;
   width: 91.5px;
 }
 
@@ -106,7 +110,7 @@ main {
 }
 
 .recipe-view__badge {
-  background-color: rgba(57, 96, 57, 0.2);
+  background-color: $color-badge-bg;
   padding: 6px 12px;
   border-radius: 30px;
   display: flex;
@@ -119,14 +123,14 @@ main {
 }
 
 .recipe-view__nutrition-title {
-  color: rgba(16, 49, 11, 1);
+  color: $color-text-dark;
   font-size: 18px;
 }
 
 .recipe-view__nutrition-row {
   display: flex;
   flex-direction: column;
-  color: rgba(16, 49, 11, 1);
+  color: $color-text-dark;
 }
 
 .recipe-view__nutrition {
@@ -158,11 +162,11 @@ main {
 
 .recipe-view__ingredients-heading {
   font-size: 32px;
-  color: rgba(30, 85, 21, 1);
+  color: $color-text-accent;
 }
 
 .recipe-view__ingredients-title {
-  background-color: rgba(250, 240, 230, 1);
+  background-color: $color-layout-bg;
   border-radius: 18px;
   padding: 10px;
   text-align: center;
@@ -178,7 +182,7 @@ main {
 }
 
 .recipe-view__ingredients-block-title {
-  color: rgba(0, 128, 0, 1);
+  color: $color-ingredients-block-title;
 }
 
 .recipe-view__ingredients-block {
@@ -207,7 +211,7 @@ main {
 }
 
 .recipe-view__directions-title {
-  background-color: rgba(250, 240, 230, 1);
+  background-color: $color-layout-bg;
   border-radius: 18px;
   padding: 10px;
   text-align: center;
@@ -216,11 +220,11 @@ main {
 
 .recipe-view__directions-heading {
   font-size: 32px;
-  color: rgba(30, 85, 21, 1);
+  color: $color-text-accent;
 }
 
 .recipe-view__direction-index {
-  background-color: rgba(250, 240, 230, 1);
+  background-color: $color-layout-bg;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,7 +235,7 @@ main {
 
 .recipe-view__direction-title {
   font-size: 24px;
-  color: rgba(16, 49, 11, 1);
+  color: $color-text-dark;
   width: 324px;
 }
 
@@ -300,8 +304,8 @@ main {
 .btn {
   width: 183px;
   height: 60px;
-  background-color: rgba(57, 96, 57, 1);
-  color: rgba(250, 240, 230, 1);
+  background-color: $color-btn-bg;
+  color: $color-btn-text;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -310,13 +314,13 @@ main {
 }
 
 .btn:hover {
-  background-color: rgba(5, 94, 5, 1);
-  color: rgba(255, 255, 255, 1);
+  background-color: $color-btn-bg-hover;
+  color: $color-btn-text-hover;
 }
 
 .recipe-view__cta {
   height: 142px;
-  background-color: rgba(57, 96, 57, 0.1);
+  background-color: $color-cta-bg;
   border-radius: 20px;
   padding: 40px;
   display: flex;
@@ -327,7 +331,7 @@ main {
 }
 
 .recipe-view__cta-text {
-  color: rgba(16, 49, 11, 1);
+  color: $color-text-dark;
   font-size: 24px;
 }
 
@@ -351,7 +355,7 @@ main {
 }
 
 .hero__link-section:hover {
-  background-color: rgba(250, 224, 198, 0.2);
+  background-color: $color-link-hover-bg;
 }
 
 .hero__arrow {
@@ -367,7 +371,7 @@ main {
 .preferences__back-link {
   display: flex;
   gap: 4px;
-  color: rgba(30, 85, 21, 1);
+  color: $color-text-accent;
   cursor: pointer;
 }
 
@@ -586,5 +590,5 @@ nav {
 
   .recipe-view__badges {
     gap: 10px;
-}
+  }
 }

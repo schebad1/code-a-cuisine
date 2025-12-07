@@ -58,6 +58,20 @@ export class LoadingComponent implements OnInit {
           return;
         }
 
+        // --- QUOTA / ERROR CASE ---
+        if (!normalized.success || !normalized.recipes?.length) {
+          this.router.navigate(['/results'], {
+            state: {
+              data: {
+                ...normalized,
+                recipeIds: [],
+              },
+            },
+          });
+          return;
+        }
+
+        // --- SUCCESS CASE: Save recipes ---
         try {
           const recipeIds = await this.saveAllRecipes(normalized.recipes);
 
@@ -73,6 +87,7 @@ export class LoadingComponent implements OnInit {
           this.router.navigate(['/generate-recipe']);
         }
       },
+
       error: () => {
         this.router.navigate(['/generate-recipe']);
       },

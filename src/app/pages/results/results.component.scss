@@ -1,8 +1,25 @@
+$color-main-bg: rgb(57, 96, 57);
+$color-main-text: rgba(250, 240, 230, 1);
+$color-tag-bg: rgba(250, 240, 230, 1);
+$color-tag-text: rgba(30, 85, 21, 1);
+$color-card-bg: rgba(219, 224, 219, 1);
+$color-card-number: rgba(30, 85, 21, 1);
+$color-card-title: rgba(16, 49, 11, 1);
+$color-card-meta: rgba(57, 96, 57, 1);
+$color-btn-bg: rgba(250, 240, 230, 1);
+$color-btn-text: rgba(0, 128, 0, 1);
+$color-btn-bg-hover: rgba(250, 224, 198, 1);
+$color-link-hover-bg: rgba(250, 224, 198, 0.2);
+$color-quota-bg: rgba(250, 240, 230, 0.08);
+$color-quota-border: rgba(250, 240, 230, 0.18);
+$color-no-results-bg: rgba(16, 49, 11, 0.45);
+$color-no-results-border: rgba(250, 240, 230, 0.25);
+
 main {
-  background-color: rgb(57, 96, 57);
+  background-color: $color-main-bg;
   height: calc(100vh - 136px);
-  color: rgba(250, 240, 230, 1);
-  padding: 0px 200px 36px 200px;
+  color: $color-main-text;
+  padding: 0 200px 36px 200px;
   display: flex;
   justify-content: center;
   overflow: auto;
@@ -42,12 +59,12 @@ header {
 
 .results__tag {
   font-size: 18px;
-  background-color: rgba(250, 240, 230, 1);
+  background-color: $color-tag-bg;
   width: 90px;
   height: 32px;
   border-radius: 30px;
   padding: 6px 12px;
-  color: rgba(30, 85, 21, 1);
+  color: $color-tag-text;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +76,7 @@ header {
 }
 
 .results-card {
-  background-color: rgba(219, 224, 219, 1);
+  background-color: $color-card-bg;
   width: 411px;
   height: 338px;
   border-radius: 20px;
@@ -72,7 +89,7 @@ header {
 }
 
 .results-card__number {
-  color: rgba(30, 85, 21, 1);
+  color: $color-card-number;
   font-size: 24px;
 }
 
@@ -83,14 +100,14 @@ header {
 
 .results-card__title {
   font-size: 32px;
-  color: rgba(16, 49, 11, 1);
+  color: $color-card-title;
   height: 74px;
   margin-top: 20px;
 }
 
 .results-card__meta-text {
   font-size: 20px;
-  color: rgba(57, 96, 57, 1);
+  color: $color-card-meta;
 }
 
 .results-card__meta {
@@ -102,8 +119,8 @@ header {
 .btn {
   width: 106px;
   height: 60px;
-  background-color: rgba(250, 240, 230, 1);
-  color: rgba(0, 128, 0, 1);
+  background-color: $color-btn-bg;
+  color: $color-btn-text;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -114,7 +131,7 @@ header {
 
 .btn:hover {
   font-weight: bold;
-  background-color: rgba(250, 224, 198, 1);
+  background-color: $color-btn-bg-hover;
 }
 
 .hero__link {
@@ -135,7 +152,7 @@ header {
 }
 
 .hero__link-section:hover {
-  background-color: rgba(250, 224, 198, 0.2);
+  background-color: $color-link-hover-bg;
 }
 
 .hero__arrow {
@@ -149,19 +166,73 @@ header {
   justify-content: flex-end;
 }
 
+.results__quota {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background-color: $color-quota-bg;
+  border: 1px solid $color-quota-border;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.results__quota-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.results__quota-label {
+  opacity: 0.7;
+}
+
+.results__quota-value {
+  font-weight: 500;
+}
+
+.results__no-results {
+  margin-top: 24px;
+  padding: 24px 20px;
+  border-radius: 16px;
+  background-color: $color-no-results-bg;
+  border: 1px solid $color-no-results-border;
+  max-width: 640px;
+}
+
+.results__no-results-title {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.results__no-results-text {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.results__no-results-quota {
+  margin-top: 12px;
+  font-size: 16px;
+}
+
+.results__no-results-quota p {
+  margin: 0;
+}
+
 @media (max-width: 1680px) {
   section {
     gap: 40px;
   }
 
   main {
-    padding: 0px 140px 36px 140px;
+    padding: 0 140px 36px 140px;
   }
 }
 
 @media (max-width: 1550px) {
   main {
-    padding: 0px 36px 36px 36px;
+    padding: 0 36px 36px 36px;
   }
 }
 
@@ -179,7 +250,7 @@ header {
 
   .results__layout {
     display: flex;
-    gap: 0px;
+    gap: 0;
     flex-direction: column;
     align-items: center;
   }
@@ -192,6 +263,10 @@ header {
     display: flex;
     width: 450px;
   }
+
+  .results__no-results {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 660px) {
@@ -201,6 +276,14 @@ header {
 
   .results__subtitle {
     font-size: 20px;
+  }
+
+  .results__no-results-title {
+    font-size: 22px;
+  }
+
+  .results__no-results-text {
+    font-size: 16px;
   }
 }
 
@@ -240,6 +323,10 @@ header {
     height: 50px;
     font-size: 20px;
     margin-top: 36px;
+  }
+
+  .results__quota {
+    font-size: 12px;
   }
 }
 

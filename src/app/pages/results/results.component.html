@@ -23,7 +23,28 @@
           <span class="results__tag results__tag--speed">
             {{ timeCategoryLabel }}
           </span>
-        </div>        
+        </div>
+
+        <!-- QUOTA BANNER -->
+        <div
+          class="results__quota"
+          *ngIf="quotaInfo.limitPerIp || quotaInfo.limitGlobal"
+        >
+          <div class="results__quota-item">
+            <span class="results__quota-label">IP quota</span>
+            <span class="results__quota-value">
+              {{ quotaInfo.remainingForIpToday }} / {{ quotaInfo.limitPerIp }}
+              left today
+            </span>
+          </div>
+          <div class="results__quota-item">
+            <span class="results__quota-label">Global quota</span>
+            <span class="results__quota-value">
+              {{ quotaInfo.remainingGlobalToday }} / {{ quotaInfo.limitGlobal }}
+              left today
+            </span>
+          </div>
+        </div>
       </header>
 
       <figure class="results__visual">
@@ -35,7 +56,11 @@
       </figure>
     </div>
 
-    <div class="results-list" *ngIf="recipes.length; else noResults">
+    <!-- ERFOLGSFALL: Rezepte vorhanden -->
+    <div
+      class="results-list"
+      *ngIf="success && recipes.length; else noResults"
+    >
       <article
         class="results-card"
         *ngFor="let recipe of recipes; let i = index"
@@ -66,32 +91,67 @@
 
         <div class="results-card__action">
           <a
-          class="results-card__action-link btn"
-          role="button"
-          href="#"
-          (click)="openRecipe(i); $event.preventDefault()"
-        >
-          View
-        </a>
-        
+            class="results-card__action-link btn"
+            role="button"
+            href="#"
+            (click)="openRecipe(i); $event.preventDefault()"
+          >
+            View
+          </a>
         </div>
       </article>
     </div>
 
+    <!-- FALL: Keine Rezepte (Quota erreicht oder anderer Grund) -->
     <ng-template #noResults>
-      <p class="results__subtitle">
-        No recipes available. Please go back and try again.
-      </p>
+      <div class="results__no-results">
+        <h2 class="results__no-results-title">
+          {{ success ? 'No recipes available' : 'Daily quota reached' }}
+        </h2>
+
+        <p class="results__no-results-text" *ngIf="!success">
+          It looks like you have used up today’s recipe quota
+          from this IP or globally.
+        </p>
+
+        <p class="results__no-results-text" *ngIf="success">
+          We could not generate recipes this time. Please go back and try
+          again with different ingredients or preferences.
+        </p>
+
+        <div
+          class="results__no-results-quota"
+          *ngIf="quotaInfo.limitPerIp || quotaInfo.limitGlobal"
+        >
+          <p>
+            IP quota today:
+            <strong
+              >{{ quotaInfo.remainingForIpToday }} /
+              {{ quotaInfo.limitPerIp }}</strong
+            >
+          </p>
+          <p>
+            Global quota today:
+            <strong
+              >{{ quotaInfo.remainingGlobalToday }} /
+              {{ quotaInfo.limitGlobal }}</strong
+            >
+          </p>
+        </div>
+      </div>
     </ng-template>
 
     <div class="hero__link-section-wrapper">
       <div class="hero__link-section">
         <a class="hero__link" role="button" (click)="startNewRecipe()">
           Generate new recipe
-          <img src="./assets/hero/arraow-creme-left.svg" alt="" class="hero__arrow" />
-        </a>        
+          <img
+            src="./assets/hero/arraow-creme-left.svg"
+            alt=""
+            class="hero__arrow"
+          />
+        </a>
       </div>
     </div>
-
   </section>
 </main>

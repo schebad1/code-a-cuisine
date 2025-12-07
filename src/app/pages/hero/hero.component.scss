@@ -1,7 +1,14 @@
+$color-main-bg: rgb(57, 96, 57);
+$color-main-text: rgba(250, 240, 230, 1);
+$color-accent-light: rgba(250, 224, 198, 1);
+$color-accent-light-transparent: rgba(250, 224, 198, 0.2);
+
+$font-hero-title: "Ubuntu";
+
 main {
-  background-color: rgb(57, 96, 57);
+  background-color: $color-main-bg;
   height: calc(100vh - 136px);
-  color: rgba(250, 240, 230, 1);
+  color: $color-main-text;
   padding: 0 0 36px 36px;
 }
 
@@ -15,7 +22,7 @@ main {
 
 .hero__title {
   font-size: 140px;
-  font-family: "Ubuntu";
+  font-family: $font-hero-title;
 }
 
 .hero__cta {
@@ -25,8 +32,8 @@ main {
 .btn {
   width: 183px;
   height: 60px;
-  background-color: rgba(250, 240, 230, 1);
-  color: rgb(57, 96, 57);
+  background-color: $color-main-text;
+  color: $color-main-bg;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -36,7 +43,7 @@ main {
 
 .btn:hover {
   font-weight: bold;
-  background-color: rgba(250, 224, 198, 1);
+  background-color: $color-accent-light;
 }
 
 .hero__secondary {
@@ -68,7 +75,7 @@ main {
 }
 
 .hero__link-section:hover {
-  background-color: rgba(250, 224, 198, 0.2);
+  background-color: $color-accent-light-transparent;
 }
 
 .hero__arrow {
@@ -208,14 +215,11 @@ main {
 @media (max-width: 550px) {
   main {
     height: calc(100vh - 55px);
+    padding-left: 20px;
   }
 
   .hero__prompt {
     width: 200px;
-  }
-
-  main {
-    padding-left: 20px;
   }
 }
 

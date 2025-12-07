@@ -31,6 +31,9 @@ export class ResultsComponent implements OnInit {
     remainingGlobalToday: 0,
   };
 
+  // neu: Erfolg/Quota-Status
+  success = true;
+
   cuisineLabel = '';
   timeCategoryLabel = '';
 
@@ -61,7 +64,8 @@ export class ResultsComponent implements OnInit {
 
     const response = data as ResultsData;
 
-    if (!this.hasResultsData(response) || response.recipes.length === 0) {
+    // Nur noch prüfen, ob Struktur stimmt – nicht mehr auf recipes.length > 0
+    if (!this.hasResultsData(response)) {
       this.router.navigate(['/generate-recipe']);
       return;
     }
@@ -69,6 +73,7 @@ export class ResultsComponent implements OnInit {
     this.recipes = response.recipes;
     this.recipeIds = response.recipeIds;
     this.quotaInfo = (response as any).quota ?? this.quotaInfo;
+    this.success = (response as any).success ?? true;
 
     if (this.recipes.length > 0) {
       const first = this.recipes[0];

@@ -1,6 +1,16 @@
+$color-primary: rgb(57, 96, 57);
+$color-form-bg: rgb(196, 207, 196);
+$color-input-bg: rgb(239, 233, 223);
+$color-scrollbar-thumb: rgb(150, 160, 150);
+$color-scrollbar-thumb-hover: rgb(120, 130, 120);
+$color-btn-bg: rgba(57, 96, 57, 1);
+$color-btn-bg-hover: rgba(5, 94, 5, 1);
+$color-btn-text: rgba(250, 240, 230, 1);
+$color-btn-text-hover: rgba(255, 255, 255, 1);
+
 main {
   height: calc(100vh - 136px);
-  color: rgb(57, 96, 57);
+  color: $color-primary;
   padding: 0 36px 36px 36px;
 }
 
@@ -28,7 +38,7 @@ header {
 }
 
 .generate__form {
-  background-color: rgb(196, 207, 196);
+  background-color: $color-form-bg;
   width: 577px;
   height: 209px;
   border-radius: 20px;
@@ -62,7 +72,7 @@ header {
   width: 300px;
   height: 36px;
   border-radius: 20px;
-  background-color: rgb(239, 233, 223);
+  background-color: $color-input-bg;
   display: flex;
   padding: 0 12px;
   align-items: center;
@@ -99,7 +109,7 @@ header {
   height: 36px;
   padding: 3px 15px;
   border-radius: 48px;
-  background-color: rgb(239, 233, 223);
+  background-color: $color-input-bg;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,7 +122,7 @@ header {
   border: none;
   outline: none;
   background: transparent;
-  color: rgb(57, 96, 57);
+  color: $color-primary;
   font-size: 16px;
   text-align: center;
   cursor: pointer;
@@ -124,7 +134,7 @@ header {
   border: none;
   outline: none;
   background: transparent;
-  color: rgb(57, 96, 57);
+  color: $color-primary;
   cursor: pointer;
 }
 
@@ -140,7 +150,7 @@ header {
   height: 36px;
   padding: 0 3px;
   border-radius: 48px;
-  background-color: rgb(239, 233, 223);
+  background-color: $color-input-bg;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,7 +167,14 @@ header {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
   margin-top: 4px;
+  margin-left: 10px;
+  border-radius: 12px;
+  padding: 4px 0;
 }
 
 .generate__add {
@@ -171,7 +188,7 @@ header {
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: rgb(239, 233, 223);
+    background-color: $color-input-bg;
   }
 }
 
@@ -182,12 +199,12 @@ header {
   transition: background-color 0.2s ease;
 
   span {
-    color: rgb(57, 96, 57);
+    color: $color-primary;
     font-size: 16px;
   }
 
   &:hover {
-    background-color: rgb(239, 233, 223);
+    background-color: $color-input-bg;
   }
 }
 
@@ -206,11 +223,12 @@ header {
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: rgb(239, 233, 223);
+    background-color: $color-input-bg;
   }
 }
+
 .generate__list {
-  background-color: rgb(196, 207, 196);
+  background-color: $color-form-bg;
   width: 577px;
   border-radius: 20px;
   padding: 25px 25px;
@@ -223,16 +241,15 @@ header {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 100%; // nutzt den gesamten Innenraum
-  overflow-y: auto; // vertikaler Scroll
-  overflow-x: hidden; // kein horizontaler Scroll
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgb(160, 170, 160) transparent; /* Firefox */
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(160, 170, 160) transparent;
 }
 
-/* Chrome, Edge, Safari */
 .generate__ingredients::-webkit-scrollbar {
-  width: 6px; /* Dicke der Scrollbar */
+  width: 6px;
 }
 
 .generate__ingredients::-webkit-scrollbar-track {
@@ -240,16 +257,16 @@ header {
 }
 
 .generate__ingredients::-webkit-scrollbar-thumb {
-  background-color: rgb(150, 160, 150);
+  background-color: $color-scrollbar-thumb;
   border-radius: 10px;
 }
 
 .generate__ingredients::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(120, 130, 120);
+  background-color: $color-scrollbar-thumb-hover;
 }
 
 .generate__ingredient--dropdown-open {
-  margin-bottom: 100px; // Wert nach Bedarf anpassen (Höhe Dropdown)
+  margin-bottom: 100px;
 }
 
 .generate__ingredient {
@@ -258,7 +275,7 @@ header {
 }
 
 .generate__ingredient:hover {
-  background-color: rgb(239, 233, 223);
+  background-color: $color-input-bg;
 }
 
 .generate__ingredient-row {
@@ -275,10 +292,9 @@ header {
   gap: 12px;
 }
 
-/* Feste Spaltenbreite für Menge+Einheit */
 .generate__ingredient-amount {
   display: inline-block;
-  min-width: 50px; // nach Geschmack anpassen (z.B. 70–100px)
+  min-width: 50px;
 }
 
 .generate__bullet {
@@ -335,8 +351,8 @@ header {
 .btn {
   width: 183px;
   height: 60px;
-  background-color: rgba(57, 96, 57, 1);
-  color: rgba(250, 240, 230, 1);
+  background-color: $color-btn-bg;
+  color: $color-btn-text;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -345,8 +361,8 @@ header {
 }
 
 .btn:hover {
-  background-color: rgba(5, 94, 5, 1);
-  color: rgba(255, 255, 255, 1);
+  background-color: $color-btn-bg-hover;
+  color: $color-btn-text-hover;
 }
 
 .generate-recipe-cta {
@@ -366,28 +382,6 @@ header {
 
 .generate__quantity-wrapper--inline {
   cursor: text;
-}
-
-.generate__unit-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative; // damit sich das Dropdown an diesem Element ausrichtet
-}
-
-.generate__unit-dropdown {
-  font-size: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  position: absolute; // aus dem Flow raus
-  top: 100%; // direkt unter dem "gram"-Chip
-  left: 0;
-  z-index: 10;
-  margin-left: 10px;
-  border-radius: 12px;
-  padding: 4px 0;
 }
 
 .generate__ingredient-name-input {
@@ -455,7 +449,6 @@ header {
     padding-top: 50px;
   }
 
-  /* Nur den Header dieser Seite, nicht global */
   .generate__header {
     gap: 8px;
     align-items: flex-start;
@@ -467,7 +460,6 @@ header {
     text-align: start;
   }
 
-  /* Kein Angular-Attribut-Selector */
   .generate__title {
     font-size: 36px;
   }
@@ -479,7 +471,6 @@ header {
 
   .generate__form {
     width: 100%;
-    /* nicht hart einsperren, etwas flexibler */
     height: auto;
     min-height: 340px;
     padding: 12px 12px;
@@ -494,20 +485,15 @@ header {
     width: 100%;
     font-size: 18px;
     padding: 12px 12px;
-
-    /* Icons/Zeilen sollen nicht abgeschnitten werden */
     height: auto;
     min-height: 185px;
     overflow: visible;
   }
 
   .generate__ingredients {
-    /* Vertikal darf weiter gescrollt werden (kommt aus Basis-Stil),
-       aber horizontal nichts abschnippeln */
     overflow-x: visible;
   }
 
-  /* Formular links untereinander statt nebeneinander */
   .generate__input-group {
     flex-direction: column;
     gap: 8px;
@@ -533,8 +519,6 @@ header {
     height: calc(100vh - 55px);
     padding: 0 36px 0 36px;
   }
-
-  /* --- Fix für die Icons in der Zutatenzeile --- */
 
   .generate__ingredient-row {
     gap: 8px;
@@ -578,12 +562,8 @@ header {
 
   .generate__ingredient-name-input {
     min-width: 0px;
-    width: 75px;
-    font-size: 14px;
-  }
-
-  .generate__ingredient-name-input {
     width: 50px;
+    font-size: 14px;
   }
 
   .generate__ingredient-info--edit {

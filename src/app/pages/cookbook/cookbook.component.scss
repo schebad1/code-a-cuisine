@@ -1,12 +1,18 @@
+$color-cookbook-text: rgba(30, 85, 21, 1);
+$color-cookbook-bg-soft: rgba(57, 96, 57, 0.04);
+$color-card-bg: rgba(219, 224, 219, 0.7);
+$color-likes-bg: rgba(57, 96, 57, 0.3);
+$color-link-hover-bg: rgba(250, 224, 198, 0.2);
+
 .cookbook {
   height: calc(100vh - 136px);
-  color: rgba(30, 85, 21, 1);
+  color: $color-cookbook-text;
   padding: 36px;
   overflow-x: hidden;
 }
 
 .cookbook__content {
-  background-color: rgba(57, 96, 57, 0.04);
+  background-color: $color-cookbook-bg-soft;
   padding: 40px 24px;
   border-radius: 20px;
   display: flex;
@@ -46,12 +52,11 @@
   overflow-y: hidden;
   max-width: 100%;
   padding-bottom: 4px;
-
   -webkit-overflow-scrolling: touch;
   scroll-snap-type: x mandatory;
-
   scrollbar-width: none;
 }
+
 .cookbook__list::-webkit-scrollbar {
   display: none;
 }
@@ -81,7 +86,7 @@
   height: 124px;
   border-radius: 16px;
   padding: 16px 12px;
-  background-color: rgba(219, 224, 219, 0.7);
+  background-color: $color-card-bg;
   scroll-snap-align: start;
   cursor: pointer;
 }
@@ -91,7 +96,7 @@
 }
 
 .cookbook-card__likes {
-  background-color: rgba(57, 96, 57, 0.3);
+  background-color: $color-likes-bg;
   border-radius: 30px;
   padding: 6px 12px;
   width: 64px;
@@ -157,7 +162,7 @@
 }
 
 .hero__link-section:hover {
-  background-color: rgba(250, 224, 198, 0.2);
+  background-color: $color-link-hover-bg;
 }
 
 .hero__arrow {
@@ -173,7 +178,7 @@
 .preferences__back-link {
   display: flex;
   gap: 4px;
-  color: rgba(30, 85, 21, 1);
+  color: $color-cookbook-text;
   cursor: pointer;
 }
 
@@ -181,17 +186,11 @@ nav {
   padding-left: 32px;
 }
 
-@media (max-width: 1430px) {
-}
-
 @media (max-width: 1350px) {
   .cookbook-cuisines__image {
     width: 350px;
     height: 350px;
   }
-}
-
-@media (max-width: 1115px) {
 }
 
 @media (max-width: 772px) {
