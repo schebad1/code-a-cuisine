@@ -7,6 +7,7 @@ import { RecipeLibraryService } from '../../api/recipe-library.service';
 import { FirestoreRecipe } from '../../api/recipe-seed.data';
 import { GeneratedStep } from '../../api/recipe-api.contracts';
 import { PreferencesStateService } from '../preferences/preferences-state.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-recipe-view',
@@ -76,8 +77,9 @@ export class RecipeViewComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly recipeLibrary: RecipeLibraryService,
     private readonly router: Router,
-    private readonly preferencesState: PreferencesStateService
-  ) {}
+    private readonly preferencesState: PreferencesStateService,
+    private readonly location: Location
+  ) { }
 
   /**
    * Lifecycle hook: loads the recipe for the ID in the current route.
@@ -236,6 +238,18 @@ export class RecipeViewComponent implements OnInit {
   startNewRecipe(): void {
     this.preferencesState.reset();
     this.router.navigate(['/generate-recipe']);
+  }
+
+  /**
+   * Navigates back to the previous page using the browser's history stack.
+   * 
+   * This ensures the user returns to the actual page they came from,
+   * regardless of whether it was the results page, cookbook, or any
+   * other route. Unlike a static routerLink, this preserves the real
+   * navigation path.
+   */
+  goBack(): void {
+    this.location.back();
   }
 
   /**

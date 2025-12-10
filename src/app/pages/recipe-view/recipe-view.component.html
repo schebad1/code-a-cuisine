@@ -1,12 +1,12 @@
 <app-header-secondary></app-header-secondary>
 <nav class="preferences__back" aria-label="Back to previous">
-  <a class="preferences__back-link" routerLink="/results">
+  <a class="preferences__back-link" (click)="goBack()">
     <img
       src="assets/preferences/back-arrow.svg"
       alt=""
       class="preferences__back-icon"
     />
-    <span class="preferences__back-text">Recipe results</span>
+    <span class="preferences__back-text">Back</span>
   </a>
 </nav>
 
