@@ -62,9 +62,9 @@
       </div>
 
       <div class="recipe-card__tags">
-        <div class="recipe-card__tag">
+        <div class="recipe-card__tag" *ngIf="recipe.diet !== 'none'">
           <span class="recipe-card__tag-text">{{ recipe.diet }}</span>
-        </div>
+        </div>        
 
         <div class="recipe-card__tag">
           <span class="recipe-card__tag-text">{{ recipe.speed }}</span>
