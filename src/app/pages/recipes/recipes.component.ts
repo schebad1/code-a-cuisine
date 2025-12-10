@@ -54,7 +54,7 @@ export class RecipesComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly recipeLibrary: RecipeLibraryService
-  ) {}
+  ) { }
 
   /**
    * Lifecycle hook: reads the optional cuisine filter from the query params,
@@ -71,7 +71,66 @@ export class RecipesComponent implements OnInit {
       this.cuisineLabel = 'All recipes';
     }
 
-    this.goToPage(0);
+    this.loadAllPages();
+  }
+
+  /**
+ * Loads all pages for the current cuisine so that the UI can show
+ * all page numbers upfront.
+ */
+  private async loadAllPages(): Promise<void> {
+    if (this.isLoading) return;
+
+    this.isLoading = true;
+
+    // Reset local pagination state
+    this.pages = [];
+    this.pageCursors = [null];
+    this.hasMore = true;
+
+    try {
+      let pageIndex = 0;
+      let startAfterDoc: QueryDocumentSnapshot<DocumentData> | null = null;
+
+      while (true) {
+        const result: RecipePageResult =
+          await this.recipeLibrary.getRecipesPage(
+            this.cuisine,
+            this.pageSize,
+            startAfterDoc || undefined
+          );
+
+        // Keine Items -> nichts mehr zu holen
+        if (result.items.length === 0) {
+          this.hasMore = false;
+          break;
+        }
+
+        this.pages[pageIndex] = result.items;
+
+        if (result.lastDoc) {
+          startAfterDoc = result.lastDoc;
+          this.pageCursors[pageIndex + 1] = result.lastDoc;
+        } else {
+          this.hasMore = false;
+        }
+
+        // Letzte Seite (weniger als pageSize) -> fertig
+        if (result.items.length < this.pageSize) {
+          this.hasMore = false;
+          break;
+        }
+
+        pageIndex++;
+      }
+
+      this.currentPageIndex = 0;
+      this.recipes = this.pages[0] ?? [];
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   /**
@@ -221,13 +280,8 @@ export class RecipesComponent implements OnInit {
    */
   get displayPagesArray(): number[] {
     const realPages = this.totalPages;
-
-    const shouldShowExtra =
-      this.hasMore &&
-      realPages === 1 &&
-      this.currentPageIndex === 0;
-
-    const count = realPages + (shouldShowExtra ? 1 : 0);
+    const extraPage = this.hasMore ? 1 : 0;
+    const count = realPages + extraPage;
     return Array.from({ length: count }, (_, i) => i);
   }
 }
