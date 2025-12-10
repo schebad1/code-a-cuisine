@@ -121,26 +121,30 @@ export class GenerateRecipeComponent {
     if (this.isEditing) {
       return;
     }
-
+  
     const rawName = this.ingredientName.trim();
     if (!rawName) return;
-
-    if (this.ingredientQuantity === null || this.ingredientQuantity <= 0) {
+  
+    const quantity = this.ingredientQuantity ?? 100;
+    if (quantity <= 0) {
       return;
     }
-
+  
     const name = this.capitalizeFirst(rawName);
-
+  
     this.ingredientsState.addIngredient({
       name,
-      quantity: this.ingredientQuantity,
+      quantity,
       unit: this.selectedUnit,
     });
-
+  
     this.ingredientName = '';
     this.ingredientQuantity = null;
     this.filteredIngredientNames = [];
-  }
+  
+    this.selectedUnit = 'gram';
+    this.isUnitDropdownOpen = false;
+  }  
 
   /**
    * Removes an ingredient by index.
